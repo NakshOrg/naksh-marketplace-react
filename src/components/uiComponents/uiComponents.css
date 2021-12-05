@@ -1,5 +1,96 @@
-.navbar {
-    background: rgba(0, 5, 19, 0.7) !important; 
-    backdrop-filter: blur(20px) !important;
-    color: #fff !important;
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0px 125px;
+    z-index: 100000;
+    background-color: rgba(0, 5, 19, 0.7);
+    /* justify-content: space-between; */
 }
+
+.header-nav-items {
+    font-size: 12px;
+    font-weight: 400;
+    display: flex;
+    width: 250px;
+    justify-content: space-between;
+    letter-spacing: 1px;
+}
+
+.search-bar {
+    background-color: #12192B;
+    border-radius: 5px;
+    position: relative;
+    height: 38px;
+    font-size: 12px;
+    width: 90%;
+    padding-left: 45px;
+}
+
+.logo {
+    margin-right: 60px;
+}
+
+.glow-on-hover {
+    width: 230px;
+    height: 50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-top: 30px;
+    background: linear-gradient(90deg, rgba(0,133,255,1) 0%, rgba(255,89,99,1) 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    justify-content: space-between;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+  }
+  
+  .glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #E85D71, #7a00ff, #0883FA, #E85D71, #7a00ff, #0883FA, #E85D71, #7a00ff, #0883FA);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 5px;
+    
+  }
+  
+  .glow-on-hover:hover:before {
+    opacity: 1;
+  }
+  
+  .glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 5px;
+  }

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
+import NftCard from '../../components/explore/NftCard';
 
 import classes from './home.module.css';
 
@@ -14,13 +15,14 @@ export default class Home extends Component {
                                 <h1 className={classes.artSectionContent}>
                                     An NFT marketplace fuelled by art communities from all over India
                                 </h1>
-                                <div class="glow-on-hover" type="button">
+                                <div class="glow-on-hover" type="button" style={{zIndex:100}}>
                                     <div style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                                 </div>
                             </div>
                         </div>
                         {/* overlay gradient  */}
                         <div className={classes.artworkGradientOverlay}/>
+                        <NftCard/>
                     </Col>
                     <Col lg={7} md={7} sm={12}>
                     

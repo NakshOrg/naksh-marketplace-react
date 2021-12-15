@@ -1,15 +1,40 @@
+/* default bootstrap overrides */
+#dropdown-basic {
+  background: #12192B;
+  backdrop-filter: blur(96.1806px);
+  border-color: #12192B;
+  height: 40px !important;
+}
+#dropdown-basic::after {
+  display:none !important;
+}
+
+#dropdown-basic:focus {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: none;
+}
+
+#dropdown-basic-content {
+  background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.8) 0%, rgba(49, 48, 65, 0.488) 100%);
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+  width:100%;
+  inset: 5px auto auto 0px !important;
+}
+
+
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    padding: 0px 125px;
-    z-index: 100000;
-    background-color: rgba(0, 5, 19, 0.7);
-    /* justify-content: space-between; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0px 125px;
+  z-index: 100000;
+  background-color: rgba(0, 5, 19, 0.7);
+  /* justify-content: space-between; */
 }
 
 .header-nav-items {

@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import NftCard from '../../components/explore/NftCard';
 
 import classes from './home.module.css';
 
@@ -22,7 +21,6 @@ export default class Home extends Component {
                         </div>
                         {/* overlay gradient  */}
                         <div className={classes.artworkGradientOverlay}/>
-                        <NftCard/>
                     </Col>
                     <Col lg={7} md={7} sm={12}>
                     

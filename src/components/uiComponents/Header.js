@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { NavLink } from "react-router-dom";
 
 import logo from "../../assets/svgs/logo.svg";
 import near from "../../assets/svgs/connect-near.svg";
@@ -15,7 +16,9 @@ function Header() {
             </div>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'45%'}}>
                 <div className="header-nav-items">
-                    <div>BROWSE</div>
+                    <NavLink to="browse">
+                        <div>BROWSE</div>
+                    </NavLink>
                     <div>ABOUT</div>
                     <div>RESOURCES</div>
                 </div>

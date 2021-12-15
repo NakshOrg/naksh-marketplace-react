@@ -11,7 +11,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Header/>
-        <Routes/>
+        <div className='app-content'>
+          <Routes/>
+        </div>
       </BrowserRouter>
     </div>
   );

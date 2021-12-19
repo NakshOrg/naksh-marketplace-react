@@ -1,4 +1,31 @@
 .cardContainer {
     background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
     backdrop-filter: blur(102.362px);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+    padding: 12px;
+    border: 2px solid transparent;
 }
+.cardContainer:hover {
+    background: linear-gradient(47.03deg, rgba(9, 131, 250, 0.2) 0%, rgba(219, 95, 121, 0.2) 48.09%, rgba(9, 131, 250, 0.2) 98.23%), linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    backdrop-filter: blur(102.362px);
+    border-color: #C56386;
+}
+.cardContainer > img {
+    width: 100%;
+    height: 92%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.cardTag {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    backdrop-filter: blur(76.8458px);
+    border-radius: 8px;
+    width: 95%;
+    text-align: center;
+    margin: -30px auto;
+    padding: 8px;
+}   

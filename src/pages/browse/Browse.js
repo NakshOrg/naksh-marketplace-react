@@ -15,7 +15,13 @@ export default class Browse extends Component {
                 </div>
                 <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
                 <div style={{marginTop:55}}>
-                    <NftCard/>
+                    <Row>
+                        <Col><NftCard/></Col>
+                        <Col><NftCard/></Col>
+                        <Col><NftCard/></Col>
+                        <Col><NftCard/></Col>
+                    </Row>
+                    
                 </div>
                 {/* <Row>
                     <Col lg={5} md={5} sm={12}>, marginTop:13

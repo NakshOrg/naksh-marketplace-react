@@ -1,3 +1,7 @@
+const flexRow =  {
+    display:"flex",
+    alignItems:"center"
+}
 const flexRowSpace =  {
     display:"flex",
     justifyContent:"space-between",
@@ -5,5 +9,6 @@ const flexRowSpace =  {
 }
 
 export default {
-    flexRowSpace
+    flexRow,
+    flexRowSpace,
 }

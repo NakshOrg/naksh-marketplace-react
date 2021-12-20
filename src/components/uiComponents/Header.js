@@ -16,7 +16,7 @@ function Header() {
             </div>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'45%'}}>
                 <div className="header-nav-items">
-                    <NavLink to="browse">
+                    <NavLink style={{color:"#fff"}} to="/browse">
                         <div>BROWSE</div>
                     </NavLink>
                     <div>ABOUT</div>

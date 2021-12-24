@@ -6,6 +6,7 @@ import Browse from '../pages/browse/Browse';
 import NotFound from '../pages/notFound/NotFound';
 import NftDetails from '../pages/detailsPage/NftDetails';
 import SearchResults from '../pages/search/SearchResults';
+import UserProfile from '../pages/profile/UserProfile';
 
 export default function Navigation() {
 
@@ -19,6 +20,7 @@ export default function Navigation() {
             <Route path="/browse" element={<Browse navigate={navigate}/>} />
             <Route path="/nftdetails/:id" element={<NftDetails/>} />
             <Route path="/searchresults" element={<SearchResults/>} />
+            <Route path="/userprofile" element={<UserProfile/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

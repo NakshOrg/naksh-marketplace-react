@@ -1,0 +1,33 @@
+.moreNftHeading {
+    font-size: 30px;
+    font-family: Athelas-regular;
+    background-color: rgb(0, 5, 19);
+    position: absolute;
+    top: -22px;
+    left: 40%;
+    padding: 0 20px;
+}
+.detailsGradientOverlay {
+    position: absolute;
+    width: 60%;
+    top: 5%;
+    height: 50%;
+    background: linear-gradient(180deg, #379FFF 0%, rgba(55, 159, 255, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    left: 0%;
+    z-index: -1;
+}
+.detailsGradientOverlayPink {
+    position: absolute;
+    width: 60%;
+    top: 85%;
+    height: 50%;
+    background: linear-gradient(180deg, #F56394 0%, rgba(245, 99, 148, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    right: 0%;
+    z-index: -1;
+}

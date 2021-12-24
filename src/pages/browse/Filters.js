@@ -29,8 +29,10 @@ function Filters({ title }) {
                 title="Newest first"
                 content={
                     <React.Fragment>
-                        <div>Artform</div>
-                        <div>Artform</div>
+                        <div style={{color:"#fff", marginBottom:10}}>Newest first</div>
+                        <div style={{color:"#fff", marginBottom:10}}>Oldest first</div>
+                        <div style={{color:"#fff", marginBottom:10}}>Price - High to low</div>
+                        <div style={{color:"#fff"}}>Price - Low to high</div>
                     </React.Fragment>
                 }
             />

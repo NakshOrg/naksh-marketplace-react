@@ -6,7 +6,7 @@ import classes from './home.module.css';
 export default class Home extends Component {
     render() {
         return (
-            <Container>
+            <Container style={{marginTop:110}}>
                 <Row>
                     <Col lg={5} md={5} sm={12}>
                         <div>

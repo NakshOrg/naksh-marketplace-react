@@ -56,6 +56,24 @@
     padding-left: 45px;
 }
 
+.search-dropdown {
+  background: rgba(0, 5, 19, 0.7);
+  backdrop-filter: blur(20px);
+  position: absolute;
+  margin-top: 5px;
+  width: 90%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 20px;
+}
+
+.search-list-image {
+  height: 70px;
+  width: 70px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
 .logo {
     margin-right: 60px;
 }

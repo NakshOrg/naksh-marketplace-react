@@ -23,11 +23,18 @@ export default class NftDetails extends Component {
         const { isOverviewActive } = this.state;
 
         return (
-            <Container>
+            <Container style={{marginTop:105}}>
+                {/* overlay gradient  */}
+                <div className={classes.detailsGradientOverlay}/>
+                {/* overlay gradient  */}
+                <div className={classes.detailsGradientOverlayPink}/>
                 <Row>
                     <Col lg={7}>
-                        <div style={{height:"63.5%", width:"100%", textAlign:"center"}}>
+                        {/* <div style={{height:"63.5%", width:"100%", textAlign:"center"}}>
                             <img style={{maxWidth:"100%", maxHeight:"100%", borderRadius:6}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
+                        </div> */}
+                        <div style={{textAlign:"center"}}>
+                            <img style={{borderRadius:6, width:"63.5%"}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
                         </div>
                     </Col>
                     <Col lg={5}>
@@ -116,9 +123,44 @@ export default class NftDetails extends Component {
                         />
                     </Col>
                 </Row>
-                <div>More NFTs like this</div>
+                <div style={{ margin: "45px 0", position: "relative" }}>
+                    <div style={{height:2, width:"100%", backgroundColor:"#fff", opacity:0.16}}/>
+                    <div className={classes.moreNftHeading}>
+                        More NFTs like this
+                    </div>
+                </div>
                 <Row>
-                    <Col lg={4} md={3} sm={2} xs={1}>
+                    <Col lg={3} md={3} sm={2} xs={1}>
+                        <NftCard
+                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                            title={"Tanjore Painting"}
+                            nearFee={"31000Ⓝ"}
+                            price={"$121,000,000"}
+                            artistName={"Sharmila S"}
+                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                        />
+                    </Col>
+                    <Col lg={3} md={3} sm={2} xs={1}>
+                        <NftCard
+                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                            title={"Tanjore Painting"}
+                            nearFee={"31000Ⓝ"}
+                            price={"$121,000,000"}
+                            artistName={"Sharmila S"}
+                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                        />
+                    </Col>
+                    <Col lg={3} md={3} sm={2} xs={1}>
+                        <NftCard
+                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                            title={"Tanjore Painting"}
+                            nearFee={"31000Ⓝ"}
+                            price={"$121,000,000"}
+                            artistName={"Sharmila S"}
+                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                        />
+                    </Col>
+                    <Col lg={3} md={3} sm={2} xs={1}>
                         <NftCard
                             image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
                             title={"Tanjore Painting"}

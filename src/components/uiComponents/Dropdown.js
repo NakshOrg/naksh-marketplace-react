@@ -13,7 +13,7 @@ function Dropdown({ title, content }) {
                     <FiChevronDown size={20} />
                 </div>
             </DropDown.Toggle>
-            <DropDown.Menu id="dropdown-basic-content">
+            <DropDown.Menu style={{padding:15, fontSize:15, minWidth:'12rem'}} id="dropdown-basic-content">
                 {content}
             </DropDown.Menu>
         </DropDown>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import '@material/react-text-field/dist/text-field.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './components/uiComponents/Header';

@@ -15,3 +15,28 @@
     height: 32vh;
     object-fit: cover;
 }
+.iconContainer {
+    background:#fff;
+    height:32px;
+    width:32px;
+    border-radius:32px; 
+    justify-content:center; 
+    align-items:center;
+    display:flex;
+}
+.editBtn {
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    border: 1px solid rgb(255, 255, 255);
+    padding: 11px;
+    border-radius: 5px;
+    width: 150px;
+    margin: 60px auto;
+    cursor: pointer;
+}
+.sectionTitle {
+    font-family: 'Athelas-Bold';
+    font-size: 36px;
+    color: #fff;
+}

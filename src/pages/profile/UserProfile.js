@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-
+import { FiFacebook, FiGlobe } from 'react-icons/fi';
+import { BsInstagram } from 'react-icons/bs';
+      
 import NftCard from '../../components/explore/NftCard';
 import globalStyles from '../../globalStyles';
 import classes from './profile.module.css';
@@ -15,7 +17,7 @@ export default class UserProfile extends Component {
         }
     }
 
-    render() {
+    render() { 
 
         const { activeTab } = this.state;
 
@@ -36,6 +38,26 @@ export default class UserProfile extends Component {
                                     alt='profile'
                                 />
                                 <div style={{fontFamily:"Athelas-bold", fontSize:24, marginTop:10}}>Nicole Souza</div>
+                                <div style={{opacity:0.7, fontSize:13, color:"#fff", letterSpacing:1, marginTop:4}}>
+                                    krithi070981123.near
+                                </div>
+                                <div style={{opacity:0.9, fontSize:15, color:"#fff", letterSpacing:1, marginTop:17}}>
+                                    NFT enthusiast with over billion+ collections
+                                </div>
+                                <div style={{...globalStyles.flexRow, justifyContent:"center", marginTop:25}}>
+                                    <div className={classes.iconContainer}>
+                                        <BsInstagram color='#000' size={16}/>
+                                    </div>
+                                    <div style={{marginLeft:15}} className={classes.iconContainer}>
+                                        <FiFacebook color='#000' size={16}/>
+                                    </div>
+                                    <div style={{marginLeft:15}} className={classes.iconContainer}>
+                                        <FiGlobe color='#000' size={16}/>
+                                    </div>
+                                </div>
+                                <div onClick={() => this.props.navigate('/editprofile')} className={classes.editBtn}>
+                                    EDIT PROFILE
+                                </div>
                             </div>
                         </Col>
                         <Col lg={8}>

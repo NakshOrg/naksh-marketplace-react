@@ -22,7 +22,7 @@ export default function Navigation() {
             <Route path="/nftdetails/:id" element={<NftDetails/>} />
             <Route path="/searchresults" element={<SearchResults/>} />
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
-            <Route path="/editprofile" element={<EditProfile/>} />
+            <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

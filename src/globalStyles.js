@@ -7,8 +7,14 @@ const flexRowSpace =  {
     justifyContent:"space-between",
     alignItems:"center"
 }
+const flexCenter = {
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center"
+}
 
 export default {
     flexRow,
     flexRowSpace,
+    flexCenter
 }

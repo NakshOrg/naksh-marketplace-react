@@ -40,3 +40,10 @@
     font-size: 36px;
     color: #fff;
 }
+.label {
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:1px;
+    margin-top:35px;
+    margin-bottom:15px;
+}

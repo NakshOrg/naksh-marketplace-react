@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 
 import NftCard from '../../components/explore/NftCard';
-import { PrimaryBtn } from '../../components/uiComponents/Buttons';
+import { GradientBtn } from '../../components/uiComponents/Buttons';
 import nearIcon from "../../assets/svgs/near-icon.svg";
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
@@ -113,7 +113,7 @@ export default class NftDetails extends Component {
                                 </div>
                             </div>
                         </div>
-                        <PrimaryBtn
+                        <GradientBtn
                             content={
                                 <div>
                                     PURCHASE FOR 200 

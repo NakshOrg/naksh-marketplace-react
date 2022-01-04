@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi"
 
@@ -21,7 +20,11 @@ function Header() {
                         <div style={{letterSpacing:1.5}}>BROWSE</div>
                     </NavLink>
                     <div style={{letterSpacing:1.5}}>ABOUT<FiChevronDown size={15} color="#fff"/></div>
-                    <div style={{letterSpacing:1.5}}>RESOURCES<FiChevronDown size={15} color="#fff"/></div>
+                    <NavLink style={{color:"#fff"}} to="/blogs">
+                        <div style={{letterSpacing:1.5}}>
+                            RESOURCES<FiChevronDown size={15} color="#fff"/>
+                        </div>
+                    </NavLink>
                 </div>
                 <div 
                     style={{    

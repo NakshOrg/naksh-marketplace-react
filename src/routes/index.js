@@ -8,6 +8,7 @@ import NftDetails from '../pages/detailsPage/NftDetails';
 import SearchResults from '../pages/search/SearchResults';
 import UserProfile from '../pages/profile/UserProfile';
 import EditProfile from '../pages/profile/EditProfile';
+import Blogs from '../pages/blogs/Blogs';
 
 export default function Navigation() {
 
@@ -23,6 +24,7 @@ export default function Navigation() {
             <Route path="/searchresults" element={<SearchResults/>} />
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
+            <Route path="/blogs" element={<Blogs navigate={navigate}/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

@@ -11,7 +11,9 @@ function Header() {
     return (
         <div class="header">
             <div style={{display:'flex', alignItems:'center', width:'55%'}}>
-                <img className="logo" src={logo} alt="logo"/>
+                <NavLink style={{color:"#fff"}} to="/">
+                    <img className="logo" src={logo} alt="logo"/>
+                </NavLink>
                 <Search/>
             </div>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'45%'}}>
@@ -19,7 +21,11 @@ function Header() {
                     <NavLink style={{color:"#fff"}} to="/browse">
                         <div style={{letterSpacing:1.5}}>BROWSE</div>
                     </NavLink>
-                    <div style={{letterSpacing:1.5}}>ABOUT<FiChevronDown size={15} color="#fff"/></div>
+                    <NavLink style={{color:"#fff"}} to="/about">
+                        <div style={{letterSpacing:1.5}}>
+                            ABOUT<FiChevronDown size={15} color="#fff"/>
+                        </div>
+                    </NavLink>
                     <NavLink style={{color:"#fff"}} to="/blogs">
                         <div style={{letterSpacing:1.5}}>
                             RESOURCES<FiChevronDown size={15} color="#fff"/>

@@ -9,6 +9,7 @@ import SearchResults from '../pages/search/SearchResults';
 import UserProfile from '../pages/profile/UserProfile';
 import EditProfile from '../pages/profile/EditProfile';
 import Blogs from '../pages/blogs/Blogs';
+import About from '../pages/about/About';
 
 export default function Navigation() {
 
@@ -25,6 +26,7 @@ export default function Navigation() {
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
             <Route path="/blogs" element={<Blogs navigate={navigate}/>} />
+            <Route path="/about" element={<About navigate={navigate}/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

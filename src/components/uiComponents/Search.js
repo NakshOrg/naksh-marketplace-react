@@ -31,7 +31,7 @@ function Search() {
                 className="search-bar" 
                 placeholder="Search for NFTs and artists" 
             />
-            <FiSearch style={{opacity:0.8, position:'absolute', top:'25%', left:15}} size={19}/>
+            <FiSearch style={{opacity:0.8, position:'absolute', top:'24%', left:15}} size={20}/>
             { show ?
             <div className="search-dropdown">
                 <div>

@@ -8,14 +8,17 @@
     font-family: AthelasBold;
     font-size: 28px;
     margin-bottom: 15px;
+    letter-spacing: 1px;
 } 
 
 .weOfferCardDescription {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 100;
     line-height: 25px;
     margin-top: 2px;
-    text-align: center;
+    padding: 0 25px;
+    min-height: 100px;
+    letter-spacing: 0.1px;
 }
   
 .weOfferCardWrapper {
@@ -26,7 +29,7 @@
     text-align: center;
     flex-direction: column;
     justify-content: center;
-    height: 330px;
+    height: 280px;
     cursor: pointer;
     position: relative;
     /* background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%); */
@@ -38,7 +41,7 @@
   
 .weOfferCardWrapper:hover {
     /* background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%); */
-    height: 330px;
+    height: 280px;
 }
   
 .weOfferCardWrapperBlack {

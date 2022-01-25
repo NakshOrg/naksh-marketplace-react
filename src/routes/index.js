@@ -3,8 +3,9 @@ import { Route, Routes, useNavigate, useLocation, useParams } from 'react-router
 
 import Home from '../pages/home/Home';
 import Browse from '../pages/browse/Browse';
-import NotFound from '../pages/notFound/NotFound';
+import NotFound from '../pages/notFound/NotFound'; 
 import NftDetails from '../pages/detailsPage/NftDetails';
+import ArtistDetails from '../pages/detailsPage/ArtistDetails';
 import SearchResults from '../pages/search/SearchResults';
 import UserProfile from '../pages/profile/UserProfile';
 import EditProfile from '../pages/profile/EditProfile';
@@ -22,6 +23,7 @@ export default function Navigation() {
             <Route path="/" element={<Home/>} exact />
             <Route path="/browse" element={<Browse navigate={navigate}/>} />
             <Route path="/nftdetails/:id" element={<NftDetails/>} />
+            <Route path="/artistDetails/:id" element={<ArtistDetails/>} />
             <Route path="/searchresults" element={<SearchResults/>} />
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />

@@ -1,20 +1,21 @@
 .sectionTitle {
     font-family: Athelas-Bold;
-    font-size: 46px;
+    font-size: 42px;
     margin-top: 90px;
     margin-bottom: 25px;
     text-align: center;
 }
 .sectionCaption {
     font-family: Athelas-Bold;
-    font-size: 59px;
+    font-size: 52px;
     line-height: 60px;
-    letter-spacing: 1.3px;
+    letter-spacing: 0.5px;
+    width: 90%;
 }
 .sectionSubHeading {
-    font-size: 18px;
+    font-size: 17px;
     opacity: 0.7;
-    width: 80%;
-    margin-top: 20px;
-    letter-spacing: 0.5px;
+    width: 90%;
+    margin-top: 15px;
+    letter-spacing: 0.4px;
 }

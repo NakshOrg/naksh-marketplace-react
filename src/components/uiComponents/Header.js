@@ -8,6 +8,7 @@ import Search from './Search';
 import './uiComponents.css';
 
 function Header() {
+    
     return (
         <div class="header">
             <div style={{display:'flex', alignItems:'center', width:'55%'}}>

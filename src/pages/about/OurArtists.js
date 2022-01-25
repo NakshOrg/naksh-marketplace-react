@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 export default function OurArtists() {
     return (
-        <Fragment>
+        <Container>
             <div className={classes.sectionCaption}>
                 Explore our lineup of sensational artists from all across India
             </div>
@@ -62,6 +62,6 @@ export default function OurArtists() {
                 text="VIEW MORE"
                 style={{margin:"20px auto", fontFamily:"Athelas-Regular", borderRadius:2, fontSize:12, letterSpacing:"1px", textAlign:'center'}}
             />
-        </Fragment>
+        </Container>
     )
 }

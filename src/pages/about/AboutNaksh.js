@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Container } from 'react-bootstrap';
 
 import AboutCard from '../../components/about/AboutCard';
 import classes from './about.module.css';
 
 export default function AboutNaksh() {
     return (
-        <Fragment>
+        <Container>
             <div className={classes.sectionCaption}>
                 Naksh is constantly pushing the boundaries of what NFTs can do
             </div>
@@ -56,6 +56,6 @@ export default function AboutNaksh() {
                     <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
                 </Col>
             </Row>
-        </Fragment>
+        </Container>
     )
 }

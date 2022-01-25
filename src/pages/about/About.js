@@ -9,11 +9,11 @@ import classes from './about.module.css';
 export default class About extends Component {
     render() {
         return (
-            <Container style={{marginTop:160}}>
+            <div style={{marginTop:160}}>
                 {/* <AboutNaksh/> */}
                 {/* <OurArtists/> */}
                 <NearProtocol/>
-            </Container>
+            </div>
         )
     }
 }

@@ -28,6 +28,7 @@ body {
     margin: 0;
     color: #fff;
     background-image: linear-gradient(to top, #000513, #000513, #000513, #000513, #000513) !important;
+    background-color: #000513;
 }
 
 a {

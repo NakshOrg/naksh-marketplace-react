@@ -19,7 +19,18 @@ function List({type, image, title, icon, name}) {
     </div>
 }
 
-function Search() {
+export function MobileSearchInput() {
+    return <div style={{position:'relative', width:'100%'}}>
+        <input
+            style={{width:"100%"}}
+            className="search-bar" 
+            placeholder="Search for NFTs and artists" 
+        />
+        <FiSearch style={{opacity:0.8, position:'absolute', top:'24%', left:15}} size={20}/>
+    </div>
+}
+
+export function Search() {
 
     const [show, setShow] = useState(false);
 
@@ -79,5 +90,3 @@ function Search() {
         </div>
     )
 }
-
-export default Search;

@@ -17,7 +17,7 @@ export default class Home extends Component {
                                 <h1 className={classes.artSectionContent}>
                                     An NFT marketplace fuelled by art communities from all over India
                                 </h1>
-                                <div class="glow-on-hover" type="button" style={{zIndex:100}}>
+                                <div className="glow-on-hover" type="button" style={{zIndex:100}}>
                                     <div style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                                 </div>
                             </div>

@@ -103,6 +103,7 @@ export default class Blogs extends Component {
                             <img src={sendMessage} alt='sendMessage'/>
                         </div>
                     </Col>
+                    <div className={classes.helpCenterBottomGradient}/>
                 </Row>
             </Container>
         )

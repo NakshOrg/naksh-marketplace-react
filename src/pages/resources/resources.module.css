@@ -56,3 +56,16 @@
     left: 2%;
     z-index: -1;
 }
+
+.helpCenterBottomGradient {
+    position: absolute;
+    width: 30%;
+    height: 50%;
+    bottom: -40%;
+    right: 0%;
+    height: 60%;
+    background: linear-gradient(180deg, #F56394 100%, rgba(245, 99, 148, 0) 100%);
+    opacity: 0.3;
+    filter: blur(240px);
+    z-index: -1;
+}

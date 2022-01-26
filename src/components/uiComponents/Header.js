@@ -4,20 +4,20 @@ import { FiChevronDown } from "react-icons/fi"
 
 import logo from "../../assets/svgs/logo.svg";
 import near from "../../assets/svgs/connect-near.svg";
-import Search from './Search';
+import { Search } from './Search';
 import './uiComponents.css';
 
 function Header() {
     
     return (
-        <div class="header">
+        <div className="header">
             <div style={{display:'flex', alignItems:'center', width:'55%'}}>
                 <NavLink style={{color:"#fff"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
                 </NavLink>
-                <Search/>
+                {/* <Search/> */}
             </div>
-            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', width:'45%'}}>
+            <div className='header-nav-container'>
                 <div className="header-nav-items">
                     <NavLink style={{color:"#fff"}} to="/browse">
                         <div style={{letterSpacing:1.5}}>BROWSE</div>

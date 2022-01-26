@@ -2,35 +2,44 @@ import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { FiFacebook, FiGlobe, FiSearch } from 'react-icons/fi';
 import { BsInstagram } from 'react-icons/bs';
-import axios from 'axios';
 
+import { _getAllBlogs } from '../../services/axios/api';
 import BlogCard from '../../components/blogs/BlogCard';
 import globalStyles from '../../globalStyles';
 import classes from './resources.module.css';
 import Search from '../../components/uiComponents/Search';
+import Spinner from '../../components/uiComponents/Spinner';
 
 export default class Blogs extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
             blogs: []
         }
     }
 
     componentDidMount() {
-        axios.get(process.env.REACT_APP_BASE_URL+'/client/landing/data')
+
+        _getAllBlogs()
         .then(({ data }) => {
             this.setState({blogs: data.mediumData})
+            this.setState({loading:false});
         })
         .catch(err => {
             console.log(err);
-        })
+            this.setState({loading:false});
+        });
     }
 
     render() { 
 
-        const { blogs } = this.state;
+        const { loading, blogs } = this.state;
+
+        if(loading) {
+            return <Spinner/>;
+        }
 
         return (
             <Container style={{marginTop:95}}>

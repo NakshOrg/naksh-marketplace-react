@@ -9,7 +9,8 @@ import ArtistDetails from '../pages/detailsPage/ArtistDetails';
 import SearchResults from '../pages/search/SearchResults';
 import UserProfile from '../pages/profile/UserProfile';
 import EditProfile from '../pages/profile/EditProfile';
-import Blogs from '../pages/blogs/Blogs';
+import Blogs from '../pages/resources/Blogs';
+import HelpCenter from '../pages/resources/HelpCenter';
 import About from '../pages/about/About';
 
 export default function Navigation() {
@@ -28,6 +29,7 @@ export default function Navigation() {
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
             <Route path="/blogs" element={<Blogs navigate={navigate}/>} />
+            <Route path="/helpcenter" element={<HelpCenter navigate={navigate}/>} />
             <Route path="/about" element={<About navigate={navigate}/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>

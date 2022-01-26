@@ -1,0 +1,58 @@
+.sectionTitle {
+    font-family: 'Athelas-Bold';
+    font-size: 42px;
+}
+
+.sectionCard {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    backdrop-filter: blur(100px);
+    border-radius: 5px;
+    padding: 25px 22px;
+    height: 100%;
+}
+
+.sectionCardTitle {
+    font-family: 'Athelas-Bold';
+    font-size: 24px;
+    width: 56%;
+    line-height: 26px;
+}
+
+.sectionCardDescription {
+    font-weight: 100;
+    font-size: 16px;
+    margin-top: 12px;
+    width: 80%;
+}
+
+.iconsContainer > div {
+    background-color: #fff;
+    border-radius: 35px;
+    height: 35px;
+    width: 35px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-right: 10px;
+}
+
+.sendBtn {
+    background: #FFFFFF;
+    border-radius: 4px;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.helpCenterTopGradient {
+    position: absolute;
+    width: 45%;
+    top: 5%;
+    height: 60%;
+    background: linear-gradient(180deg, #379FFF 10%, rgba(55, 159, 255, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    left: 2%;
+    z-index: -1;
+}

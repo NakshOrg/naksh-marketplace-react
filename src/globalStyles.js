@@ -1,3 +1,8 @@
+// FONT SIZES
+// Primary Headings - 52px as 42px 
+// Primary Sub Headings - 28px as 24px 
+// Primary Caption - 20px as 16px 
+
 const flexRow =  {
     display:"flex",
     alignItems:"center"

@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import BlogCard from '../../components/blogs/BlogCard';
 import globalStyles from '../../globalStyles';
-import classes from './blogs.module.css';
+import classes from './resources.module.css';
 import Search from '../../components/uiComponents/Search';
 
 export default class Blogs extends Component {

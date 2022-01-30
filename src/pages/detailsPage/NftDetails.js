@@ -2,6 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { utils } from 'near-api-js';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
@@ -9,18 +12,118 @@ import nearIcon from "../../assets/svgs/near-icon.svg";
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 
-export default class NftDetails extends Component {
+class NftDetails extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
+            nft: null,
             isOverviewActive: true
         }
     }
 
+    componentDidMount() {
+
+        if(this.props.walletInfo) {
+            this.fetchNfts();
+        }
+
+    }
+
+    componentDidUpdate(prevProps) {
+
+        if(prevProps.walletInfo !== this.props.walletInfo) {
+            this.fetchNfts();
+        }
+
+    }
+
+    fetchNfts = () => {
+
+        this.props.walletInfo.account()
+        .viewFunction(
+            'nft1.abhishekvenunathan.testnet', 
+            'nft_tokens', 
+            {
+                from_index: "0",
+                limit: 1000 
+            }
+        )
+        .then(res => {
+            this.fetchListedNfts(res);
+        })
+        .catch(err => {
+            this.setState({loading:false});
+            console.log(err);
+        });
+
+    }
+
+    fetchListedNfts = (allNfts) => {
+
+        this.props.walletInfo.account()
+        .viewFunction(
+            'market1.abhishekvenunathan.testnet', 
+            'get_sales_by_nft_contract_id', 
+            { 
+                nft_contract_id: 'nft1.abhishekvenunathan.testnet',
+                from_index: "0", 
+                limit: 1000 
+            }
+        )
+        .then(res => {
+            
+            const listedNfts = res;
+            
+            allNfts.map(nftItem => {
+                const singleItem = listedNfts.find(t => t.token_id === nftItem.token_id);
+                if(singleItem) {
+                    nftItem["listed"] = true;
+                    nftItem["price"] =  singleItem.sale_conditions;
+                } else {
+                    nftItem["listed"] = false;
+                    nftItem["price"] = "NIL";
+                }
+            });
+
+            const item = allNfts.find(item => item.token_id === this.props.params.id);
+            item.metadata['extra'] = JSON.parse(item.metadata.extra);        
+        
+            this.setState({nft:item, loading:false});
+        })
+        .catch(err => {
+            this.setState({loading:false});
+            console.log(err);
+        });
+    }
+
+    handleBuyNft = async () => {
+
+        const gas = 200000000000000;
+        const attachedDeposit = utils.format.parseNearAmount("1");
+        const FunctionCallOptions = {
+            contractId: 'market1.abhishekvenunathan.testnet',
+            methodName: 'offer',
+            args: {
+                nft_contract_id: 'nft1.abhishekvenunathan.testnet',
+                token_id: this.state.nft.token_id
+            },
+            gas,
+            attachedDeposit
+        };
+
+        const data = await this.props.walletInfo.account().functionCall(FunctionCallOptions);
+
+    }
+
     render() {
 
-        const { isOverviewActive } = this.state;
+        const { isOverviewActive, nft, loading } = this.state;
+
+        console.log(nft);
+
+        if(loading) return <div>loading...</div>;
 
         return (
             <Container style={{marginTop:105}}>
@@ -34,7 +137,7 @@ export default class NftDetails extends Component {
                             <img style={{maxWidth:"100%", maxHeight:"100%", borderRadius:6}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
                         </div> */}
                         <div style={{textAlign:"center"}}>
-                            <img style={{borderRadius:6, width:"63.5%"}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
+                            <img style={{borderRadius:6, width:"63.5%"}} src={nft.metadata.media} alt='nft'/>
                         </div>
                     </Col>
                     <Col lg={5}>
@@ -114,6 +217,7 @@ export default class NftDetails extends Component {
                             </div>
                         </div>
                         <GradientBtn
+                            onClick={this.handleBuyNft}
                             content={
                                 <div>
                                     PURCHASE FOR 200 
@@ -174,4 +278,16 @@ export default class NftDetails extends Component {
             </Container>
         )
     }
+}
+
+export default function NftDetailsWrapper(props) {
+
+    const walletInfo = useSelector(state => state.nearReducer.walletInfo);
+    const params = useParams();
+    
+    return <NftDetails
+        walletInfo={walletInfo}
+        params={params}
+    />;
+
 }

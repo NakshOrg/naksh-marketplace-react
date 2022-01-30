@@ -17,13 +17,12 @@ export default function Navigation() {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const params = useParams();
 
     return (
         <Routes>
             <Route path="/" element={<Home/>} exact />
             <Route path="/browse" element={<Browse navigate={navigate}/>} />
-            <Route path="/nftdetails/:id" element={<NftDetails/>} />
+            <Route path="/nftdetails/:id" element={<NftDetails/>}/>
             <Route path="/artistDetails/:id" element={<ArtistDetails/>} />
             <Route path="/searchresults" element={<SearchResults/>} />
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />

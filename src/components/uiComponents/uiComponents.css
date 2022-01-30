@@ -38,11 +38,11 @@
 }
 
 .header-nav-container {
-  display: none;
-  /* display:flex; 
+  /* display: none; */
+  display:flex; 
   align-items:center;
   justify-content:space-between;
-  width:45%; */
+  width:45%;
 }
 
 .header-nav-items {

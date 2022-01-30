@@ -1,0 +1,2 @@
+export const IS_WALLET_SIGNED_IN = 'IS_WALLET_SIGNED_IN';
+export const GET_WALLET_INFO = 'GET_WALLET_INFO';

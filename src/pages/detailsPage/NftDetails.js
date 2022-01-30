@@ -8,9 +8,11 @@ import { utils } from 'near-api-js';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
+import Spinner from '../../components/uiComponents/Spinner';
 import nearIcon from "../../assets/svgs/near-icon.svg";
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
+import { helpers } from '../../constants';
 
 class NftDetails extends Component {
 
@@ -89,7 +91,7 @@ class NftDetails extends Component {
 
             const item = allNfts.find(item => item.token_id === this.props.params.id);
             item.metadata['extra'] = JSON.parse(item.metadata.extra);        
-        
+            console.log(item);
             this.setState({nft:item, loading:false});
         })
         .catch(err => {
@@ -101,7 +103,7 @@ class NftDetails extends Component {
     handleBuyNft = async () => {
 
         const gas = 200000000000000;
-        const attachedDeposit = utils.format.parseNearAmount("1");
+        const attachedDeposit = utils.format.parseNearAmount(this.state.nft.price);
         const FunctionCallOptions = {
             contractId: 'market1.abhishekvenunathan.testnet',
             methodName: 'offer',
@@ -117,13 +119,84 @@ class NftDetails extends Component {
 
     }
 
+    overview = () => {
+
+        const { nft } = this.state;
+
+        return <>
+            <div style={{fontWeight:200, lineHeight:"25px", letterSpacing:"0.3px", marginTop:20, opacity:0.95}}>
+                {nft?.metadata?.description}
+            </div>
+            {/* line seperator */}
+            <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
+            <div style={{marginTop:13}}>
+                <div style={{fontSize:14, opacity:0.66}}>Quantity</div>
+                <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>1 available</div>
+            </div>
+            <div style={{marginTop:18, fontWeight:400}}>
+                <div style={{fontSize:14, opacity:0.66}}>Proof of authenticity</div>
+                <div style={{marginTop:5}}>
+                    <span style={{marginRight:10, borderBottom:"1px solid #fff", paddingBottom:1}}>kaer10202kaskdhfcnzaleleraoao</span>
+                    <span><FiExternalLink size={22} color='#fff'/></span>
+                </div>
+            </div>
+            {/* line seperator */}
+            <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:15}}/>
+            <div style={{marginBottom:30, marginTop:14, ...globalStyles.flexRow}}>
+                <div>
+                    <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Artist</div>
+                    <div style={globalStyles.flexRow}>
+                        <img
+                            style={{height:30, width:30, borderRadius:30}}
+                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
+                            alt="artist"
+                        />
+                        <div style={{fontSize:16, marginLeft:10}}>Lata Mangeskar</div>
+                    </div>
+                </div>
+                <div style={{marginLeft:30}}>
+                    <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
+                    <div style={globalStyles.flexRow}>
+                        <img
+                            style={{height:30, width:30, borderRadius:30}}
+                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
+                            alt="artist"
+                        />
+                        <div style={{fontSize:16, marginLeft:10}}>{nft?.owner_id}</div>
+                    </div>
+                </div>
+            </div>
+        </> 
+    }
+
+    otherDetails = () => {
+
+        const { nft } = this.state;
+
+        return nft?.metadata?.extra?.custom?.map(item => {
+            return <>
+                <div style={{marginTop:13}}>
+                    <div style={{fontSize:14, opacity:0.66}}>{item.name}</div>
+                    {item.type === 1 ?
+                    <div onClick={() => helpers.openInNewTab(item.fileUrl)} style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, cursor:"pointer", letterSpacing:"0.5px", display:"flex"}}>
+                        <div style={{marginRight:10, borderBottom:"1px solid #fff", paddingBottom:1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{item.fileUrl}</div>
+                        <div><FiExternalLink size={22} color='#fff'/></div>
+                    </div> :
+                    <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>
+                        {item?.text || item?.date}
+                    </div>}
+                </div>
+                <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
+            </>
+        })
+        
+    }
+
     render() {
 
         const { isOverviewActive, nft, loading } = this.state;
 
-        console.log(nft);
-
-        if(loading) return <div>loading...</div>;
+        if(loading) return <Spinner/>;
 
         return (
             <Container style={{marginTop:105}}>
@@ -142,7 +215,7 @@ class NftDetails extends Component {
                     </Col>
                     <Col lg={5}>
                         <div style={globalStyles.flexRowSpace}>
-                            <div style={{fontFamily:"Athelas-Bold", fontSize:36}}>Sparkle Twinkle</div>
+                            <div style={{fontFamily:"Athelas-Bold", fontSize:36}}>{nft?.metadata?.title}</div>
                             <div>
                                 <span style={{backgroundColor:"#fff", borderRadius:100, padding:6}}>
                                     <FiBookmark size={22} color="#130F26"/>
@@ -154,8 +227,8 @@ class NftDetails extends Component {
                         </div>
                         <div style={{marginTop:5}}>
                             <span style={{fontSize:15, opacity:0.6}}>Price:</span> 
-                            <span style={{marginLeft:5, fontSize:17}}>200 <img style={{marginTop:-2, marginLeft:-1}} src={nearIcon} alt="near"/></span>
-                            <span style={{marginLeft:10, fontSize:15, opacity:0.6}}>($2500)</span>
+                            <span style={{marginLeft:5, fontSize:17}}>{nft?.price} <img style={{marginTop:-2, marginLeft:-1}} src={nearIcon} alt="near"/></span>
+                            <span style={{marginLeft:10, fontSize:15, opacity:0.6}}>{`($${nft?.price * 10.43})`}</span>
                         </div>
                         <div>
                             <div style={{...globalStyles.flexRow, marginTop:20}}>
@@ -173,49 +246,7 @@ class NftDetails extends Component {
                                 style={{height:3, background:"#fff", width:8, borderRadius:100, marginTop:2}}
                             /> 
                         </div>
-                        <div style={{fontWeight:200, lineHeight:"25px", letterSpacing:"0.3px", marginTop:20, opacity:0.95}}>
-                            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Velit officia consequat duis.
-                            Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Velit officia consequat duis sunt nostrud...
-                        </div>
-                        {/* line seperator */}
-                        <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
-                        <div style={{marginTop:13}}>
-                            <div style={{fontSize:14, opacity:0.66}}>Quantity</div>
-                            <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>3 available</div>
-                        </div>
-                        <div style={{marginTop:18, fontWeight:400}}>
-                            <div style={{fontSize:14, opacity:0.66}}>Proof of authenticity</div>
-                            <div style={{marginTop:5}}>
-                                <span style={{marginRight:10, borderBottom:"1px solid #fff", paddingBottom:1}}>kaer10202kaskdhfcnzaleleraoao</span>
-                                <span><FiExternalLink size={22} color='#fff'/></span>
-                            </div>
-                        </div>
-                        {/* line seperator */}
-                        <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:15}}/>
-                        <div style={{marginBottom:30, marginTop:14, ...globalStyles.flexRow}}>
-                            <div>
-                                <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Artist</div>
-                                <div style={globalStyles.flexRow}>
-                                    <img
-                                        style={{height:30, width:30, borderRadius:30}}
-                                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
-                                        alt="artist"
-                                    />
-                                    <div style={{fontSize:16, marginLeft:10}}>Lata Mangeskar</div>
-                                </div>
-                            </div>
-                            <div style={{marginLeft:30}}>
-                                <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
-                                <div style={globalStyles.flexRow}>
-                                    <img
-                                        style={{height:30, width:30, borderRadius:30}}
-                                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
-                                        alt="artist"
-                                    />
-                                    <div style={{fontSize:16, marginLeft:10}}>Lata Mangeskar</div>
-                                </div>
-                            </div>
-                        </div>
+                        {isOverviewActive ? this.overview() : this.otherDetails()}
                         <GradientBtn
                             onClick={this.handleBuyNft}
                             content={

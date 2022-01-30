@@ -5,6 +5,7 @@ import uuid from 'react-uuid';
 
 import NftCard from '../../components/explore/NftCard';
 import ArtistCard from '../../components/explore/ArtistCard';
+import Spinner from '../../components/uiComponents/Spinner';
 import classes from './browse.module.css';
 import Filters from './Filters';
 
@@ -13,7 +14,7 @@ class Browse extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
             allNfts: []
         }
     }
@@ -46,7 +47,7 @@ class Browse extends Component {
             }
         )
         .then(res => {
-            this.setState({allNfts:res});
+            this.setState({allNfts:res, loading:false});
         })
         .catch(err => {
             this.setState({loading:false});
@@ -74,6 +75,9 @@ class Browse extends Component {
     }
 
     render() {
+
+        if(this.state.loading) return <Spinner/>;
+
         return (
             <Container style={{marginTop:95}}>
                 <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
@@ -86,11 +90,6 @@ class Browse extends Component {
                         {this.renderNfts()}
                     </Row>            
                 </div>
-                {/* <Row>
-                    <Col lg={5} md={5} sm={12}>, marginTop:13
-                        <NftCard/>
-                    </Col>
-                </Row> */}
             </Container>
         )
     }

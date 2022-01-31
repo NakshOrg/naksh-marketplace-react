@@ -228,7 +228,7 @@ class NftDetails extends Component {
                         <div style={{marginTop:5}}>
                             <span style={{fontSize:15, opacity:0.6}}>Price:</span> 
                             <span style={{marginLeft:5, fontSize:17}}>{nft?.price} <img style={{marginTop:-2, marginLeft:-1}} src={nearIcon} alt="near"/></span>
-                            <span style={{marginLeft:10, fontSize:15, opacity:0.6}}>{`($${nft?.price * 10.43})`}</span>
+                            {/* <span style={{marginLeft:10, fontSize:15, opacity:0.6}}>{`($${nft?.price * 10.43})`}</span> */}
                         </div>
                         <div>
                             <div style={{...globalStyles.flexRow, marginTop:20}}>

@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 export default function OurArtists() {
     return (
-        <Container>
+        <Container style={{marginTop:160}}>
             <div className={classes.sectionCaption}>
                 Explore our lineup of sensational artists from all across India
             </div>

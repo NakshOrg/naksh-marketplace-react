@@ -6,7 +6,7 @@ import classes from './about.module.css';
 
 export default function AboutNaksh() {
     return (
-        <Container>
+        <Container style={{marginTop:160}}>
             <div className={classes.sectionCaption}>
                 Naksh is constantly pushing the boundaries of what NFTs can do
             </div>

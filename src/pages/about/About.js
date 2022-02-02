@@ -10,9 +10,9 @@ export default class About extends Component {
     render() {
         return (
             <div style={{marginTop:160}}>
-                {/* <AboutNaksh/> */}
+                <AboutNaksh/>
                 {/* <OurArtists/> */}
-                <NearProtocol/>
+                {/* <NearProtocol/> */}
             </div>
         )
     }

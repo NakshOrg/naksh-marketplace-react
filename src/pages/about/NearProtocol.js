@@ -10,7 +10,7 @@ import classes from './about.module.css';
 export default function NearProtocol() {
 
     return (
-        <Container fluid>
+        <Container style={{marginTop:160}} fluid>
             <Row>
                 <Col style={{paddingLeft:120}} lg={5}>
                     <div style={{fontFamily:'Athelas-Bold', fontSize:42}}>Why NEAR?</div>

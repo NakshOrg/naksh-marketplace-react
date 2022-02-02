@@ -23,13 +23,14 @@ export default class Blogs extends Component {
     componentDidMount() {
 
         _getAllBlogs()
-        .then(({ data }) => {
-            this.setState({blogs: data.mediumData})
-            this.setState({loading:false});
+        .then(res => res.json())
+        .then(res => {
+            this.setState({blogs: res.mediumData})
+            this.setState({loading: false});
         })
         .catch(err => {
             console.log(err);
-            this.setState({loading:false});
+            this.setState({loading: false});
         });
     }
 

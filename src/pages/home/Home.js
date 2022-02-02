@@ -12,7 +12,7 @@ export default class Home extends Component {
             <Container fluid style={{height:"100vh"}}>
                 <Row>
                     <Col style={{display:"flex"}} lg={5} md={5} sm={12}>
-                        <div style={{alignSelf:"center", paddingLeft:105}}>
+                        <div style={{alignSelf:"center", paddingLeft:75}}>
                             <div className={classes.artSectionTitle}>
                                 <h1 className={classes.artSectionContent}>
                                     An NFT marketplace fuelled by art communities from all over India

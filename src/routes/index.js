@@ -11,7 +11,9 @@ import UserProfile from '../pages/profile/UserProfile';
 import EditProfile from '../pages/profile/EditProfile';
 import Blogs from '../pages/resources/Blogs';
 import HelpCenter from '../pages/resources/HelpCenter';
-import About from '../pages/about/About';
+import AboutNaksh from '../pages/about/AboutNaksh';
+import OurArtists from '../pages/about/OurArtists';
+import NearProtocol from '../pages/about/NearProtocol';
 
 export default function Navigation() {
 
@@ -29,7 +31,9 @@ export default function Navigation() {
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
             <Route path="/blogs" element={<Blogs navigate={navigate}/>} />
             <Route path="/helpcenter" element={<HelpCenter navigate={navigate}/>} />
-            <Route path="/about" element={<About navigate={navigate}/>} />
+            <Route path="/aboutnaksh" element={<AboutNaksh/>} />
+            <Route path="/ourartists" element={<OurArtists/>} />
+            <Route path="/nearprotocol" element={<NearProtocol/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

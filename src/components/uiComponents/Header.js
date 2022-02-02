@@ -1,20 +1,34 @@
-import React from 'react';
-import { NavLink } from "react-router-dom";
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi"
 import { useSelector, useDispatch } from 'react-redux';
 
 import logo from "../../assets/svgs/logo.svg";
 import near from "../../assets/svgs/connect-near.svg";
+import profileIcon from "../../assets/svgs/profile-icon.svg";
 import { Search } from './Search';
 import configs from '../../configs';
 import * as actionTypes from '../../redux/actions/actionTypes';
 import './uiComponents.css';
+import { Dropdown } from 'react-bootstrap';
 
 function Header() {
     
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
+
+    const menuStyle = {
+        padding:15,
+        fontSize:15, 
+        // background: "rgba(0, 5, 19, 0.7)", 
+        backdropFilter: "blur(20px)",
+        // transform: "translate(0px, 45px)",
+        marginTop: 12,
+        borderTopLeftRadius: "0px",
+        borderTopRightRadius: "0px"
+    }
 
     function walletSignIn() {
         if(walletInfo) {
@@ -32,7 +46,7 @@ function Header() {
 
     return (
         <div className="header">
-            <div style={{display:'flex', alignItems:'center', width:'55%'}}>
+            <div style={{display:'flex', alignItems:'center', width:'50%'}}>
                 <NavLink style={{color:"#fff"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
                 </NavLink>
@@ -40,22 +54,44 @@ function Header() {
             </div>
             <div className='header-nav-container'>
                 <div className="header-nav-items">
-                    <NavLink style={{color:"#fff"}} to="/browse">
-                        <div style={{letterSpacing:1.5}}>BROWSE</div>
-                    </NavLink>
-                    <NavLink style={{color:"#fff"}} to="/about">
-                        <div style={{letterSpacing:1.5}}>
+                    <Dropdown className="d-inline mx-2">
+                        <NavLink style={{color:"#fff"}} to="/browse">
+                            <Dropdown.Toggle style={{letterSpacing:1.5, fontSize:12, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                                BROWSE
+                            </Dropdown.Toggle>
+                        </NavLink>
+                    </Dropdown>
+                    <Dropdown className="d-inline mx-2">
+                        <Dropdown.Toggle style={{letterSpacing:1.5, fontSize:12, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                             ABOUT<FiChevronDown size={15} color="#fff"/>
-                        </div>
-                    </NavLink>
-                    <NavLink style={{color:"#fff"}} to="/blogs">
-                        <div style={{letterSpacing:1.5}}>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
+                            <Dropdown.Item onClick={() => navigate("/aboutnaksh")}>About Naksh</Dropdown.Item>
+                            <Dropdown.Item onClick={() => navigate("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
+                            <Dropdown.Item onClick={() => navigate("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown className="d-inline mx-2">
+                        <Dropdown.Toggle style={{letterSpacing:1.5, fontSize:12, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                             RESOURCES<FiChevronDown size={15} color="#fff"/>
-                        </div>
-                    </NavLink>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
+                            <Dropdown.Item onClick={() => navigate("/blogs")}>Blogs</Dropdown.Item>
+                            <Dropdown.Item onClick={() => navigate("/helpcenter")} style={{marginTop:15}}>Help Center</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
                 {isWalletSignedIn ?
-                <div onClick={walletSignOut}>Disconnect</div> :
+                <Dropdown className="d-inline mx-2">
+                    <Dropdown.Toggle style={{backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                        <img src={profileIcon} alt="profileIcon"/>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu style={{padding:15, fontSize:15}} id="dropdown-basic-content">
+                        <Dropdown.Item onClick={() => navigate("/userprofile")}>View Profile</Dropdown.Item>
+                        <Dropdown.Item onClick={walletSignOut} style={{marginTop:15}}>Log Out</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+                :
                 <div 
                     onClick={walletSignIn}
                     style={{    

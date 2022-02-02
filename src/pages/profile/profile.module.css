@@ -47,15 +47,13 @@
     margin-top:35px;
     margin-bottom:15px;
 }
-.gradientCover {
+.gradientCover1 {
     background: linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%);
     opacity: 0.9;
-    border-radius: 8px;
-    height: 70px;
-    margin-top: 10px;
-    display:flex; 
-    align-items:center; 
-    justify-content:center;
+    height: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
 }
 .color1 {

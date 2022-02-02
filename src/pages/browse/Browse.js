@@ -8,6 +8,7 @@ import ArtistCard from '../../components/explore/ArtistCard';
 import Spinner from '../../components/uiComponents/Spinner';
 import classes from './browse.module.css';
 import Filters from './Filters';
+import NearHelperFunctions from '../../services/nearHelperFunctions';
 
 class Browse extends Component {
 
@@ -15,7 +16,8 @@ class Browse extends Component {
         super(props);
         this.state = {
             loading: true,
-            allNfts: []
+            allNfts: [],
+            filterData: []
         }
     }
 
@@ -37,21 +39,22 @@ class Browse extends Component {
 
     fetchNfts = () => {
 
-        this.props.walletInfo.account()
-        .viewFunction(
-            'nft1.abhishekvenunathan.testnet', 
-            'nft_tokens', 
-            { 
-                from_index: "0", 
-                limit: 1000 
-            }
-        )
+        const functions = new NearHelperFunctions(this.props.walletInfo); 
+        
+        functions.getAllNfts()
         .then(res => {
-            this.setState({allNfts:res, loading:false});
+            const reversedAllNfts = [...res];
+            const reversedFilterNfts = [...res];
+            this.setState({
+                allNfts:reversedAllNfts.reverse(), 
+                filterData:reversedFilterNfts.reverse(), 
+                loading:false
+            });
         })
         .catch(err => {
-            this.setState({loading:false});
             console.log(err);
+            alert("something went wrong!");
+            this.setState({loading:false});
         });
 
     }

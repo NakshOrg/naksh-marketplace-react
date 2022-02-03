@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     isWalletSignedIn: false,
-    walletInfo: null
+    walletInfo: null,
+    userData: null
 }
 
 const nearReducer = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const nearReducer = (state = initialState, action) => {
             return {
                 ...state,
                 walletInfo: action.payload
+            }
+        case actionTypes.USER_DATA:
+            return {
+                ...state,
+                userData: action.payload
             }
         default: return state;
     }

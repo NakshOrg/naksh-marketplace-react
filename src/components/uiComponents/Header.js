@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import logo from "../../assets/svgs/logo.svg";
 import near from "../../assets/svgs/connect-near.svg";
-import profileIcon from "../../assets/svgs/profile-icon.svg";
+import profileIcon from "../../assets/svgs/profile-icon-big.svg";
 import { Search } from './Search';
 import configs from '../../configs';
 import * as actionTypes from '../../redux/actions/actionTypes';
@@ -18,6 +18,7 @@ function Header() {
     const navigate = useNavigate();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
+    const userData = useSelector(state => state.nearReducer.userData);
 
     const menuStyle = {
         padding:15,
@@ -84,7 +85,8 @@ function Header() {
                 {isWalletSignedIn ?
                 <Dropdown className="d-inline mx-2">
                     <Dropdown.Toggle style={{backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
-                        <img src={profileIcon} alt="profileIcon"/>
+                        <img style={{height:40, width:40, borderRadius:40, objectFit:"cover"}} src={userData?.image ?? profileIcon} alt="profileIcon"/>
+                        {" "}<FiChevronDown size={15} color="#fff"/>
                     </Dropdown.Toggle>
                     <Dropdown.Menu style={{padding:15, fontSize:15}} id="dropdown-basic-content">
                         <Dropdown.Item onClick={() => navigate("/userprofile")}>View Profile</Dropdown.Item>

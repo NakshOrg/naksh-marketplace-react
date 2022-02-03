@@ -10,6 +10,7 @@ import MaterialInput from '../../components/uiComponents/MaterialInput';
 import Spinner from '../../components/uiComponents/Spinner';
 import { helpers } from '../../constants';
 import globalStyles from '../../globalStyles';
+import * as actionTypes from '../../redux/actions/actionTypes';
 import { _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws } from '../../services/axios/api';
 import classes from './profile.module.css';
 
@@ -147,7 +148,8 @@ class EditProfile extends Component {
 
     updateArtist = (data) => {
         _updateArtist(this.state.artistId, data)
-        .then(res => {
+        .then(({ data: { artist }}) => {
+            this.props.updateUserData(artist);
             this.setState({loading:false});
             this.props.navigate('/userprofile');
             // this.props.alert.success('Artist updated successfully!', {timeout:2000});
@@ -295,6 +297,12 @@ class EditProfile extends Component {
     }
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        updateUserData: (payload) => dispatch({type: actionTypes.USER_DATA, payload}),
+    }
+};
+
 const mapStateToProps = state => {
     return {
         walletInfo: state.nearReducer.walletInfo,
@@ -302,4 +310,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps, null)(EditProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

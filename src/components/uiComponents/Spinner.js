@@ -4,7 +4,7 @@ import "./uiComponents.css";
 
 function Spinner() {
   return (
-    <div class="loader"></div>
+    <div className="loader"></div>
   );
 }
 

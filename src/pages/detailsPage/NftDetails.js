@@ -3,16 +3,20 @@ import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { utils } from 'near-api-js';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
 import Spinner from '../../components/uiComponents/Spinner';
 import nearIcon from "../../assets/svgs/near-icon.svg";
+import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
+import { _getAllArtists } from '../../services/axios/api';
+import NearHelperFunctions from '../../services/nearHelperFunctions';
+import uuid from 'react-uuid';
 
 class NftDetails extends Component {
 
@@ -21,6 +25,8 @@ class NftDetails extends Component {
         this.state = {
             loading: true,
             nft: null,
+            ownerData: null,
+            moreNfts: [],
             isOverviewActive: true
         }
     }
@@ -28,7 +34,7 @@ class NftDetails extends Component {
     componentDidMount() {
 
         if(this.props.walletInfo) {
-            this.fetchNfts();
+            this.fetchNft();
         }
 
     }
@@ -36,70 +42,43 @@ class NftDetails extends Component {
     componentDidUpdate(prevProps) {
 
         if(prevProps.walletInfo !== this.props.walletInfo) {
-            this.fetchNfts();
+            this.fetchNft();
         }
 
     }
 
-    fetchNfts = () => {
+    fetchNft = () => {
 
-        this.props.walletInfo.account()
-        .viewFunction(
-            'nft1.abhishekvenunathan.testnet', 
-            'nft_tokens', 
-            {
-                from_index: "0",
-                limit: 1000 
-            }
-        )
-        .then(res => {
-            this.fetchListedNfts(res);
-        })
-        .catch(err => {
-            this.setState({loading:false});
-            console.log(err);
-        });
+        const functions = new NearHelperFunctions(this.props.walletInfo); 
 
-    }
-
-    fetchListedNfts = (allNfts) => {
-
-        this.props.walletInfo.account()
-        .viewFunction(
-            'market1.abhishekvenunathan.testnet', 
-            'get_sales_by_nft_contract_id', 
-            { 
-                nft_contract_id: 'nft1.abhishekvenunathan.testnet',
-                from_index: "0", 
-                limit: 1000 
-            }
-        )
-        .then(res => {
+        functions.getNftDetails()
+        .then(nfts => {
+            console.log(nfts, "nfts");
+            const nft = nfts.find(item => item.token_id === this.props.params.id);
+            const moreNfts = nfts.filter(item => item.token_id !== this.props.params.id);
             
-            const listedNfts = res;
-            
-            allNfts.map(nftItem => {
-                const singleItem = listedNfts.find(t => t.token_id === nftItem.token_id);
-                if(singleItem) {
-                    nftItem["listed"] = true;
-                    nftItem["price"] =  singleItem.sale_conditions;
-                } else {
-                    nftItem["listed"] = false;
-                    nftItem["price"] = "NIL";
-                }
+            _getAllArtists({wallet: nft?.owner_id, sortBy: 'createdAt', sort: -1})
+            .then(res => {
+                res.data.artists.length !== 0 && this.setState({ownerData: res.data.artists[0]});
+                this.setState({
+                    nft, 
+                    moreNfts: moreNfts.reverse(),
+                    loading:false
+                });
+            })
+            .catch(err => {
+                alert("something went wrong!");
+                this.setState({loading:false});
             });
-
-            const item = allNfts.find(item => item.token_id === this.props.params.id);
-            item.metadata['extra'] = JSON.parse(item.metadata.extra);        
-            console.log(item);
-            this.setState({nft:item, loading:false});
         })
         .catch(err => {
-            this.setState({loading:false});
             console.log(err);
+            alert("something went wrong!");
+            this.setState({loading:false});
         });
-    }
-
+        
+    } 
+    
     handleBuyNft = async () => {
 
         const gas = 200000000000000;
@@ -133,33 +112,33 @@ class NftDetails extends Component {
                 <div style={{fontSize:14, opacity:0.66}}>Quantity</div>
                 <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>1 available</div>
             </div>
-            <div style={{marginTop:18, fontWeight:400}}>
+            {/* <div style={{marginTop:18, fontWeight:400}}>
                 <div style={{fontSize:14, opacity:0.66}}>Proof of authenticity</div>
                 <div style={{marginTop:5}}>
                     <span style={{marginRight:10, borderBottom:"1px solid #fff", paddingBottom:1}}>kaer10202kaskdhfcnzaleleraoao</span>
                     <span><FiExternalLink size={22} color='#fff'/></span>
                 </div>
-            </div>
+            </div> */}
             {/* line seperator */}
             <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:15}}/>
-            <div style={{marginBottom:30, marginTop:14, ...globalStyles.flexRow}}>
+            <div style={{marginTop:14, ...globalStyles.flexRow}}>
                 <div>
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Artist</div>
                     <div style={globalStyles.flexRow}>
                         <img
-                            style={{height:30, width:30, borderRadius:30}}
-                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
+                            style={{height:30, width:30, borderRadius:30, objectFit:'cover'}}
+                            src={nft?.artist?.image}
                             alt="artist"
                         />
-                        <div style={{fontSize:16, marginLeft:10}}>Lata Mangeskar</div>
+                        <div style={{fontSize:16, marginLeft:10}}>{nft?.artist?.name}</div>
                     </div>
                 </div>
                 <div style={{marginLeft:30}}>
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
                     <div style={globalStyles.flexRow}>
                         <img
-                            style={{height:30, width:30, borderRadius:30}}
-                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"
+                            style={{height:30, width:30, borderRadius:30, objectFit:'cover'}}
+                            src={this.state?.ownerData?.image ?? profileSvg }
                             alt="artist"
                         />
                         <div style={{fontSize:16, marginLeft:10}}>{nft?.owner_id}</div>
@@ -173,28 +152,59 @@ class NftDetails extends Component {
 
         const { nft } = this.state;
 
-        return nft?.metadata?.extra?.custom?.map(item => {
-            return <>
-                <div style={{marginTop:13}}>
-                    <div style={{fontSize:14, opacity:0.66}}>{item.name}</div>
-                    {item.type === 1 ?
-                    <div onClick={() => helpers.openInNewTab(item.fileUrl)} style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, cursor:"pointer", letterSpacing:"0.5px", display:"flex"}}>
-                        <div style={{marginRight:10, borderBottom:"1px solid #fff", paddingBottom:1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{item.fileUrl}</div>
-                        <div><FiExternalLink size={22} color='#fff'/></div>
-                    </div> :
-                    <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>
-                        {item?.text || item?.date}
-                    </div>}
+        return <>
+            {nft?.metadata?.extra?.materialMediumUsed &&
+            <div style={{marginTop:20}}>
+                <div style={{fontSize:14, opacity:0.66}}>Material Medium Used</div>
+                <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>
+                    {nft?.metadata?.extra?.materialMediumUsed}
                 </div>
-                <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
-            </>
-        })
-        
+            </div>}
+            <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
+            {nft?.metadata?.extra?.custom?.map(item => {
+                return <>
+                    <div style={{marginTop:13}}>
+                        <div style={{fontSize:14, opacity:0.66}}>{item.name}</div>
+                        {item.type === 1 ?
+                        <div onClick={() => helpers.openInNewTab(item.fileUrl)} style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, cursor:"pointer", letterSpacing:"0.5px", display:"flex"}}>
+                            <div style={{marginRight:10, borderBottom:"1px solid #fff", paddingBottom:1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{item.fileUrl}</div>
+                            <div><FiExternalLink size={22} color='#fff'/></div>
+                        </div> :
+                        <div style={{fontFamily:200, fontSize:16, opacity:0.95, marginTop:5, letterSpacing:"0.5px"}}>
+                            {item?.text || item?.date}
+                        </div>}
+                    </div>
+                    <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
+                </>
+            })}
+        </>
+                
+    }
+
+    renderNfts = () => {
+
+        return this.state.moreNfts.slice(0, 4).map(nft => {
+            console.log(nft);
+            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
+                <NftCard
+                    // onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`, {replace: true})}
+                    image={nft.metadata?.media}
+                    title={nft.metadata?.title}
+                    nearFee={nft.price}
+                    price={"$121,000,000"}
+                    artistName={nft?.artist?.name} 
+                    artistImage={nft?.artist?.image}
+                />
+            </Col>
+        });
+
     }
 
     render() {
 
         const { isOverviewActive, nft, loading } = this.state;
+        
+        const purchasable = this.props.walletInfo?.getAccountId() !== nft?.owner_id;
 
         if(loading) return <Spinner/>;
 
@@ -215,7 +225,7 @@ class NftDetails extends Component {
                     </Col>
                     <Col lg={5}>
                         <div style={globalStyles.flexRowSpace}>
-                            <div style={{fontFamily:"Athelas-Bold", fontSize:36}}>{nft?.metadata?.title}</div>
+                            <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize"}}>{nft?.metadata?.title}</div>
                             <div>
                                 <span style={{backgroundColor:"#fff", borderRadius:100, padding:6}}>
                                     <FiBookmark size={22} color="#130F26"/>
@@ -248,10 +258,11 @@ class NftDetails extends Component {
                         </div>
                         {isOverviewActive ? this.overview() : this.otherDetails()}
                         <GradientBtn
-                            onClick={this.handleBuyNft}
+                            style={{marginTop:30, cursor: purchasable ? "pointer" : "no-drop", opacity: purchasable ? 1 : 0.6}}
+                            onClick={() => purchasable ? this.handleBuyNft() : alert("You cannot purchase your own nft")}
                             content={
                                 <div>
-                                    PURCHASE FOR 200 
+                                    PURCHASE FOR {nft?.price} 
                                     <span><img style={{marginTop:-2, marginLeft:3}} src={nearIcon} alt="near"/></span>
                                 </div>
                             }
@@ -265,46 +276,7 @@ class NftDetails extends Component {
                     </div>
                 </div>
                 <Row>
-                    <Col lg={3} md={3} sm={2} xs={1}>
-                        <NftCard
-                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                            title={"Tanjore Painting"}
-                            nearFee={"31000Ⓝ"}
-                            price={"$121,000,000"}
-                            artistName={"Sharmila S"}
-                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        />
-                    </Col>
-                    <Col lg={3} md={3} sm={2} xs={1}>
-                        <NftCard
-                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                            title={"Tanjore Painting"}
-                            nearFee={"31000Ⓝ"}
-                            price={"$121,000,000"}
-                            artistName={"Sharmila S"}
-                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        />
-                    </Col>
-                    <Col lg={3} md={3} sm={2} xs={1}>
-                        <NftCard
-                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                            title={"Tanjore Painting"}
-                            nearFee={"31000Ⓝ"}
-                            price={"$121,000,000"}
-                            artistName={"Sharmila S"}
-                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        />
-                    </Col>
-                    <Col lg={3} md={3} sm={2} xs={1}>
-                        <NftCard
-                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                            title={"Tanjore Painting"}
-                            nearFee={"31000Ⓝ"}
-                            price={"$121,000,000"}
-                            artistName={"Sharmila S"}
-                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        />
-                    </Col>
+                    {this.renderNfts()}
                 </Row>
             </Container>
         )
@@ -315,10 +287,12 @@ export default function NftDetailsWrapper(props) {
 
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const params = useParams();
+    const navigate = useNavigate();
     
     return <NftDetails
         walletInfo={walletInfo}
         params={params}
+        navigate={navigate}
     />;
 
 }

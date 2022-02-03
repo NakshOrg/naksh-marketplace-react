@@ -10,6 +10,9 @@ import globalStyles from '../../globalStyles';
 import classes from './profile.module.css';
 import { connect } from 'react-redux';
 import { _getAllArtists } from '../../services/axios/api';
+import NearHelperFunctions from '../../services/nearHelperFunctions';
+import Spinner from '../../components/uiComponents/Spinner';
+import uuid from 'react-uuid';
 
 class UserProfile extends Component {
 
@@ -17,8 +20,9 @@ class UserProfile extends Component {
         super(props);
         this.state = {
             activeTab: "owned",
-            loading: true,
-            artist: ""
+            artist: "",
+            ownedNfts: [],
+            loading: true
         }
     }
 
@@ -28,23 +32,41 @@ class UserProfile extends Component {
         }
      }
  
-     componentDidUpdate(prevProps) {
-         if(prevProps.walletInfo !== this.props.walletInfo) {
-             this.getArtist();
-         }
-     }
- 
-     getArtist = () => {
-         _getAllArtists({wallet: this.props.walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
-         .then(({ data: { artists } }) => {
+    componentDidUpdate(prevProps) {
+        if(prevProps.walletInfo !== this.props.walletInfo) {
+            this.getArtist();
+        }
+    }
 
-            this.setState({loading: false, artist: artists[0]});
-            
-         })
-         .catch(err => {
-             this.setState({loading: false});
-         });
-     }
+    getOwnedNfts = () => {
+
+        const functions = new NearHelperFunctions(this.props.walletInfo); 
+
+        functions.getOwnedNfts()
+        .then(res => {
+            this.setState({
+                ownedNfts: res,
+                loading:false
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            alert("something went wrong!");
+            this.setState({loading:false});
+        });
+
+    }
+ 
+    getArtist = () => {
+        _getAllArtists({wallet: this.props.walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
+        .then(({ data: { artists } }) => {
+            this.setState({artist: artists[0]});
+            this.getOwnedNfts();        
+        })
+        .catch(err => {
+            this.setState({loading: false});
+        });
+    }
 
     profileInfo = () => {
 
@@ -82,9 +104,29 @@ class UserProfile extends Component {
         </div>
     }
 
+    renderNfts = () => {
+
+        return this.state.ownedNfts.map(nft => {
+            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
+                <NftCard
+                    onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}
+                    image={nft.metadata.media}
+                    title={nft.metadata.title}
+                    nearFee={nft.price}
+                    price={"$121,000,000"}
+                    artistName={nft?.artist?.name} 
+                    artistImage={nft?.artist?.image}
+                />
+            </Col>
+        });
+
+    }
+
     render() { 
 
-        const { activeTab } = this.state;
+        const { activeTab, loading } = this.state;
+
+        if(loading) return <Spinner/>;
 
         return (
             <div>
@@ -125,16 +167,7 @@ class UserProfile extends Component {
                                 />  */}
                             </div>
                             <Row>
-                                <Col lg={4}>
-                                    <NftCard
-                                        image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                                        title={"Tanjore Painting"}
-                                        nearFee={"31000Ⓝ"}
-                                        price={"$121,000,000"}
-                                        artistName={"Sharmila S"}
-                                        artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                                    />
-                                </Col>
+                                {this.renderNfts()}
                             </Row>
                         </Col>
                     </Row>
@@ -147,7 +180,8 @@ class UserProfile extends Component {
 const mapStateToProps = state => {
     return {
         walletInfo: state.nearReducer.walletInfo,
-        isWalletSignedIn: state.nearReducer.isWalletSignedIn
+        isWalletSignedIn: state.nearReducer.isWalletSignedIn,
+        userData: state.nearReducer.userData
     }
 };
 

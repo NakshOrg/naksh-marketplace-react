@@ -7,7 +7,8 @@ import NftCard from '../../components/explore/NftCard';
 import ArtistCard from '../../components/explore/ArtistCard';
 import Spinner from '../../components/uiComponents/Spinner';
 import classes from './browse.module.css';
-import Filters from './Filters';
+import Dropdown from '../../components/uiComponents/Dropdown';
+import { staticValues } from '../../constants';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 
 class Browse extends Component {
@@ -17,7 +18,8 @@ class Browse extends Component {
         this.state = {
             loading: true,
             allNfts: [],
-            filterData: []
+            filterData: [],
+            currentSort: staticValues.sortFilter[0]
         }
     }
 
@@ -29,10 +31,14 @@ class Browse extends Component {
 
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
 
         if(prevProps.walletInfo !== this.props.walletInfo) {
             this.fetchNfts();
+        }
+
+        if(prevState.currentSort !== this.state.currentSort) {
+            this.applyFilters();
         }
 
     }
@@ -59,6 +65,28 @@ class Browse extends Component {
 
     }
 
+    applyFilters = () => {
+        
+        const { filterData, currentSort } = this.state;
+        const copiedFilterArr = [...filterData];
+        let result;
+        if(currentSort === "Newest first") {
+            result = copiedFilterArr;
+        } else if(currentSort === "Oldest first") {
+            result = copiedFilterArr.reverse();
+        } else if(currentSort === "Price - High to low") {
+            result = copiedFilterArr.sort(function(a, b) {
+                return b.price - a.price;
+            });
+        } else {
+            result = copiedFilterArr.sort(function(a, b) {
+                return a.price - b.price;
+            });
+        }
+
+        this.setState({allNfts:result});
+    }
+
     renderNfts = () => {
 
         return this.state.allNfts.map(nft => {
@@ -66,11 +94,11 @@ class Browse extends Component {
                 <NftCard
                     onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}
                     image={nft.metadata.media}
-                    title={"Tanjore Painting"}
-                    nearFee={"31000Ⓝ"}
+                    title={nft.metadata.title}
+                    nearFee={nft.price}
                     price={"$121,000,000"}
-                    artistName={"Sharmila S"}
-                    artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                    artistName={nft?.artist?.name} 
+                    artistImage={nft?.artist?.image}
                 />
             </Col>
         });
@@ -85,7 +113,14 @@ class Browse extends Component {
             <Container style={{marginTop:95}}>
                 <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                     <div className={classes.sectionTitle}>Explore NFTs </div>
-                    <Filters/>
+                    <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
+                        <div style={{marginLeft:13}}/>
+                        <Dropdown 
+                            title={this.state.currentSort}
+                            content={staticValues.sortFilter}
+                            onChange={(val) => this.setState({currentSort:val})}
+                        />
+                    </div>
                 </div>
                 <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
                 <div style={{marginTop:55}}>

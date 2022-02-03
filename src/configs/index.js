@@ -5,7 +5,7 @@ const { keyStores } = nearAPI;
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     baseURL: 'http://apidev.naksh.org/admin',
-    appUrl: process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "http://admindev.naksh.org",
+    appUrl: process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "http://marketdev.naksh.org/",
     nakshContractWallet: 'nft1.abhishekvenunathan.testnet',
     nakshMarketWallet: 'market1.abhishekvenunathan.testnet',
     walletConfig: {

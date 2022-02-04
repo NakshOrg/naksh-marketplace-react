@@ -11,6 +11,8 @@ export const _getOneArtist = (id) => axiosNoAuth.get(`/artist/get?id=${id}`);
 
 export const _getPresignedUrl = (data) => axiosNoAuth.post('/file/upload', data);
 
+export const _getAllArtforms = () => axiosNoAuth.get('/artform/all');
+
 
 // POST
 

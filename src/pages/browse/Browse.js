@@ -19,7 +19,7 @@ class Browse extends Component {
             loading: true,
             allNfts: [],
             filterData: [],
-            currentSort: staticValues.sortFilter[0]
+            currentSort: staticValues.sortFilter[0].name
         }
     }
 
@@ -90,7 +90,6 @@ class Browse extends Component {
     renderNfts = () => {
 
         return this.state.allNfts.map(nft => {
-            console.log(nft);
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
                 <NftCard
                     onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}
@@ -119,7 +118,7 @@ class Browse extends Component {
                         <Dropdown 
                             title={this.state.currentSort}
                             content={staticValues.sortFilter}
-                            onChange={(val) => this.setState({currentSort:val})}
+                            onChange={(val) => this.setState({currentSort:val.name})}
                         />
                     </div>
                 </div>

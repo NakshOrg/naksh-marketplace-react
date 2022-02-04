@@ -14,7 +14,7 @@ function Dropdown({ title, content, onChange }) {
                 </div>
             </DropDown.Toggle>
             <DropDown.Menu style={{padding:15, fontSize:15, minWidth:'12rem'}} id="dropdown-basic-content">
-                {content.map((item, i) => <DropDown.Item onClick={() => onChange(item)} key={i} style={{marginTop: i > 0 && 15}}>{item}</DropDown.Item>)}
+                {content.map((item, i) => <DropDown.Item onClick={() => onChange(item)} key={i} style={{marginTop: i > 0 && 15}}>{item.name}</DropDown.Item>)}
             </DropDown.Menu>
         </DropDown>
     )

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
@@ -69,7 +69,7 @@ export default function ArtistDetails() {
 
         return <>
             {artistDetails.custom?.map(item => {
-                return <>
+                return <Fragment key={uuid()}>
                     <div style={{marginTop:13}}>
                         <div style={{fontSize:14, opacity:0.66}}>{item.name}</div>
                         {item.type === 1 ?
@@ -82,7 +82,7 @@ export default function ArtistDetails() {
                         </div>}
                     </div>
                     <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
-                </>
+                </Fragment>
             })}
         </>
                 

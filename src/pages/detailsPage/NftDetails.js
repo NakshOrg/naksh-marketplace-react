@@ -113,7 +113,7 @@ class NftDetails extends Component {
             <div style={{marginTop:14, ...globalStyles.flexRow}}>
                 <div>
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Artist</div>
-                    <div style={globalStyles.flexRow}>
+                    <div onClick={() => this.props.navigate(`/ourartists/${nft?.artist?._id}`)} style={{...globalStyles.flexRow, cursor:"pointer"}}>
                         <img
                             style={{height:30, width:30, borderRadius:30, objectFit:'cover'}}
                             src={nft?.artist?.image}

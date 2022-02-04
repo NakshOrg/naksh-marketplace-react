@@ -90,6 +90,7 @@ class Browse extends Component {
     renderNfts = () => {
 
         return this.state.allNfts.map(nft => {
+            console.log(nft);
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
                 <NftCard
                     onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}

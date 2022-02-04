@@ -184,7 +184,6 @@ class NftDetails extends Component {
     renderNfts = () => {
 
         return this.state.moreNfts.slice(0, 4).map(nft => {
-            console.log(nft);
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
                 <NftCard
                     // onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`, {replace: true})}

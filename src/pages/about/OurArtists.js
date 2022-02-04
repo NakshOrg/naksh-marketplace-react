@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 
 import ArtistCard from '../../components/explore/ArtistCard';
@@ -7,10 +7,35 @@ import globalStyles from '../../globalStyles';
 import classes from './about.module.css';
 import { OutlineBtn } from '../../components/uiComponents/Buttons';
 import { Link } from 'react-router-dom';
+import { _getAllArtists } from '../../services/axios/api';
+import uuid from 'react-uuid';
 
 export default function OurArtists() {
+
+    const [loading, setLoading] = useState(true);
+    const [artists, setArtists] = useState([]);
+
+    useEffect(() => {
+      
+        _getAllArtists({sortBy: 'createdAt', sort: -1})
+        .then(({ data }) => {
+            console.log(data);
+            setLoading(false);
+            setArtists(data.artists);
+        })
+        .catch(err => {
+            console.log(err.response);
+            setLoading(false);
+        })
+    
+      return () => {
+        
+      };
+    }, []);
+    
+
     return (
-        <Container style={{marginTop:160}}>
+        <Container style={{marginTop:140}}>
             <div className={classes.sectionCaption}>
                 Explore our lineup of sensational artists from all across India
             </div>
@@ -22,46 +47,27 @@ export default function OurArtists() {
                 <Filters/>
             </div>
             <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:80, marginTop:5}}/>
+            {/* overlay gradient  */}
+            <div className={classes.detailsGradientOverlay}/>
+            {/* overlay gradient  */}
+            <div className={classes.detailsGradientOverlayPink}/>
             <Row>
-                <Col lg={3} md={3} sm={2} xs={1}>
-                    <Link style={{color:"#fff"}} to="/artistDetails/dummy">
+                {artists.map(artist => {
+                return <Col style={{marginBottom:70}} key={uuid()} lg={3} md={3} sm={2} xs={1}>
+                    <Link style={{color:"#fff"}} to={`/ourartists/${artist._id}`}>
                         <ArtistCard
-                            image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                            name={"Krithi K Mughal"}
-                            about={"Mughal Painting"}
-                            place={"Chennai"}
+                            image={artist.image}
+                            name={artist.name}
+                            artform={artist?.artform?.name}
+                            place={artist.city}
                         />
                     </Link>
-                </Col>
-                <Col lg={3} md={3} sm={2} xs={1}>
-                    <ArtistCard
-                        image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        name={"Krithi K Mughal"}
-                        about={"Mughal Painting"}
-                        place={"Chennai"}
-                    />
-                </Col>
-                <Col lg={3} md={3} sm={2} xs={1}>
-                    <ArtistCard
-                        image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        name={"Krithi K Mughal"}
-                        about={"Mughal Painting"}
-                        place={"Chennai"}
-                    />
-                </Col>
-                <Col lg={3} md={3} sm={2} xs={1}>
-                    <ArtistCard
-                        image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                        name={"Krithi K Mughal"}
-                        about={"Mughal Painting"}
-                        place={"Chennai"}
-                    />
-                </Col>
+                </Col>})}
             </Row>  
-            <OutlineBtn
+            {/* <OutlineBtn
                 text="VIEW MORE"
                 style={{margin:"20px auto", fontFamily:"Athelas-Regular", borderRadius:2, fontSize:12, letterSpacing:"1px", textAlign:'center'}}
-            />
+            /> */}
         </Container>
     )
 }

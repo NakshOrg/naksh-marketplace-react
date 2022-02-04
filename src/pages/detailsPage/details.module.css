@@ -4,7 +4,7 @@
     background-color: rgb(0, 5, 19);
     position: absolute;
     top: -22px;
-    left: 40%;
+    left: 33%;
     padding: 0 20px;
 }
 .detailsGradientOverlay {
@@ -30,4 +30,14 @@
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: 0%;
     z-index: 1;
+}
+.iconsContainer > div {
+    background-color: #fff;
+    border-radius: 35px;
+    height: 35px;
+    width: 35px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-right: 15px;
 }

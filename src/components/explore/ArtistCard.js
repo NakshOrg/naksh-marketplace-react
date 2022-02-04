@@ -12,7 +12,7 @@ function ArtistCard(props) {
         place,
         name,
         image,
-        about,
+        artform,
         onClick
     } = props;
 
@@ -36,7 +36,7 @@ function ArtistCard(props) {
                 </div>
                 <div style={{...globalStyles.flexRow, opacity:0.7, marginTop:6, marginBottom:5}}>
                     <MdOutlineBrokenImage size={22} color='#fff'/>
-                    <div style={{fontSize:14, marginLeft:5}}>{about}</div>
+                    <div style={{fontSize:14, marginLeft:5}}>{artform}</div>
                 </div>
           </div>
         </div>

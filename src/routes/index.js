@@ -25,7 +25,6 @@ export default function Navigation() {
             <Route path="/" element={<Home/>} exact />
             <Route path="/browse" element={<Browse navigate={navigate}/>} />
             <Route path="/nftdetails/:id" element={<NftDetails/>}/>
-            <Route path="/artistDetails/:id" element={<ArtistDetails/>} />
             <Route path="/searchresults" element={<SearchResults/>} />
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
@@ -33,6 +32,7 @@ export default function Navigation() {
             <Route path="/helpcenter" element={<HelpCenter navigate={navigate}/>} />
             <Route path="/aboutnaksh" element={<AboutNaksh/>} />
             <Route path="/ourartists" element={<OurArtists/>} />
+            <Route path="/ourartists/:id" element={<ArtistDetails/>} />
             <Route path="/nearprotocol" element={<NearProtocol/>} />
             <Route path="*" element={<NotFound />} />
         </Routes>

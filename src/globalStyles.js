@@ -1,4 +1,6 @@
 // FONT SIZES
+// Prominent Headings - 66px as 50px 
+// artist Headings - 70px as 52px 
 // Primary Headings - 52px as 42px 
 // Primary Sub Headings - 28px as 24px 
 // Primary Caption - 20px as 16px 

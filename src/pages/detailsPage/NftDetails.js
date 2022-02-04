@@ -53,7 +53,7 @@ class NftDetails extends Component {
 
         functions.getNftDetails()
         .then(nfts => {
-            console.log(nfts, "nfts");
+
             const nft = nfts.find(item => item.token_id === this.props.params.id);
             const moreNfts = nfts.filter(item => item.token_id !== this.props.params.id);
             
@@ -81,20 +81,9 @@ class NftDetails extends Component {
     
     handleBuyNft = async () => {
 
-        const gas = 200000000000000;
-        const attachedDeposit = utils.format.parseNearAmount(this.state.nft.price);
-        const FunctionCallOptions = {
-            contractId: 'market1.abhishekvenunathan.testnet',
-            methodName: 'offer',
-            args: {
-                nft_contract_id: 'nft1.abhishekvenunathan.testnet',
-                token_id: this.state.nft.token_id
-            },
-            gas,
-            attachedDeposit
-        };
+        const functions = new NearHelperFunctions(this.props.walletInfo); 
 
-        const data = await this.props.walletInfo.account().functionCall(FunctionCallOptions);
+        functions.buyNFt(this.state.nft.price, this.state.nft.token_id);
 
     }
 

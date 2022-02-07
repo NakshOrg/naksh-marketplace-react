@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi"
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import configs from '../../configs';
 import * as actionTypes from '../../redux/actions/actionTypes';
 import './uiComponents.css';
 import { Dropdown } from 'react-bootstrap';
+import { _getAllArtists } from '../../services/axios/api';
 
 function Header() {
     
@@ -19,6 +20,32 @@ function Header() {
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
     const userData = useSelector(state => state.nearReducer.userData);
+    const searchResults = useSelector(state => state.dataReducer.searchResults);
+    const loading = useSelector(state => state.dataReducer.headerSearchLoading);
+
+    const [keyword, setkeyword] = useState("");
+
+    useEffect(() => {
+      
+        if(keyword) {
+            dispatch({type: actionTypes.HEADER_SEARCH_LOADING, payload: true});
+            _getAllArtists({search: keyword, sortBy: 'createdAt', sort: -1})
+            .then(({ data }) => {
+                dispatch({type: actionTypes.SEARCH_RESULTS, payload: {artists: data.artists, searchKeyword:keyword}});
+                dispatch({type: actionTypes.HEADER_SEARCH_LOADING, payload: false});
+            })
+            .catch(err => {
+                dispatch({type: actionTypes.HEADER_SEARCH_LOADING, payload: false});
+            })
+        }
+
+    }, [keyword]);
+
+    function resetSearch() {
+        setkeyword("");
+        dispatch({type: actionTypes.SEARCH_RESULTS, payload: {artists: [], searchKeyword: ""}});
+    }
+    
 
     const menuStyle = {
         padding:15,
@@ -51,7 +78,13 @@ function Header() {
                 <NavLink style={{color:"#fff"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
                 </NavLink>
-                <Search/>
+                <Search
+                    keyword={keyword}
+                    onChange={(e) => setkeyword(e.target.value)}
+                    loading={loading}
+                    resetSearch={resetSearch}
+                    searchResults={searchResults}
+                />
             </div>
             <div className='header-nav-container'>
                 <div className="header-nav-items">

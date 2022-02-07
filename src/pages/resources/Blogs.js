@@ -2,12 +2,12 @@ import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { FiFacebook, FiGlobe, FiSearch } from 'react-icons/fi';
 import { BsInstagram } from 'react-icons/bs';
+import { helpers } from '../../constants';
 
-import { _getAllBlogs } from '../../services/axios/api';
+import { _getLandingPageData } from '../../services/axios/api';
 import BlogCard from '../../components/blogs/BlogCard';
 import globalStyles from '../../globalStyles';
 import classes from './resources.module.css';
-import Search from '../../components/uiComponents/Search';
 import Spinner from '../../components/uiComponents/Spinner';
 
 export default class Blogs extends Component {
@@ -22,7 +22,7 @@ export default class Blogs extends Component {
 
     componentDidMount() {
 
-        _getAllBlogs()
+        _getLandingPageData()
         .then(res => res.json())
         .then(res => {
             this.setState({blogs: res.mediumData})
@@ -62,7 +62,7 @@ export default class Blogs extends Component {
                                 coverImage={blog.image}
                                 title={blog.title}
                                 description={"Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint..."}
-                                // onClick={blog.link}
+                                onClick={() => helpers.openInNewTab(blog.link)}
                             />
                         </Col>
                     })}

@@ -96,7 +96,6 @@ class Browse extends Component {
                     image={nft.metadata.media}
                     title={nft.metadata.title}
                     nearFee={nft.price}
-                    price={"$121,000,000"}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
                 />

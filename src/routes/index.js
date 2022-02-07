@@ -25,7 +25,7 @@ export default function Navigation() {
             <Route path="/" element={<Home/>} exact />
             <Route path="/browse" element={<Browse navigate={navigate}/>} />
             <Route path="/nftdetails/:id" element={<NftDetails/>}/>
-            <Route path="/searchresults" element={<SearchResults/>} />
+            <Route path="/searchresults/:keyword" element={<SearchResults/>} />
             <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
             <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
             <Route path="/blogs" element={<Blogs navigate={navigate}/>} />

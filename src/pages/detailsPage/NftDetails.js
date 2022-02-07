@@ -32,7 +32,6 @@ class NftDetails extends Component {
     }
 
     componentDidMount() {
-
         if(this.props.walletInfo) {
             this.fetchNft();
         }
@@ -179,7 +178,6 @@ class NftDetails extends Component {
                     image={nft.metadata?.media}
                     title={nft.metadata?.title}
                     nearFee={nft.price}
-                    price={"$121,000,000"}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
                 />
@@ -215,7 +213,7 @@ class NftDetails extends Component {
                         <div style={globalStyles.flexRowSpace}>
                             <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize"}}>{nft?.metadata?.title}</div>
                             <div>
-                                <span style={{backgroundColor:"#fff", borderRadius:100, padding:6}}>
+                                <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                     <FiBookmark size={22} color="#130F26"/>
                                 </span>
                                 <span style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6}}>
@@ -223,11 +221,11 @@ class NftDetails extends Component {
                                 </span>
                             </div>
                         </div>
-                        <div style={{marginTop:5}}>
+                        {(purchasable && nft?.price) && <div style={{marginTop:5}}>
                             <span style={{fontSize:15, opacity:0.6}}>Price:</span> 
                             <span style={{marginLeft:5, fontSize:17}}>{nft?.price} <img style={{marginTop:-2, marginLeft:-1}} src={nearIcon} alt="near"/></span>
                             {/* <span style={{marginLeft:10, fontSize:15, opacity:0.6}}>{`($${nft?.price * 10.43})`}</span> */}
-                        </div>
+                        </div>}
                         <div>
                             <div style={{...globalStyles.flexRow, marginTop:20}}>
                                 <div onClick={() => this.setState({isOverviewActive:true})} style={{fontWeight: !isOverviewActive ? "400" : "bold", opacity: !isOverviewActive ? 0.7 : 1, fontSize:12, cursor:'pointer', letterSpacing:1.5}}>
@@ -250,8 +248,9 @@ class NftDetails extends Component {
                             onClick={() => purchasable ? this.handleBuyNft() : alert("You cannot purchase your own nft")}
                             content={
                                 <div>
-                                    PURCHASE FOR {nft?.price} 
-                                    <span><img style={{marginTop:-2, marginLeft:3}} src={nearIcon} alt="near"/></span>
+                                    {(purchasable && nft?.price) ? `PURCHASE FOR ${nft?.price}` : !purchasable ? 'You own this nft' : 'Unavailable'}
+                                    {(purchasable && nft?.price) && 
+                                    <span><img style={{marginTop:-2, marginLeft:3}} src={nearIcon} alt="near"/></span>}
                                 </div>
                             }
                         />

@@ -33,7 +33,9 @@ export default function ArtistDetails() {
 
     useEffect(() => {
 
-        getArtists();
+        if(walletInfo) {
+            getArtists();
+        }
 
         return () => {
 
@@ -41,15 +43,21 @@ export default function ArtistDetails() {
 
     }, []);
 
+    useEffect(() => {
+        if(walletInfo) {
+            getArtists();
+        }
+    }, [walletInfo]);
+
     const getArtists = () => {
 
         _getOneArtist(params.id)
         .then(({ data }) => {
 
             const functions = new NearHelperFunctions(walletInfo); 
-            functions.getAllNfts()
+            functions.getAllNfts(true)
             .then(res => {
-                const filteredNfts = res.filter(item => item?.metadata?.extra?.artistId === params.id);
+                const filteredNfts = res.filter(item => item?.artist?._id === params.id);
                 setArtworks(filteredNfts);
                 setArtistDetails(data.artist);
                 setLoading(false);
@@ -135,26 +143,21 @@ export default function ArtistDetails() {
             <div style={{ margin: "45px 0", marginTop: 80, position: "relative" }}>
                 <div style={{height:2, width:"100%", backgroundColor:"#fff", opacity:0.16}}/>
                 <div className={classes.moreNftHeading}>
-                    Artworks by Shwetambari Shetty
+                    Artworks by {artistDetails.name}
                 </div>
             </div>
             <Row>
                 {artworks.map(nft => {
-                    return <Col key={uuid()} style={{zIndex:2}} lg={3} md={3} sm={2} xs={1}>
+                    console.log(nft, 'nft');
+                    return <Col key={uuid()} style={{zIndex:2, marginBottom:30}} lg={3} md={3} sm={2} xs={1}>
                         <NftCard
                             onClick={() => navigate(`/nftdetails/${nft.token_id}`)}
                             image={nft.metadata.media}
                             title={nft.metadata.title}
                             nearFee={nft.price}
                             price={"$121,000,000"}
-                            artistName={nft?.artist?.name} 
+                            artistName={nft?.artist?.name}
                             artistImage={nft?.artist?.image}
-                            // image={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
-                            // title={"Tanjore Painting"}
-                            // nearFee={"31000Ⓝ"}
-                            // price={"$121,000,000"}
-                            // artistName={"Sharmila S"}
-                            // artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
                         />
                     </Col>
                 })}

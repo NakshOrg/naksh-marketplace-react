@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Slider from "react-slick";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
 import "../../App.css";
+import { Spinner } from "react-bootstrap";
 
-function CarouselBtns() {
+function CarouselBtns({leftBtn, rightBtn}) {
     return <div style={{marginTop:10, marginLeft:50}} className="carousel-btns">
-        <span id="prev" style={{marginRight:25}}>
+        <span onClick={leftBtn} id="prev" style={{marginRight:25, cursor:"pointer"}}>
         <svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24.5" cy="24.5" r="23.5" stroke="url(#paint0_linear_2:778)" stroke-width="2"/>
             <path d="M26 31L20 25L26 19" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -18,7 +19,7 @@ function CarouselBtns() {
             </defs>
         </svg> 
         </span>
-        <span id="next">
+        <span onClick={rightBtn} style={{cursor:"pointer"}} id="next">
         <svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle r="23.5" transform="matrix(-1 0 0 1 24.5 24.5)" stroke="url(#paint0_linear_2:775)" stroke-width="2"/>
             <path d="M22 31L28 25L22 19" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -33,27 +34,30 @@ function CarouselBtns() {
     </div>
 }
 
-function CarouselItem({stats, content}) {
+function CarouselItem({stats, content, loading}) {
     return <div className="carousel-slide-item-wrapper">
         <div className="carousel-slide-item-wrapper-black"></div>
         <div className="carousel-slide-item">
             <div className="carousel-slide-item-content">
-                <div className="carousel-slide-item-content-stats">{stats}</div>
+                <div className="carousel-slide-item-content-stats">
+                    {loading ? <Spinner animation="border" size={20}/> : stats}
+                </div>
                 <div className="carousel-slide-item-content-caption">{content}</div>
             </div>
         </div>
     </div>  
   }
 
-export default function Carousel() {
+export default function Carousel({ loading, slideData }) {
 
+  const slick = useRef(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [carouselData, setCarouselData] = useState([
-    {stats:"1000+", content:"People Are Already On NEAR"},
-    {stats:"1000+", content:"Transactions Were Powered By NEAR Token Today"},
-    {stats:"1000+", content:"Daily Gas Used"},
-    {stats:"1000+", content:"Users Have Joined NEAR Today"}
-  ]);
+  const carouselData = [
+    {stats:`${slideData?.dailyActiveAccounts}+`, content:"People Are Already On NEAR"},
+    {stats:`${slideData?.dailyTransactionsCount}+`, content:"Transactions Were Powered By NEAR Token Today"},
+    {stats:"4B+", content:"Daily Gas Used"},
+    {stats:`${slideData?.dailyNewAccountsCount}+`, content:"Users Have Joined NEAR Today"}
+  ];
  
   const settings = {
     infinite: true,
@@ -65,22 +69,27 @@ export default function Carousel() {
     autoplay: true,
     autoplaySpeed: 5000,
     arrows: false,
+    swipe: false,
     beforeChange: (_, next) => setCarouselIndex(next)
   };
 
   return (
     <div className="App">
-        <Slider {...settings}>
+        <Slider ref={slick} {...settings}>
         {carouselData.map((item, i) => (
             <div key={i} className={i === carouselIndex ? "slide activeSlide" : "slide"}>
-            <CarouselItem 
+            <CarouselItem
+                loading={loading} 
                 stats={item.stats} 
                 content={item.content}
             />
             </div>
         ))}
         </Slider>
-        <CarouselBtns/>
+        <CarouselBtns
+            leftBtn={() => slick?.current?.slickPrev()}
+            rightBtn={() => slick?.current?.slickNext()}
+        />
     </div>
   );
 }

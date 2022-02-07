@@ -6,7 +6,7 @@ import { _getAllArtists, _getOneArtist } from '../axios/api';
 
 export default function NearHelperFunctions(wallet) {
 
-  this.getAllListedNfts = async (allNfts) => {
+  this.getAllListedNfts = async (allNfts, getAllNft) => {
     
     const res = await wallet.account()
     .viewFunction(
@@ -34,16 +34,18 @@ export default function NearHelperFunctions(wallet) {
 
       if(listedItem) {
         nftItem["listed"] = true;
-        nftItem["price"] = `${listedItem.sale_conditions}`;
+        nftItem["price"] = utils.format.formatNearAmount(listedItem.sale_conditions);
         filteredNfts.push(nftItem);
       }
 
     });
 
+    if(getAllNft) return allNfts;
+
     return filteredNfts;
   }
 
-  this.getAllNfts = async () => {
+  this.getAllNfts = async (getAllNft) => {
 
     const res = await wallet.account()
     .viewFunction(
@@ -55,7 +57,7 @@ export default function NearHelperFunctions(wallet) {
       }
     );
 
-    const nftsWithPrice = await this.getAllListedNfts(res); // to get nft price
+    const nftsWithPrice = await this.getAllListedNfts(res, getAllNft); // to get nft price
 
     return nftsWithPrice;
 
@@ -98,7 +100,7 @@ export default function NearHelperFunctions(wallet) {
 
       if(listedItem) {
         nftItem["listed"] = true;
-        nftItem["price"] = `${listedItem.sale_conditions}`;
+        nftItem["price"] = utils.format.formatNearAmount(listedItem.sale_conditions);
       }
 
     });

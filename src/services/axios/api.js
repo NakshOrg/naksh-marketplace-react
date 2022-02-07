@@ -3,7 +3,7 @@ import axiosNoAuth from "./axiosNoAuth";
 
 // GET
 
-export const _getAllBlogs = () => fetch('https://api.naksh.org/client/landing/data');
+export const _getLandingPageData = () => fetch('https://api.naksh.org/client/landing/data');
 
 export const _getAllArtists = (params) => axiosNoAuth.get('/artist/all', {params});
 

@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useEffect, useState } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import Slider from "react-slick";
+import { _getLandingPageData } from '../../services/axios/api';
 
 import Carousel from './Carousel';
 import AboutCard from '../../components/about/AboutCard';
@@ -8,6 +8,23 @@ import connectNear from '../../assets/svgs/connect-near-gradient.svg';
 import classes from './about.module.css';
 
 export default function NearProtocol() {
+
+    const [loading, setLoading] = useState(true);
+    const [slideData, setSlideData] = useState(null);
+
+    useEffect(() => {
+        _getLandingPageData()
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            setSlideData(res);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log(err);
+            setLoading(false);
+        });
+    }, [])
 
     return (
         <Container style={{marginTop:160}} fluid>
@@ -31,7 +48,7 @@ export default function NearProtocol() {
                     </div>
                 </Col>
                 <Col lg={7}>
-                    <Carousel/>    
+                    <Carousel slideData={slideData} loading={loading}/>    
                 </Col>
             </Row>
         </Container>

@@ -1,5 +1,10 @@
 const openInNewTab = (url) => {
-    const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+    var prefix = 'http://';
+    let link = url;
+    if (url.substr(0, prefix.length) !== prefix) {
+        link = prefix + url;
+    }
+    const newWindow = window.open(link, '_blank', 'noopener, noreferrer')
     if (newWindow) newWindow.opener = null
 }
 

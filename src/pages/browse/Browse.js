@@ -90,7 +90,7 @@ class Browse extends Component {
     renderNfts = () => {
 
         return this.state.allNfts.map(nft => {
-            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
+            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
                     onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}
                     image={nft.metadata.media}
@@ -111,8 +111,8 @@ class Browse extends Component {
         return (
             <Container style={{marginTop:95}}>
                 <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
-                    <div className={classes.sectionTitle}>Explore NFTs </div>
-                    <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
+                    <div className={classes.sectionTitle}>Explore NFTs</div>
+                    <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
                         <div style={{marginLeft:13}}/>
                         <Dropdown 
                             title={this.state.currentSort}
@@ -121,7 +121,7 @@ class Browse extends Component {
                         />
                     </div>
                 </div>
-                <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
+                <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
                 <div style={{marginTop:55}}>
                     <Row>
                         {this.renderNfts()}

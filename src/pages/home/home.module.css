@@ -1,12 +1,22 @@
 .artSectionTitle {
     font-size: 2.5em;
 }
-  
+ 
+.artSectionCarouselMobile {
+    display: none;
+}
+
 .artSectionContent {
     margin-left: 0;
     align-self: center;
     font-family: 'Athelas-Bold';
     /* width: 75%; */
+}
+
+.artSectionContentContainer {
+    align-self:"center";
+    padding-left:75px;
+    margin: auto 0;
 }
 
 .artworkGradientOverlay {
@@ -43,3 +53,25 @@
     position: relative;
 }
   
+
+@media only screen and (max-width: 767px) {
+    #btnContainer {
+        margin:0 auto;
+    }
+    .artSectionCarouselDesktop {
+        display: none;
+    }
+    .artSectionContent {
+        text-align: center;
+        padding: 0 10%;
+        margin-bottom: 30px;
+    }
+    .artSectionContentContainer {
+        padding: 0;
+        margin: 0;
+    }
+    .artSectionCarouselMobile {
+        display: block;
+    }
+
+}

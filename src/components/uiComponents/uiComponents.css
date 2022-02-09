@@ -448,3 +448,43 @@
     transform: translate(0, 0);
   }
 }
+
+.swiper {
+  height: 300px;
+  width: 200px;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.carousel-img {
+  /* height: 375px;
+  width: 250px; */
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.modal {
+  backdrop-filter: blur(5px) !important;
+}
+
+.modal-body {
+  background-color: #12192B;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.modal-content {
+  margin: 0 auto;
+  width: 70%;
+  background-color: #12192B;
+}

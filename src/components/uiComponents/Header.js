@@ -29,7 +29,7 @@ function Header() {
       
         if(keyword) {
             dispatch({type: actionTypes.HEADER_SEARCH_LOADING, payload: true});
-            _getAllArtists({search: keyword, sortBy: 'createdAt', sort: -1})
+            _getAllArtists({search: keyword, sortBy: 'createdAt', sort: -1, createdBy: 0})
             .then(({ data }) => {
                 dispatch({type: actionTypes.SEARCH_RESULTS, payload: {artists: data.artists, searchKeyword:keyword}});
                 dispatch({type: actionTypes.HEADER_SEARCH_LOADING, payload: false});

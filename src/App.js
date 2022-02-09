@@ -11,7 +11,6 @@ import reducer from './redux';
 import { establishWalletConnection } from './redux/actions/actions';
 import './App.css';
 
-
 function App() {
 
   const dispatch = useDispatch();

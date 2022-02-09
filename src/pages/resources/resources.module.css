@@ -69,3 +69,47 @@
     filter: blur(240px);
     z-index: -1;
 }
+
+.mobileCardSpace {
+    margin-top: 20px;
+    display: none;
+}
+
+.mobileCardColSpace {
+    margin-top: 20px;
+    display: none;
+}
+
+.iconsContainerDesktop {
+    /* margin: 30px 0; */
+    /* margin-top: 100px; */
+    /* display: none; */
+}
+
+.iconsContainerMobile {
+    /* margin: 30px 0; */
+    /* margin-top: 100px; */
+    display: none;
+}
+
+@media only screen and (max-width: 991px) {
+    .mobileCardSpace {
+        display: block;
+    }
+    .iconsContainer {
+        text-align: center;
+        margin-top: 30px;
+        justify-content: center !important;
+    }
+    .iconsContainerMobile {
+        /* margin: 30px 0; */
+        /* margin-top: 100px; */
+        display: flex !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .mobileCardColSpace {
+        display: block;
+    }
+}

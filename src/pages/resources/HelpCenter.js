@@ -30,16 +30,17 @@ export default class Blogs extends Component {
                     <div className={classes.sectionTitle}>How can we help you?</div>
                 </div>
                 <Row>
-                    <Col lg={8}>
+                    <Col lg={8} md={12}>
                         <Row>
-                            <Col>
+                            <Col md={6} sm={12}>
                                 <div className={classes.sectionCard}>
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Get familiar with Naksh</div>
                                     <div className={classes.sectionCardDescription}>Everything you need to know about Naksh</div>
                                 </div>
                             </Col>
-                            <Col>
+                            <div className={classes.mobileCardColSpace}/>
+                            <Col md={6} sm={12}>
                                 <div className={classes.sectionCard}>
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Naksh and its functioning</div>
@@ -49,14 +50,15 @@ export default class Blogs extends Component {
                         </Row>
                         <div style={{marginTop:20}}/>
                         <Row>
-                            <Col>
+                            <Col md={6} sm={12}>
                                 <div className={classes.sectionCard}>
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Questions for existing users</div>
                                     <div className={classes.sectionCardDescription}>Everything you need to know about Naksh</div>
                                 </div>            
                             </Col>
-                            <Col>
+                            <div className={classes.mobileCardColSpace}/>
+                            <Col md={6} sm={12}>
                                 <div className={classes.sectionCard}>
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Questions for NFT owners</div>
@@ -65,7 +67,8 @@ export default class Blogs extends Component {
                             </Col>
                         </Row>
                     </Col>
-                    <Col lg={4}>
+                    <div className={classes.mobileCardSpace}/>
+                    <Col lg={4} md={12}>
                         <div style={{height:"100%"}} className={classes.sectionCard}>
                             <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                             <div className={classes.sectionCardTitle}>Frequently asked questions</div>
@@ -79,7 +82,7 @@ export default class Blogs extends Component {
                         <div style={{fontSize: "16px", opacity: 0.7, marginTop: "10px", letterSpacing: "0.5px", fontWeight: 100, width: "60%", lineHeight: "20px"}}>
                             Fill out the form, and we'll reply to you soon.
                         </div>
-                        <div className={classes.iconsContainer} style={{...globalStyles.flexRow, marginTop:30}}>
+                        <div className={classes.iconsContainer} style={{...globalStyles.flexRow, margin:"30px 0"}}>
                             <div><img src={discord} alt='discord'/></div>
                             <div><img src={instagram} alt='instagram'/></div>
                             <div><img src={twitter} alt='twitter'/></div>

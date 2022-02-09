@@ -18,7 +18,8 @@ export default function OurArtists() {
     const [artforms, setArtforms] = useState([]);
     const [filterParams, setFilterParams] = useState({
         sortBy: 'createdAt', 
-        sort: -1
+        sort: -1,
+        createdBy: 0
     });
     const [selectedArtform, setSelectedArtform] = useState("All Artforms");
 
@@ -101,8 +102,8 @@ export default function OurArtists() {
                         <ArtistCard
                             image={artist.image}
                             name={artist.name}
-                            artform={artist?.artform?.name}
-                            place={artist.city}
+                            artform={artist?.artform?.name ?? "-----"}
+                            place={artist.city ?? "-----"}
                         />
                     </Link>
                 </Col>})}

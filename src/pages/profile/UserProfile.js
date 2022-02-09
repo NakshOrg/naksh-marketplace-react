@@ -81,7 +81,7 @@ class UserProfile extends Component {
                 alt='profile'
             />
             <div style={{fontFamily:"Athelas-bold", fontSize:24, marginTop:10}}>{artist?.name}</div>
-            <div style={{opacity:0.7, fontSize:13, color:"#fff", letterSpacing:1, marginTop:4}}>
+            <div style={{opacity:0.7, fontSize:13, color:"#fff", letterSpacing:1, marginTop:4, wordBreak: "break-word", padding: "0 30px"}}>
                 {walletInfo?.getAccountId()}
             </div>
             <div style={{opacity:0.9, fontSize:15, color:"#fff", letterSpacing:1, marginTop:17}}>

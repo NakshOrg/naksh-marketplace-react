@@ -76,7 +76,7 @@ export default function ArtistDetails() {
     const customFields = () => {
 
         return <>
-            {artistDetails.custom?.map(item => {
+            {artistDetails?.custom?.map(item => {
                 return <Fragment key={uuid()}>
                     <div style={{marginTop:13}}>
                         <div style={{fontSize:14, opacity:0.66}}>{item.name}</div>
@@ -110,30 +110,30 @@ export default function ArtistDetails() {
                         <img style={{maxWidth:"100%", maxHeight:"100%", borderRadius:6}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
                     </div> */}
                     <div style={{textAlign:"center"}}>
-                        <img style={{borderRadius:6, width:"63.5%"}} src={artistDetails.image} alt='artist'/>
+                        <img style={{borderRadius:6, width:"63.5%"}} src={artistDetails?.image} alt='artist'/>
                     </div>
                 </Col>
                 <Col lg={5}>
                     <div style={globalStyles.flexRowSpace}>
-                        <div style={{fontFamily:"Athelas-Bold", fontSize:52, lineHeight:"55px"}}>{artistDetails.name}</div>
+                        <div style={{fontFamily:"Athelas-Bold", fontSize:52, lineHeight:"55px"}}>{artistDetails?.name}</div>
                     </div>
                     <div className={classes.iconsContainer} style={{...globalStyles.flexRow}}>
-                        {artistDetails.instagram && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.instagram)}><img src={instagram} alt='instagram'/></div>}
-                        {artistDetails.facebook && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.facebook)}><img src={facebook} alt='facebook'/></div>}
-                        {artistDetails.website && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.website)}><img src={website} alt='website'/></div>}
+                        {artistDetails?.instagram && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.instagram)}><img src={instagram} alt='instagram'/></div>}
+                        {artistDetails?.facebook && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.facebook)}><img src={facebook} alt='facebook'/></div>}
+                        {artistDetails?.website && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.website)}><img src={website} alt='website'/></div>}
                     </div>
                     <div style={{...globalStyles.flexRow, marginTop:20}}>
                         <div style={{...globalStyles.flexRow, marginRight:20}}>
                             <img src={location} alt="icon"/>
-                            <div style={{fontSize:13, marginLeft:5, textTransform:"uppercase", fontWeight:500, letterSpacing:"0.4px"}}>{artistDetails.city}</div>
+                            <div style={{fontSize:13, marginLeft:5, textTransform:"uppercase", fontWeight:500, letterSpacing:"0.4px"}}>{artistDetails?.city ?? "----"}</div>
                         </div>
                         <div style={{...globalStyles.flexRow}}>
                             <img src={imgbackground} alt="icon"/>
-                            <div style={{fontSize:13, marginLeft:5, textTransform:"uppercase", fontWeight:500, letterSpacing:"0.4px"}}>{artistDetails.artform.name}</div>
+                            <div style={{fontSize:13, marginLeft:5, textTransform:"uppercase", fontWeight:500, letterSpacing:"0.4px"}}>{artistDetails?.artform?.name ?? "----"}</div>
                         </div>
                     </div>
                     <div style={{fontWeight:200, lineHeight:"25px", letterSpacing:"0.3px", marginTop:20, opacity:0.95}}>
-                        {artistDetails.description}
+                        {artistDetails?.description}
                     </div>
                     {/* line seperator */}
                     <div style={{height:1, width:"100%", backgroundColor:"#fff", opacity:0.16, marginTop:7}}/>
@@ -143,12 +143,11 @@ export default function ArtistDetails() {
             <div style={{ margin: "45px 0", marginTop: 80, position: "relative" }}>
                 <div style={{height:2, width:"100%", backgroundColor:"#fff", opacity:0.16}}/>
                 <div className={classes.moreNftHeading}>
-                    Artworks by {artistDetails.name}
+                    Artworks by {artistDetails?.name}
                 </div>
             </div>
             <Row>
                 {artworks.map(nft => {
-                    console.log(nft, 'nft');
                     return <Col key={uuid()} style={{zIndex:2, marginBottom:30}} lg={3} md={3} sm={2} xs={1}>
                         <NftCard
                             onClick={() => navigate(`/nftdetails/${nft.token_id}`)}

@@ -55,9 +55,8 @@ class EditProfile extends Component {
         .then(({ data: { artists } }) => {
             
             if(artists.length !== 0) {
-                
-                this.setState({profileAlreadyCreated: true});
-                this.setState({artistId: artists[0]._id});
+
+                this.setState({profileAlreadyCreated: true, artistId: artists[0]._id});
                 const artistKeys = Object.entries(artists[0]);
                 const stateKeys = Object.keys(this.state);
         
@@ -67,8 +66,8 @@ class EditProfile extends Component {
                     }
                 });
 
-                this.setState({loading: false});
             }
+            this.setState({loading: false});
         })
         .catch(err => {
             this.setState({loading: false});
@@ -100,7 +99,8 @@ class EditProfile extends Component {
         } = this.state;
 
         let data = {
-            name: name
+            name: name,
+            wallet: this.props.walletInfo.getAccountId() 
         }
 
         const stateObj = {email:email, website:website, facebook:facebook, instagram:instagram, description:description};
@@ -141,6 +141,7 @@ class EditProfile extends Component {
         })
         .catch(err => {
             console.log(err.response.data.error, 'err');
+            alert(err.response.data.error);
             // this.props.alert.error(err.response.data.error, {timeout:5000});
             this.setState({loading:false});
         })

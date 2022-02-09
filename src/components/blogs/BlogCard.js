@@ -10,6 +10,18 @@ export default function BlogCard({ onClick, coverImage, title, description }) {
         cursor: 'pointer'
     }
 
+    const descriptionStyle = {
+        "overflow": "hidden",
+        "text-overflow": "ellipsis",
+        "display": "-webkit-box",
+        "-webkit-line-clamp": "3", /* number of lines to show */
+        "line-clamp": "3",
+        "-webkit-box-orient": "vertical",
+        fontWeight:100, 
+        letterSpacing:1, 
+        fontSize:16
+    }
+
     return (
         <div onClick={onClick} style={containerStyle}>
             <div>
@@ -23,7 +35,7 @@ export default function BlogCard({ onClick, coverImage, title, description }) {
                 <div style={{fontFamily:'Athelas-Bold', fontSize:26, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                     {title}
                 </div>
-                <div style={{fontWeight:100, letterSpacing:1, fontSize:16}}>
+                <div style={descriptionStyle}>
                     {description}
                 </div>
             </div>

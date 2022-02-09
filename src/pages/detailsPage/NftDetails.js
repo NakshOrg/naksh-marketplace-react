@@ -5,6 +5,7 @@ import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { utils } from 'near-api-js';
+import Modal from '../../components/uiComponents/Modal';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
@@ -27,7 +28,8 @@ class NftDetails extends Component {
             nft: null,
             ownerData: null,
             moreNfts: [],
-            isOverviewActive: true
+            isOverviewActive: true,
+            show: false
         }
     }
 
@@ -80,9 +82,12 @@ class NftDetails extends Component {
     
     handleBuyNft = async () => {
 
-        const functions = new NearHelperFunctions(this.props.walletInfo); 
-
-        functions.buyNFt(this.state.nft.price, this.state.nft.token_id);
+        if(this.props.isWalletSignedIn) {
+            const functions = new NearHelperFunctions(this.props.walletInfo); 
+            functions.buyNFt(this.state.nft.price, this.state.nft.token_id);
+            return;
+        }
+        this.setState({show:true});
 
     }
 
@@ -265,19 +270,25 @@ class NftDetails extends Component {
                 <Row>
                     {this.renderNfts()}
                 </Row>
+                <Modal
+                    show={this.state.show}
+                    onHide={() => this.setState({show:false})}
+                />
             </Container>
         )
     }
 }
 
 export default function NftDetailsWrapper(props) {
-
+    
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
+    const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
     const params = useParams();
     const navigate = useNavigate();
     
     return <NftDetails
         walletInfo={walletInfo}
+        isWalletSignedIn={isWalletSignedIn}
         params={params}
         navigate={navigate}
     />;

@@ -488,3 +488,15 @@
   width: 70%;
   background-color: #12192B;
 }
+
+.near-btn {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 9px 12px;
+  cursor:pointer;
+}
+
+.near-btn:hover {
+  background-color: rgba(255, 255, 255, 0.062);
+  transition: 0.3s;
+}

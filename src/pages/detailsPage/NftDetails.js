@@ -177,7 +177,7 @@ class NftDetails extends Component {
     renderNfts = () => {
 
         return this.state.moreNfts.slice(0, 4).map(nft => {
-            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
+            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
                     // onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`, {replace: true})}
                     image={nft.metadata?.media}
@@ -200,21 +200,20 @@ class NftDetails extends Component {
         if(loading) return <Spinner/>;
 
         return (
-            <Container style={{marginTop:105}}>
-                {/* overlay gradient  */}
+            <Container fluid style={{marginTop:105}}>
                 <div className={classes.detailsGradientOverlay}/>
-                {/* overlay gradient  */}
                 <div className={classes.detailsGradientOverlayPink}/>
                 <Row>
-                    <Col lg={7}>
-                        {/* <div style={{height:"63.5%", width:"100%", textAlign:"center"}}>
-                            <img style={{maxWidth:"100%", maxHeight:"100%", borderRadius:6}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
-                        </div> */}
+                    <Col style={{padding:0}} lg={7} md={7}>
                         <div style={{textAlign:"center"}}>
-                            <img style={{borderRadius:6, width:"63.5%"}} src={nft.metadata.media} alt='nft'/>
+                            <img
+                                className={classes.nftImage}
+                                src={nft.metadata.media} 
+                                alt='nft'
+                            />
                         </div>
                     </Col>
-                    <Col lg={5}>
+                    <Col className={classes.descriptionCol} lg={5} md={5}>
                         <div style={globalStyles.flexRowSpace}>
                             <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize"}}>{nft?.metadata?.title}</div>
                             <div>
@@ -229,7 +228,6 @@ class NftDetails extends Component {
                         {(purchasable && nft?.price) && <div style={{marginTop:5}}>
                             <span style={{fontSize:15, opacity:0.6}}>Price:</span> 
                             <span style={{marginLeft:5, fontSize:17}}>{nft?.price} <img style={{marginTop:-2, marginLeft:-1}} src={nearIcon} alt="near"/></span>
-                            {/* <span style={{marginLeft:10, fontSize:15, opacity:0.6}}>{`($${nft?.price * 10.43})`}</span> */}
                         </div>}
                         <div>
                             <div style={{...globalStyles.flexRow, marginTop:20}}>
@@ -240,7 +238,6 @@ class NftDetails extends Component {
                                     OTHER DETAILS
                                 </div>
                             </div>
-                            {/* bottom indicator */}
                             <motion.div 
                                 animate={{ x: isOverviewActive ? 33 : 150 }}
                                 transition={{ duration: 0.5 }}
@@ -261,11 +258,14 @@ class NftDetails extends Component {
                         />
                     </Col>
                 </Row>
-                <div style={{ margin: "45px 0", position: "relative" }}>
+                {/* <div style={{ margin: "45px 0", position: "relative" }}>
                     <div style={{height:2, width:"100%", backgroundColor:"#fff", opacity:0.16}}/>
                     <div className={classes.moreNftHeading}>
                         More NFTs like this
                     </div>
+                </div> */}
+                <div className={classes.heading}>
+                    More NFTs like this
                 </div>
                 <Row>
                     {this.renderNfts()}

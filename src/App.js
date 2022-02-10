@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Header/>
+        {/* <Header/> */}
         <div className='app-content'>
           <Routes/>
         </div>

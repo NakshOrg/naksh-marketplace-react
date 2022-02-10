@@ -80,7 +80,7 @@ class EditProfile extends Component {
     }
 
     buildImgTag = () => {
-        return <img style={{objectFit:"cover", width:150, height:150, borderRadius:75, marginRight:25}} src={this.state.image} alt='icon'/> 
+        return <img className={classes.imgStyle} src={this.state.image} alt='icon'/> 
     } 
 
     saveProfile = async () => {
@@ -171,19 +171,23 @@ class EditProfile extends Component {
         }
 
         return (
-            <Container style={{marginTop:100, marginBottom:40, padding:'0 200px'}} fluid>
+            <Container fluid className={classes.editContainer}>
                 <div style={{...globalStyles.flexRowSpace}}>
                     <div>
-                        <span onClick={() => this.props.navigate(-1)}><FiArrowLeft style={{marginTop:-14, marginRight:10}} size={25} color='#fff'/></span>
+                        <span className={classes.arrowIcon} onClick={() => this.props.navigate(-1)}>
+                            <FiArrowLeft style={{marginTop:-14, marginRight:10}} size={25} color='#fff'/>
+                        </span>
                         <span className={classes.sectionTitle}>Edit Profile</span>
                     </div>
-                    <GradientBtn
-                        onClick={this.saveProfile}
-                        style={{width:200, padding:'0 37px', height:45}}
-                        content={
-                            <div>SAVE CHANGES</div>
-                        }
-                    />
+                    <div className={classes.saveBtnDesktop}>
+                        <GradientBtn
+                            onClick={this.saveProfile}
+                            style={{width:200, padding:'0 37px', height:45}}
+                            content={
+                                <div>SAVE CHANGES</div>
+                            }
+                        />
+                    </div>
                 </div>
                 <div className={classes.label}>
                     PROFILE PICTURE
@@ -191,12 +195,12 @@ class EditProfile extends Component {
                 <div style={{...globalStyles.flexRow}}>
                     {this.state.image ?
                         this.buildImgTag() :
-                        <div style={{...globalStyles.flexCenter, background:"#14192B", width:150, height:150, borderRadius:75, marginRight:25}}>
+                        <div className={classes.imgStyle} style={{...globalStyles.flexCenter, background:"#14192B"}}>
                             <img src={cameraIcon} alt='icon'/> 
                         </div>
                     }
                     <div>
-                        <div style={{fontSize:14, opacity:0.66, letterSpacing:0.5, fontWeight:100, width:"60%", marginBottom:15}}>
+                        <div className={classes.supportedFormats}>
                             Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
                         </div>
                         <label htmlFor="addImg" style={{position:'relative', cursor:'pointer'}}>
@@ -293,6 +297,15 @@ class EditProfile extends Component {
                         />
                     </Col>
                 </Row>
+                <div className={classes.saveBtnMobile}>
+                    <GradientBtn
+                        onClick={this.saveProfile}
+                        style={{width:"100%", position:"fixed", bottom:0, left:0, borderRadius:0, height:45}}
+                        content={
+                            <div>SAVE CHANGES</div>
+                        }
+                    />
+                </div>
             </Container>
         )
     }

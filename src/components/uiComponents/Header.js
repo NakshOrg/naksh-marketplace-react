@@ -129,12 +129,7 @@ function Header() {
                 :
                 <div 
                     onClick={walletSignIn}
-                    style={{    
-                        border: '1px solid #fff',
-                        borderRadius: '4px',
-                        padding: '9px 12px',
-                        cursor:'pointer'
-                    }}
+                    className="near-btn"
                 >
                     <img src={near} alt="near"/>
                 </div>}

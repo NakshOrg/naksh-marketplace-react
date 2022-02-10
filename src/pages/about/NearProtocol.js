@@ -47,17 +47,7 @@ export default function NearProtocol() {
                     <div style={{fontSize:16, letterSpacing:0.5}}>At Naksh, we believe in not only talking the talk but also walking the walk. Our effort in creating a conscious marketplace led to the decision of working with the NEAR ecosystem.</div>
                     <div 
                         onClick={walletSignIn}
-                        style={{    
-                            background: "white",
-                            width: "215px",
-                            height: "50px",
-                            borderRadius: "4px",
-                            alignItems: "center",
-                            display: "flex",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            marginTop:50
-                        }}
+                        className={classes.nearBtn}
                     >
                         <img src={connectNear} alt="near"/>
                     </div>

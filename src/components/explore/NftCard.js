@@ -21,7 +21,7 @@ function NftCard(props) {
             <img src={image} alt="nft"/>
             <div className={classes.cardTag}>
                 <div style={globalStyles.flexRowSpace}>
-                    <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize"}}>{title}</div>
+                    <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{title}</div>
                     <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis", width: "50px"}}>
                         {nearFee} <img src={nearLogo} alt="nearlogo"/>
                     </div>

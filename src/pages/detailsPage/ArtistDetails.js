@@ -99,21 +99,18 @@ export default function ArtistDetails() {
     if(loading) return <Spinner/>
 
     return (
-        <Container style={{marginTop:105}}>
+        <Container fluid style={{marginTop:105}}>
             {/* overlay gradient  */}
             <div className={classes.detailsGradientOverlay}/>
             {/* overlay gradient  */}
             <div className={classes.detailsGradientOverlayPink}/>
             <Row>
-                <Col lg={7}>
-                    {/* <div style={{height:"63.5%", width:"100%", textAlign:"center"}}>
-                        <img style={{maxWidth:"100%", maxHeight:"100%", borderRadius:6}} src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80' alt='nft'/>
-                    </div> */}
+                <Col style={{padding:0}} lg={7}  md={7}>
                     <div style={{textAlign:"center"}}>
-                        <img style={{borderRadius:6, width:"63.5%"}} src={artistDetails?.image} alt='artist'/>
+                        <img className={classes.nftImage} src={artistDetails?.image} alt='artist'/>
                     </div>
                 </Col>
-                <Col lg={5}>
+                <Col className={classes.descriptionCol} lg={5} md={5}>
                     <div style={globalStyles.flexRowSpace}>
                         <div style={{fontFamily:"Athelas-Bold", fontSize:52, lineHeight:"55px"}}>{artistDetails?.name}</div>
                     </div>
@@ -140,15 +137,18 @@ export default function ArtistDetails() {
                     {customFields()}
                 </Col>
             </Row>
-            <div style={{ margin: "45px 0", marginTop: 80, position: "relative" }}>
+            {/* <div style={{ margin: "45px 0", marginTop: 80, position: "relative" }}>
                 <div style={{height:2, width:"100%", backgroundColor:"#fff", opacity:0.16}}/>
                 <div className={classes.moreNftHeading}>
                     Artworks by {artistDetails?.name}
                 </div>
+            </div> */}
+            <div className={classes.heading}>
+                Artworks by {artistDetails?.name}
             </div>
             <Row>
                 {artworks.map(nft => {
-                    return <Col key={uuid()} style={{zIndex:2, marginBottom:30}} lg={3} md={3} sm={2} xs={1}>
+                    return <Col key={uuid()} style={{zIndex:2, marginBottom:30}} lg={3} md={4} sm={6} xs={12}>
                         <NftCard
                             onClick={() => navigate(`/nftdetails/${nft.token_id}`)}
                             image={nft.metadata.media}

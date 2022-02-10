@@ -107,7 +107,7 @@ class UserProfile extends Component {
     renderNfts = () => {
 
         return this.state.ownedNfts.map(nft => {
-            return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={3} sm={2} xs={1}>
+            return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={12}>
                 <NftCard
                     onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}
                     image={nft.metadata.media}
@@ -130,18 +130,13 @@ class UserProfile extends Component {
 
         return (
             <div>
-                {/* <img
-                    className={classes.profileCoverImage} 
-                    src='https://media.istockphoto.com/photos/fine-art-abstract-floral-painting-background-picture-id1258336471'
-                    alt='cover'
-                /> */}
                 <div className={classes.gradientCover1} />
                 <Container fluid>
                     <Row>
-                        <Col lg={4}>
+                        <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>
                             {this.profileInfo()}
                         </Col>
-                        <Col lg={8}>
+                        <Col lg={8} md={8}>
                             <div style={{margin:"30px auto", width:"100%"}}>
                                 <div style={{...globalStyles.flexRow, justifyContent:"center"}}>
                                     <div>

@@ -7,6 +7,12 @@
     left: 33%;
     padding: 0 20px;
 }
+.heading {
+    font-size: 30px;
+    font-family: Athelas-regular;
+    text-align: center;
+    margin: 20px 0;
+}
 .detailsGradientOverlay {
     position: absolute;
     width: 60%;
@@ -40,4 +46,27 @@
     align-items: center;
     display: flex;
     margin-right: 15px;
+}
+
+.nftImage {
+    border-radius:6px;
+    width:63.5%
+}
+
+@media only screen and (max-width: 575px) {
+    .containerPadding {
+        /* padding: 0 20px; */
+    }
+    .nftImage {
+        border-radius:0px;
+        width:100%
+    }
+    .heading {
+        font-size: 26px;
+        margin: 25px 0 12px 0;
+        text-align: left;
+    }
+    .descriptionCol {
+        margin-top: 10px;
+    }
 }

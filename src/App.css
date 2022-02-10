@@ -131,3 +131,14 @@ input {
 .carousel-btns {
     text-align: center;
 }
+
+body::-webkit-scrollbar {
+    width: 8px;
+    background-color: #212529;
+}
+   
+  
+body::-webkit-scrollbar-thumb {
+    background: linear-gradient(94.83deg, #0084ff6b -0.81%, #ff596473 107.02%);
+    outline: none;
+}

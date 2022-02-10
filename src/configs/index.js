@@ -3,8 +3,8 @@ import * as nearAPI from "near-api-js";
 const { keyStores } = nearAPI;
 
 const isDevelopment = window.location.host === "localhost:3000";
-const isStaging = window.location.host === "admindev.naksh.org";
-const isProduction = window.location.host === "admin.naksh.org";
+const isStaging = window.location.host === "marketdev.naksh.org";
+const isProduction = window.location.host === "market.naksh.org";
 
 const testnetConfig = {
     networkId: "testnet",

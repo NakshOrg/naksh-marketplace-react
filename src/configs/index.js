@@ -27,8 +27,8 @@ const mainnetConfig = {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     baseURL: (isDevelopment || isStaging) ? 'http://apidev.naksh.org/admin' : 'https://api.naksh.org/admin',
-    nakshContractWallet: (isDevelopment || isStaging) ? 'nft1.abhishekvenunathan.testnet' : 'nft1.srilakshmi_96.near' ,
-    nakshMarketWallet: (isDevelopment || isStaging) ? 'market1.abhishekvenunathan.testnet' : 'market1.srilakshmi_96.near',
+    nakshContractWallet: (isDevelopment || isStaging) ? 'nft1.abhishekvenunathan.testnet' : 'nft1.naksh.near' ,
+    nakshMarketWallet: (isDevelopment || isStaging) ? 'market1.abhishekvenunathan.testnet' : 'market1.naksh.near',
     appUrl: isDevelopment ? "http://localhost:3000" :
     isStaging ? "http://marketdev.naksh.org" :
     "https://market.naksh.org",

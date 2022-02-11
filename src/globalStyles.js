@@ -4,6 +4,7 @@
 // Primary Headings - 52px as 42px 
 // Primary Sub Headings - 28px as 24px 
 // Primary Caption - 20px as 16px 
+// Headings - 42px as 38px 
 
 const flexRow =  {
     display:"flex",

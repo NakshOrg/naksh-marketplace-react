@@ -113,7 +113,7 @@ function Header() {
                 />
             </div>
             <div className='header-nav-container'>
-                <div className="header-nav-items">
+                <div style={{marginRight:70}} className="header-nav-items">
                     <Dropdown>
                         <NavLink style={{color:"#fff"}} to="/browse">
                             <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
@@ -143,7 +143,7 @@ function Header() {
                 </div>
                 {isWalletSignedIn ?
                 <Dropdown>
-                    <Dropdown.Toggle style={{backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                    <Dropdown.Toggle className='profile-icon' style={{backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                         <img style={{height:40, width:40, borderRadius:40, objectFit:"cover"}} src={userData?.image ?? profileIcon} alt="profileIcon"/>
                         {" "}<FiChevronDown size={15} color="#fff"/>
                     </Dropdown.Toggle>

@@ -24,9 +24,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Header/>
-        {/* <div className='app-content'>
+        <div className='app-content'>
           <Routes/>
-        </div> */}
+        </div>
       </BrowserRouter>
     </div>
   );

@@ -1,6 +1,13 @@
 const openInNewTab = (url) => {
     var prefix = 'http://';
+    var prefix2 = 'https://';
     let link = url;
+
+    if(url.includes(prefix) || url.includes(prefix2)) {
+        const newWindow = window.open(link, '_blank', 'noopener, noreferrer');
+        if (newWindow) newWindow.opener = null;
+        return;
+    }
     if (url.substr(0, prefix.length) !== prefix) {
         link = prefix + url;
     }

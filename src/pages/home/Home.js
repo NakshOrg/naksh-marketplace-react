@@ -3,10 +3,8 @@ import { Col, Row, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import SwipingCarousel from '../../components/uiComponents/SwipingCarousel';
-import art1 from "../../assets/images/arts1.png";
-import art2 from "../../assets/images/arts2.png";
-import art3 from "../../assets/images/arts3.png";
 import classes from './home.module.css';
+import DesktopCarousel from '../../components/uiComponents/DesktopCarousel';
 
 
 export default function Home() {
@@ -23,23 +21,15 @@ export default function Home() {
                                 An NFT marketplace fuelled by art communities from all over India
                             </h1>
                             <div id={classes.btnContainer} onClick={() => navigate("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
-                                <div style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+                                <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                             </div>
                         </div>
                         <div className={classes.artworkGradientOverlay}/>
                     </div>
                 </Col>
-                <Col lg={7} md={7} sm={12}>
+                <Col style={{padding:0}} lg={7} md={7} sm={12}>
                     <div className={classes.artSectionCarouselDesktop}>
-                        <div style={{overflow: "hidden"}} className={classes.img1}>
-                            <img style={{width:"100%", height:"100vh"}} src={art1} alt="art1"/>
-                        </div>
-                        <div style={{overflow: "hidden"}} className={classes.img2}>
-                            <img style={{width:"100%", height:"100vh"}} src={art2} alt="art2"/>
-                        </div>
-                        <div style={{overflow: "hidden"}} className={classes.img3}>
-                            <img style={{width:"100%", height:"100vh"}} src={art3} alt="art3"/>
-                        </div>
+                        <DesktopCarousel/>
                     </div>
                     <div className={classes.artSectionCarouselMobile}> 
                         <SwipingCarousel/>

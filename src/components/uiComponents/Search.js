@@ -23,13 +23,13 @@ function List({type, image, title, icon, name, onClick}) {
 }
 
 export function MobileSearchInput({ value, onChange }) {
-    return <div style={{position:'relative', width:'100%'}}>
+    return <div style={{position:'relative'}}>
         <input
             style={{width:"100%"}}
             onChange={onChange}
             value={value}
             className="search-bar" 
-            placeholder="Search for NFTs and artists" 
+            placeholder="Search for artists" 
         />
         <FiSearch style={{opacity:0.8, position:'absolute', top:'24%', left:15}} size={20}/>
     </div>
@@ -51,10 +51,10 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResults 
                     // onBlur={show}
                     onChange={onChange}
                     value={keyword}
-                    className="search-bar" 
-                    placeholder="Search for NFTs and artists" 
+                    className="search-bar search-bar-desktop" 
+                    placeholder="Search for artists" 
                 />
-                <FiSearch style={{opacity:0.8, position:'absolute', top:'24%', left:15}} size={20}/>
+                <FiSearch className='search-icon-desktop' style={{opacity:0.8, position:'absolute', top:"24%", left:15}} size={20}/>
                 {loading ?
                 <Spinner 
                     animation="border" 

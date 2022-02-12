@@ -136,7 +136,7 @@ class EditProfile extends Component {
         _postArtist(data)
         .then(res => {
             this.setState({loading:false});
-            this.props.navigate('/userprofile');
+            this.props.history.push('/userprofile');
             // this.props.alert.success('Artist added successfully!', {timeout:2000});
         })
         .catch(err => {
@@ -152,7 +152,7 @@ class EditProfile extends Component {
         .then(({ data: { artist }}) => {
             this.props.updateUserData(artist);
             this.setState({loading:false});
-            this.props.navigate('/userprofile');
+            this.props.history.push('/userprofile');
             // this.props.alert.success('Artist updated successfully!', {timeout:2000});
         })
         .catch(err => {
@@ -174,7 +174,7 @@ class EditProfile extends Component {
             <Container fluid className={classes.editContainer}>
                 <div style={{...globalStyles.flexRowSpace}}>
                     <div>
-                        <span className={classes.arrowIcon} onClick={() => this.props.navigate(-1)}>
+                        <span className={classes.arrowIcon} onClick={() => this.props.history.goBack()}>
                             <FiArrowLeft style={{marginTop:-14, marginRight:10}} size={25} color='#fff'/>
                         </span>
                         <span className={classes.sectionTitle}>Edit Profile</span>

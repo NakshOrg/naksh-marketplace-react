@@ -98,7 +98,7 @@ class UserProfile extends Component {
                     <FiGlobe color='#000' size={16}/>
                 </div>
             </div> */}
-            <div onClick={() => this.props.navigate('/editprofile')} className={classes.editBtn}>
+            <div onClick={() => this.props.history.push('/editprofile')} className={classes.editBtn}>
                 EDIT PROFILE
             </div>
         </div>
@@ -109,7 +109,7 @@ class UserProfile extends Component {
         return this.state.ownedNfts.map(nft => {
             return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={12}>
                 <NftCard
-                    onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`)}
+                    onClick={() => this.props.history.push(`/nftdetails/${nft.token_id}`)}
                     image={nft.metadata.media}
                     title={nft.metadata.title}
                     nearFee={nft.price}

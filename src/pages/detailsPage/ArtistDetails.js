@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
@@ -24,7 +24,7 @@ import uuid from 'react-uuid';
 export default function ArtistDetails() {
 
     const params = useParams();
-    const navigate = useNavigate();
+    const history = useHistory();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const [loading, setLoading] = useState(true);
     const [artistDetails, setArtistDetails] = useState(null);
@@ -99,10 +99,8 @@ export default function ArtistDetails() {
     if(loading) return <Spinner/>
 
     return (
-        <Container fluid style={{marginTop:105}}>
-            {/* overlay gradient  */}
+        <div className={classes.container}>
             <div className={classes.detailsGradientOverlay}/>
-            {/* overlay gradient  */}
             <div className={classes.detailsGradientOverlayPink}/>
             <Row>
                 <Col style={{padding:0}} lg={7}  md={7}>
@@ -112,7 +110,7 @@ export default function ArtistDetails() {
                 </Col>
                 <Col className={classes.descriptionCol} lg={5} md={5}>
                     <div style={globalStyles.flexRowSpace}>
-                        <div style={{fontFamily:"Athelas-Bold", fontSize:52, lineHeight:"55px"}}>{artistDetails?.name}</div>
+                        <div className={classes.artistName} style={{fontFamily:"Athelas-Bold", fontSize:52, lineHeight:"55px"}}>{artistDetails?.name}</div>
                     </div>
                     <div className={classes.iconsContainer} style={{...globalStyles.flexRow}}>
                         {artistDetails?.instagram && <div style={{marginTop:10}} onClick={() => helpers.openInNewTab(artistDetails.instagram)}><img src={instagram} alt='instagram'/></div>}
@@ -143,24 +141,26 @@ export default function ArtistDetails() {
                     Artworks by {artistDetails?.name}
                 </div>
             </div> */}
-            <div className={classes.heading}>
-                Artworks by {artistDetails?.name}
+            <div className={classes.bottomContent}>
+                <div className={classes.heading}>
+                    Artworks by {artistDetails?.name}
+                </div>
+                <Row>
+                    {artworks.map(nft => {
+                        return <Col key={uuid()} style={{zIndex:2, marginBottom:30}} lg={3} md={4} sm={6} xs={12}>
+                            <NftCard
+                                onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
+                                image={nft.metadata.media}
+                                title={nft.metadata.title}
+                                nearFee={nft.price}
+                                price={"$121,000,000"}
+                                artistName={nft?.artist?.name}
+                                artistImage={nft?.artist?.image}
+                            />
+                        </Col>
+                    })}
+                </Row>
             </div>
-            <Row>
-                {artworks.map(nft => {
-                    return <Col key={uuid()} style={{zIndex:2, marginBottom:30}} lg={3} md={4} sm={6} xs={12}>
-                        <NftCard
-                            onClick={() => navigate(`/nftdetails/${nft.token_id}`)}
-                            image={nft.metadata.media}
-                            title={nft.metadata.title}
-                            nearFee={nft.price}
-                            price={"$121,000,000"}
-                            artistName={nft?.artist?.name}
-                            artistImage={nft?.artist?.image}
-                        />
-                    </Col>
-                })}
-            </Row>
-        </Container>
+        </div>
     )
 }

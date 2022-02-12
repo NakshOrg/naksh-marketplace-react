@@ -35,7 +35,7 @@
     filter: blur(150px);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: 0%;
-    z-index: 1;
+    z-index: -1;
 }
 .iconsContainer > div {
     background-color: #fff;
@@ -53,6 +53,17 @@
     width:63.5%
 }
 
+.container {
+    margin-top:105px;
+    padding: 0 8%;
+}
+
+@media only screen and (max-width: 767px) {
+    .artistName {
+        margin-top: 20px !important;
+    }
+}
+
 @media only screen and (max-width: 575px) {
     .containerPadding {
         /* padding: 0 20px; */
@@ -65,8 +76,23 @@
         font-size: 26px;
         margin: 25px 0 12px 0;
         text-align: left;
+        line-height: 30px !important;
     }
     .descriptionCol {
         margin-top: 10px;
+        padding: 0 35px;
+    }
+    .container {
+        margin-top: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    .bottomContent {
+        padding: 0 25px;
+    }
+    .artistName {
+        font-size: 36px !important;
+        line-height: 38px !important;
+        margin-top: 10px !important;
     }
 }

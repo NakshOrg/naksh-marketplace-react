@@ -30,8 +30,8 @@ export default function MyVerticallyCenteredModal(props) {
     >
       <Modal.Body style={{textAlign:"center"}}>
         <FiX onClick={props.onHide} style={{position:"absolute", right:15, top:15, cursor:"pointer"}} size={18} color="#fff"/>
-      <div style={{fontFamily:"Athelas-Bold", fontSize:32}}>Connect to NEAR</div>
-      <div style={{fontSize:16, fontWeight:100}}>Connect to your Near Wallet to complete this purchase</div>
+      <div className="near-heading">Connect to NEAR</div>
+      <div className="near-description">Connect to your Near Wallet to complete this purchase</div>
         <div 
           onClick={walletSignIn}
           style={{    

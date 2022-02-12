@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Container, Spinner } from 'react-bootstrap';
+import { BottomSheet } from 'react-spring-bottom-sheet';
+import crossBtn from "../../assets/svgs/header-cross.svg";
+import 'react-spring-bottom-sheet/dist/style.css';
+import { useHistory, Link } from 'react-router-dom';
+import uuid from 'react-uuid';
 
 import ArtistCard from '../../components/explore/ArtistCard';
 import Filters from '../../pages/browse/Filters';
 import globalStyles from '../../globalStyles';
 import classes from './about.module.css';
 import { OutlineBtn } from '../../components/uiComponents/Buttons';
-import { Link } from 'react-router-dom';
 import { _getAllArtforms, _getAllArtists } from '../../services/axios/api';
-import uuid from 'react-uuid';
 import Dropdown from '../../components/uiComponents/Dropdown';
+import { staticValues } from '../../constants';
 
 export default function OurArtists() {
 
     const [loading, setLoading] = useState(true);
     const [artists, setArtists] = useState([]);
     const [artforms, setArtforms] = useState([]);
+    const [open, setOpen] = useState(false);
     const [filterParams, setFilterParams] = useState({
         sortBy: 'createdAt', 
         sort: -1,
         createdBy: 0
     });
     const [selectedArtform, setSelectedArtform] = useState("All Artforms");
+    const history = useHistory();
 
     useEffect(() => {
       
@@ -63,11 +69,11 @@ export default function OurArtists() {
         setFilterParams(prevState => ({
             ...prevState,
             artform: item._id
-        }))
+        }));
     }
 
     return (
-        <Container style={{marginTop:140}}>
+        <Container fluid className={classes.container}>
             <div className={classes.sectionCaption}>
                 Explore our lineup of sensational artists from all across India
             </div>
@@ -76,7 +82,7 @@ export default function OurArtists() {
             </div>
             <div style={{...globalStyles.flexRowSpace, marginTop:100}}>
                 <div style={{margin:0}} className={classes.sectionTitle}>Our artists</div>
-                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
+                <div className={classes.desktopFilter} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
                     <div style={{marginLeft:13}}/>
                     <Dropdown 
                         title={selectedArtform}
@@ -97,9 +103,10 @@ export default function OurArtists() {
             </div> :
             <Row>
                 {artists.map(artist => {
-                return <Col style={{marginBottom:70}} key={uuid()} lg={3} md={3} sm={2} xs={1}>
-                    <Link style={{color:"#fff"}} to={`/ourartists/${artist._id}`}>
+                return <Col style={{marginBottom:70}} key={uuid()} lg={3} md={4} sm={6} xs={12}>
+                    <Link style={{color:"#fff"}}>
                         <ArtistCard
+                            onClick={() => history.push(`/ourartists/${artist._id}`)}
                             image={artist.image}
                             name={artist.name}
                             artform={artist?.artform?.name ?? "-----"}
@@ -108,6 +115,45 @@ export default function OurArtists() {
                     </Link>
                 </Col>})}
             </Row>}
+            <div onClick={() => setOpen(true)} className={classes.mobileFixedBtn}>
+                    FILTER
+                </div>  
+                <BottomSheet
+                    open={open}
+                    onDismiss={() => setOpen(false)}
+                    header={false}
+                    snapPoints={({ minHeight, maxHeight }) => [minHeight*1.8, maxHeight]}
+                >
+                    <img 
+                        onClick={() => setOpen(false)}
+                        style={{height:30, width:30, position: "absolute", right: "20px", top: "15px"}} 
+                        src={crossBtn} 
+                        alt="cross"
+                    />
+                    <div style={{marginTop:35}}>
+                        <div style={{fontFamily:"Athelas-Bold", fontSize:18}}>Sort by</div>
+                        <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:8}}/>
+                        <div className={classes.pillsContainer}>
+                            {artforms.map(item => {
+                                return <div
+                                    key={uuid()} 
+                                    onClick={() => handleFilterChange(item)}
+                                    className={`${classes.pill} ${selectedArtform === item.name ? classes.pillActive : ""}`}
+                                >
+                                    {item.name}
+                                </div>})
+                            }
+                        </div>
+                    </div>
+                    <div style={{...globalStyles.flexRowSpace, position: "absolute", width: "87%", bottom: "20px"}}>
+                        <div className={classes.clearBtn} onClick={() => setSelectedArtform("All Artforms")}>
+                            CLEAR FILTER
+                        </div>  
+                        <div className={classes.applyBtn} onClick={() => setOpen(false)}>
+                            APPLY FILTER
+                        </div> 
+                    </div>
+                </BottomSheet>  
             {/* <OutlineBtn
                 text="VIEW MORE"
                 style={{margin:"20px auto", fontFamily:"Athelas-Regular", borderRadius:2, fontSize:12, letterSpacing:"1px", textAlign:'center'}}

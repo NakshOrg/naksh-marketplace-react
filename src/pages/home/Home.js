@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import SwipingCarousel from '../../components/uiComponents/SwipingCarousel';
 import classes from './home.module.css';
@@ -9,7 +9,7 @@ import DesktopCarousel from '../../components/uiComponents/DesktopCarousel';
 
 export default function Home() {
 
-    const navigate = useNavigate();
+    const history = useHistory();
 
     return (
         <Container fluid style={{height:"100vh"}}>
@@ -20,7 +20,7 @@ export default function Home() {
                             <h1 className={classes.artSectionContent}>
                                 An NFT marketplace fuelled by art communities from all over India
                             </h1>
-                            <div id={classes.btnContainer} onClick={() => navigate("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+                            <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
                                 <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                             </div>
                         </div>

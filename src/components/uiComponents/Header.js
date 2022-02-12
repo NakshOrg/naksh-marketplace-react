@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi"
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from "framer-motion"
@@ -25,7 +25,7 @@ import globalStyles from '../../globalStyles';
 function Header() {
     
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const history = useHistory();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
     const userData = useSelector(state => state.nearReducer.userData);
@@ -94,7 +94,7 @@ function Header() {
 
     function navigateItem(path) {
         setShowHeaderContents(false);
-        navigate(path);
+        history.push(path);
     }
 
     return (
@@ -126,9 +126,9 @@ function Header() {
                             ABOUT<FiChevronDown size={15} color="#fff"/>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
-                            <Dropdown.Item onClick={() => navigate("/aboutnaksh")}>About Naksh</Dropdown.Item>
-                            <Dropdown.Item onClick={() => navigate("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
-                            <Dropdown.Item onClick={() => navigate("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/aboutnaksh")}>About Naksh</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                     <Dropdown>
@@ -136,8 +136,8 @@ function Header() {
                             RESOURCES<FiChevronDown size={15} color="#fff"/>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
-                            <Dropdown.Item onClick={() => navigate("/blogs")}>Blogs</Dropdown.Item>
-                            <Dropdown.Item onClick={() => navigate("/helpcenter")} style={{marginTop:15}}>Help Center</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/blogs")}>Blogs</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/helpcenter")} style={{marginTop:15}}>Help Center</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
@@ -148,7 +148,7 @@ function Header() {
                         {" "}<FiChevronDown size={15} color="#fff"/>
                     </Dropdown.Toggle>
                     <Dropdown.Menu style={{padding:15, fontSize:15}} id="dropdown-basic-content">
-                        <Dropdown.Item onClick={() => navigate("/userprofile")}>View Profile</Dropdown.Item>
+                        <Dropdown.Item onClick={() => history.push("/userprofile")}>View Profile</Dropdown.Item>
                         <Dropdown.Item onClick={walletSignOut} style={{marginTop:15}}>Log Out</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

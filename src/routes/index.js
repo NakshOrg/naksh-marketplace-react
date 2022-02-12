@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Home from '../pages/home/Home';
 import Browse from '../pages/browse/Browse';
@@ -17,25 +17,23 @@ import NearProtocol from '../pages/about/NearProtocol';
 
 export default function Navigation() {
 
-    const navigate = useNavigate();
-    const location = useLocation();
-
     return (
-        <Routes>
-            <Route path="/" element={<Home/>} exact />
-            <Route path="/browse" element={<Browse navigate={navigate}/>} />
-            <Route path="/nftdetails/:id" element={<NftDetails/>}/>
-            <Route path="/searchresults/:keyword" element={<SearchResults/>} />
-            <Route path="/userprofile" element={<UserProfile navigate={navigate}/>} />
-            <Route path="/editprofile" element={<EditProfile navigate={navigate}/>} />
-            <Route path="/blogs" element={<Blogs navigate={navigate}/>} />
-            <Route path="/helpcenter" element={<HelpCenter navigate={navigate}/>} />
-            <Route path="/aboutnaksh" element={<AboutNaksh/>} />
-            <Route path="/ourartists" element={<OurArtists/>} />
-            <Route path="/ourartists/:id" element={<ArtistDetails/>} />
-            <Route path="/nearprotocol" element={<NearProtocol/>} />
-            <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Switch>
+            <Route path="/" component={Home} exact/>
+            <Route path="/browse" component={Browse}/>
+            <Route path="/nftdetails/:id" component={NftDetails} exact/>
+            <Route path="/searchresults/:keyword" component={SearchResults}/>
+            <Route path="/userprofile" component={UserProfile}/>
+            <Route path="/editprofile" component={EditProfile}/>
+            <Route path="/blogs" component={Blogs}/>
+            <Route path="/helpcenter" component={HelpCenter}/>
+            <Route path="/aboutnaksh" component={AboutNaksh}/>
+            <Route path="/ourartists/:id" component={ArtistDetails}/>
+            <Route path="/ourartists" component={OurArtists}/>
+            <Route path="/nearprotocol" component={NearProtocol}/>
+            <Route path="/404" component={NotFound}/>
+            <Redirect from='*' to='/404' exact/>
+        </Switch>
     )
 }
 

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { BsArrowRight } from 'react-icons/bs';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
+import { Spinner } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import uuid from 'react-uuid';
 
 import globalStyles from '../../globalStyles';
 import './uiComponents.css';
-import { Spinner } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import uuid from 'react-uuid';
+
 
 function List({type, image, title, icon, name, onClick}) {
     return <div onClick={onClick} style={{...globalStyles.flexRow, marginTop:12}}>
@@ -37,7 +38,7 @@ export function MobileSearchInput({ value, onChange }) {
 
 export function Search({ keyword, onChange, loading, resetSearch, searchResults }) {
 
-    const navigate = useNavigate();
+    const history = useHistory();
     const [show, setShow] = useState(false);
 
     return (
@@ -111,7 +112,7 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResults 
                             <div style={{fontFamily:"Athelas-bold", fontSize:22}}>Artists</div>
                             <div 
                             onClick={() => {
-                                navigate('/searchresults/artists');
+                                history.push('/searchresults/artists');
                                 setShow(false);
                             }} 
                             style={{fontSize:11, letterSpacing:1.5, cursor:"pointer", zIndex:3}}>
@@ -123,7 +124,7 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResults 
                                 key={uuid()}
                                 onClick={() => {
                                     setShow(false);
-                                    navigate(`/ourartists/${item._id}`);
+                                    history.push(`/ourartists/${item._id}`);
                                 }}
                                 image={item.image}
                                 title={item.name}

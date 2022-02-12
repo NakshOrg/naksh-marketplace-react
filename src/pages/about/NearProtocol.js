@@ -40,9 +40,13 @@ export default function NearProtocol() {
     };
 
     return (
-        <Container style={{marginTop:160}} fluid>
-            <Row>
-                <Col style={{paddingLeft:120}} lg={5}>
+        <Container fluid className={classes.nearcontainer}>
+            {/* overlay gradient  */}
+            <div className={classes.nearGradientOverlay}/>
+            {/* overlay gradient  */}
+            <div className={classes.nearGradientOverlayPink}/>
+            <Row style={{display:"flex", alignItems:"center"}}>
+                <Col lg={4}>
                     <div style={{fontFamily:'Athelas-Bold', fontSize:42}}>Why NEAR?</div>
                     <div style={{fontSize:16, letterSpacing:0.5}}>At Naksh, we believe in not only talking the talk but also walking the walk. Our effort in creating a conscious marketplace led to the decision of working with the NEAR ecosystem.</div>
                     <div 
@@ -52,7 +56,7 @@ export default function NearProtocol() {
                         <img src={connectNear} alt="near"/>
                     </div>
                 </Col>
-                <Col lg={7}>
+                <Col lg={8}>
                     <Carousel slideData={slideData} loading={loading}/>    
                 </Col>
             </Row>

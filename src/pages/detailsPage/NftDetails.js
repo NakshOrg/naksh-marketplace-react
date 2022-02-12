@@ -3,7 +3,7 @@ import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { utils } from 'near-api-js';
 import Modal from '../../components/uiComponents/Modal';
 
@@ -35,6 +35,7 @@ class NftDetails extends Component {
 
     componentDidMount() {
         if(this.props.walletInfo) {
+            this.setState({loading:true});
             this.fetchNft();
         }
 
@@ -43,6 +44,11 @@ class NftDetails extends Component {
     componentDidUpdate(prevProps) {
 
         if(prevProps.walletInfo !== this.props.walletInfo) {
+            this.fetchNft();
+        }
+
+        if(prevProps.location.pathname !== this.props.location.pathname) {
+            this.setState({loading:true});
             this.fetchNft();
         }
 
@@ -117,7 +123,7 @@ class NftDetails extends Component {
             <div style={{marginTop:14, ...globalStyles.flexRow}}>
                 <div>
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Artist</div>
-                    <div onClick={() => this.props.navigate(`/ourartists/${nft?.artist?._id}`)} style={{...globalStyles.flexRow, cursor:"pointer"}}>
+                    <div onClick={() => this.props.history.push(`/ourartists/${nft?.artist?._id}`)} style={{...globalStyles.flexRow, cursor:"pointer"}}>
                         <img
                             style={{height:30, width:30, borderRadius:30, objectFit:'cover'}}
                             src={nft?.artist?.image}
@@ -134,7 +140,7 @@ class NftDetails extends Component {
                             src={this.state?.ownerData?.image ?? profileSvg }
                             alt="artist"
                         />
-                        <div style={{fontSize:16, marginLeft:10}}>{nft?.owner_id}</div>
+                        <div style={{fontSize:16, marginLeft:10, wordBreak:"break-word"}}>{nft?.owner_id}</div>
                     </div>
                 </div>
             </div>
@@ -179,7 +185,7 @@ class NftDetails extends Component {
         return this.state.moreNfts.slice(0, 4).map(nft => {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
-                    // onClick={() => this.props.navigate(`/nftdetails/${nft.token_id}`, {replace: true})}
+                    onClick={() => this.props.history.push(`/nftdetails/${nft.token_id}`, {replace: true})}
                     image={nft.metadata?.media}
                     title={nft.metadata?.title}
                     nearFee={nft.price}
@@ -200,11 +206,11 @@ class NftDetails extends Component {
         if(loading) return <Spinner/>;
 
         return (
-            <Container fluid style={{marginTop:105}}>
+            <div className={classes.container}>
                 <div className={classes.detailsGradientOverlay}/>
                 <div className={classes.detailsGradientOverlayPink}/>
                 <Row>
-                    <Col style={{padding:0}} lg={7} md={7}>
+                    <Col lg={7} md={7}>
                         <div style={{textAlign:"center"}}>
                             <img
                                 className={classes.nftImage}
@@ -215,8 +221,8 @@ class NftDetails extends Component {
                     </Col>
                     <Col className={classes.descriptionCol} lg={5} md={5}>
                         <div style={globalStyles.flexRowSpace}>
-                            <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize"}}>{nft?.metadata?.title}</div>
-                            <div>
+                            <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize", lineHeight:"40px", marginRight:10}}>{nft?.metadata?.title}</div>
+                            <div style={{display:'flex'}}>
                                 <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                     <FiBookmark size={22} color="#130F26"/>
                                 </span>
@@ -258,23 +264,19 @@ class NftDetails extends Component {
                         />
                     </Col>
                 </Row>
-                {/* <div style={{ margin: "45px 0", position: "relative" }}>
-                    <div style={{height:2, width:"100%", backgroundColor:"#fff", opacity:0.16}}/>
-                    <div className={classes.moreNftHeading}>
+                <div className={classes.bottomContent}>
+                    <div className={classes.heading}>
                         More NFTs like this
                     </div>
-                </div> */}
-                <div className={classes.heading}>
-                    More NFTs like this
+                    <Row>
+                        {this.renderNfts()}
+                    </Row>
                 </div>
-                <Row>
-                    {this.renderNfts()}
-                </Row>
                 <Modal
                     show={this.state.show}
                     onHide={() => this.setState({show:false})}
                 />
-            </Container>
+            </div>
         )
     }
 }
@@ -283,14 +285,16 @@ export default function NftDetailsWrapper(props) {
     
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
-    const params = useParams();
-    const navigate = useNavigate();
+    const params = useParams(); 
+    const history = useHistory();
+    const location = useLocation();
     
     return <NftDetails
         walletInfo={walletInfo}
         isWalletSignedIn={isWalletSignedIn}
         params={params}
-        navigate={navigate}
+        history={history}
+        location={location}
     />;
 
 }

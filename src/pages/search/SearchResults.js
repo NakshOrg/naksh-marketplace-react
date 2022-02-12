@@ -3,19 +3,20 @@ import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from "framer-motion";
 import { FiSearch } from 'react-icons/fi';
 import uuid from 'react-uuid';
+import { useHistory, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 
 import NftCard from '../../components/explore/NftCard';
 import ArtistCard from '../../components/explore/ArtistCard';
 import classes from './search.module.css';
 import globalStyles from '../../globalStyles';
 import Search, { MobileSearchInput } from '../../components/uiComponents/Search';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+;
 
 export default function SearchResults() {
 
     const params = useParams();
-    const navigate = useNavigate();
+    const history = useHistory();
     const searchResults = useSelector(state => state.dataReducer.searchResults);
     const searchKeyword = useSelector(state => state.dataReducer.searchKeyword);
 
@@ -54,7 +55,7 @@ export default function SearchResults() {
             return searchResults.map(artist => {
                 return <Col key={uuid()} style={{marginBottom:70}} lg={3} md={4} sm={6} xs={12}>
                     <ArtistCard
-                        onClick={() => navigate(`/ourartists/${artist._id}`)}
+                        onClick={() => history.push(`/ourartists/${artist._id}`)}
                         image={artist.image}
                         name={artist.name}
                         artform={artist?.artform?.name}

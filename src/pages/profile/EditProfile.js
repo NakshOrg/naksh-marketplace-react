@@ -267,7 +267,7 @@ class EditProfile extends Component {
                 <div style={{marginBottom:5}} className={classes.label}>
                     SOCIAL MEDIA
                 </div>
-                <Row>
+                <Row style={{marginBottom:60}}>
                     <Col lg={6}>
                         <MaterialInput 
                             label="Instagram"

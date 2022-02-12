@@ -24,7 +24,7 @@ function List({type, image, title, icon, name, onClick}) {
 }
 
 export function MobileSearchInput({ value, onChange }) {
-    return <div style={{position:'relative'}}>
+    return <div style={{position:'relative', width:"100%"}}>
         <input
             style={{width:"100%"}}
             onChange={onChange}
@@ -82,30 +82,12 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResults 
             </div>
             { show ?
             <div className="search-dropdown">
-                {/* <div>
-                    <div style={globalStyles.flexRowSpace}>
-                        <div style={{fontFamily:"Athelas-bold", fontSize:22}}>NFTs</div>
-                        <div style={{fontSize:11, letterSpacing:1.5}}>VIEW ALL (12) <span><BsArrowRight size={18} color="#fff"/></span></div>
-                    </div>
-                    <List
-                        image="https://worlduniversityofdesign.ac.in/assets/images/bgs/school-of-visual-arts-banner.jpg"
-                        title="Mughal Emperor"
-                        icon={<FiUser size={17} color='#FFFFFF' style={{opacity:0.7}}/>}
-                        name="Shrishti Saha"
-                        type="nft"
-                    />
-                    <List
-                        image="https://worlduniversityofdesign.ac.in/assets/images/bgs/school-of-visual-arts-banner.jpg"
-                        title="Mughal Emperor"
-                        icon={<FiUser size={17} color='#FFFFFF' style={{opacity:0.7}}/>}
-                        name="Shrishti Saha"
-                        type="nft"
-                    />
-                </div> */}
                 {
                     keyword && searchResults.length === 0 && !loading 
                     ?
-                    <div style={{fontFamily:"Athelas-bold", fontSize:20, textAlign:'center'}}>No results found</div> :
+                    <div style={{fontFamily:"Athelas-bold", fontSize:20, textAlign:'center'}}>
+                        {`Sorry! No results found for ${keyword}!`}
+                    </div> :
                     searchResults.length !== 0 &&
                     <div style={{marginTop:20}}>
                         <div style={globalStyles.flexRowSpace}>

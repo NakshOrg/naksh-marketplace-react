@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi"
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from "framer-motion"
@@ -26,6 +26,7 @@ function Header() {
     
     const dispatch = useDispatch();
     const history = useHistory();
+    const location = useLocation();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
     const userData = useSelector(state => state.nearReducer.userData);
@@ -34,6 +35,8 @@ function Header() {
 
     const [keyword, setkeyword] = useState("");
     const [showHeaderContents, setShowHeaderContents] = useState(false);
+
+    const isSearchPage = location.pathname === "/searchresults/nfts" || location.pathname === "/searchresults/artists";
 
     const list = {
         visible: { opacity: 1 },
@@ -135,9 +138,19 @@ function Header() {
                         <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                             RESOURCES<FiChevronDown size={15} color="#fff"/>
                         </Dropdown.Toggle>
-                        <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
+                        <Dropdown.Menu style={{...menuStyle, width:230}} id="dropdown-basic-content">
                             <Dropdown.Item onClick={() => history.push("/blogs")}>Blogs</Dropdown.Item>
                             <Dropdown.Item onClick={() => history.push("/helpcenter")} style={{marginTop:15}}>Help Center</Dropdown.Item>
+                            <div style={{height:1, backgroundColor:"#fff", margin:"10px 0", opacity:0.27}}/>
+                            <Dropdown.Item onClick={() => history.push("/helpcenter")} style={{marginTop:15}}>
+                                <div className="icons-container" style={{...globalStyles.flexRow}}>
+                                    <div><img style={{height:15}} src={discord} alt='discord'/></div>
+                                    <div><img style={{height:15}} src={instagram} alt='instagram'/></div>
+                                    <div><img style={{height:15}} src={twitter} alt='twitter'/></div>
+                                    <div><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
+                                    <div><img style={{height:15}} src={telegram} alt='telegram'/></div>
+                                </div>
+                            </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
@@ -166,7 +179,7 @@ function Header() {
                 <NavLink style={{color:"#fff"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
                 </NavLink>
-                {!showHeaderContents && <div onClick={() => setShowHeaderContents(true)}>
+                {(!showHeaderContents && !isSearchPage) &&  <div onClick={() => setShowHeaderContents(true)}>
                     <img src={hamburgerMenu} alt="hamburger-menu"/>
                 </div>}
             </div>

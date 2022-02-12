@@ -1,5 +1,7 @@
 import React from 'react';
 
+import classes from '../../pages/resources/resources.module.css';
+
 export default function BlogCard({ onClick, coverImage, title, description }) {
 
     const containerStyle = {
@@ -23,7 +25,7 @@ export default function BlogCard({ onClick, coverImage, title, description }) {
     }
 
     return (
-        <div onClick={onClick} style={containerStyle}>
+        <div className={classes.blogContainer} onClick={onClick} style={containerStyle}>
             <div>
                 <img 
                     style={{width:'100%', height:'200px', objectFit:'cover', borderRadius:5}} 
@@ -32,10 +34,10 @@ export default function BlogCard({ onClick, coverImage, title, description }) {
                 />
             </div>
             <div style={{padding:'15px'}}>
-                <div style={{fontFamily:'Athelas-Bold', fontSize:26, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                <div className={classes.blogTitle} style={{fontFamily:'Athelas-Bold', fontSize:26, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                     {title}
                 </div>
-                <div style={descriptionStyle}>
+                <div className={classes.blogDescription} style={descriptionStyle}>
                     {description}
                 </div>
             </div>

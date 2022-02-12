@@ -66,7 +66,7 @@ input {
 
  
 .slide {
-    transform: scale(0.4);
+    transform: scale(0.5);
     transition: transform 300ms;
     opacity: 0.5;
     height: 350px;
@@ -118,7 +118,7 @@ input {
 
 .carousel-slide-item-content-stats {
     font-weight: 600;
-    font-size: 2.7rem;
+    font-size: 2.5rem;
 }
   
 .carousel-slide-item-content-caption {
@@ -142,3 +142,65 @@ body::-webkit-scrollbar-thumb {
     background: linear-gradient(94.83deg, #0084ff6b -0.81%, #ff596473 107.02%);
     outline: none;
 }
+
+/* @media only screen and (max-width: 1300px) {
+    .slide {
+        transform: scale(0.4);
+        transition: transform 300ms;
+        opacity: 0.5;
+        height: 300px;
+        padding-top: 20px;
+    }
+    
+    .activeSlide {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    
+    .carousel-slide-item-wrapper {
+        position: relative;
+        background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%);
+        border-radius: 100%;
+        width: 270px;
+        height: 270px;
+    }
+    
+    .carousel-slide-item-wrapper-black {
+        position: absolute;
+        left: 2.1px;
+        top: 1.6px;
+        width: 98.5%;
+        height: 98.5%;
+        border-radius: 100%;
+        background: black;
+    }
+    
+    .carousel-slide-item {
+        position: absolute;
+        left: 3.1px;
+        top: 2.4px;
+        width: 98%;
+        height: 98%;
+        background: linear-gradient(47.03deg, rgba(9, 131, 250, 0.2) 0%, rgba(219, 95, 121, 0.2) 48.09%, rgba(9, 131, 250, 0.2) 98.23%), linear-gradient(92.18deg, rgba(98, 127, 156, 0.2)0%, rgba(49, 48, 65, 0.305) 100%);
+        border-radius: 100%;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+      
+    .carousel-slide-item-content {
+        text-align: center;
+    }
+    
+    .carousel-slide-item-content-stats {
+        font-weight: 600;
+        font-size: 2.7rem;
+    }
+      
+    .carousel-slide-item-content-caption {
+        font-size: 1.1rem;
+        font-weight: 300;
+        margin: 0 auto;
+        width: 90%;
+    }
+} */

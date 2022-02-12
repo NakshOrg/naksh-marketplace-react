@@ -107,7 +107,7 @@ class UserProfile extends Component {
     renderNfts = () => {
 
         return this.state.ownedNfts.map(nft => {
-            return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={12}>
+            return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
                 <NftCard
                     onClick={() => this.props.history.push(`/nftdetails/${nft.token_id}`)}
                     image={nft.metadata.media}
@@ -131,7 +131,7 @@ class UserProfile extends Component {
         return (
             <div>
                 <div className={classes.gradientCover1} />
-                <Container fluid>
+                <Container fluid className={classes.container}>
                     <Row>
                         <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>
                             {this.profileInfo()}

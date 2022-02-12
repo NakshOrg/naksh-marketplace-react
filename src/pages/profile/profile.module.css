@@ -128,6 +128,11 @@
     object-fit: cover;
 }
 
+.container {
+    /* padding: 0;
+    overflow-y: hidden; */
+}
+
 @media only screen and (max-width: 600px) {
     .saveBtnDesktop, .arrowIcon {
         display: none;
@@ -145,5 +150,8 @@
     }
     .sectionTitle {
         font-size: 32px;
+    }
+    .profileContainer {
+        height:425px;
     }
 }

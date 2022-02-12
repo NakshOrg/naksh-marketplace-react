@@ -8,6 +8,7 @@
     padding-left: 8%;
     padding-right: 1%;
     margin-top: 10%;
+    overflow: hidden;
 }
 .sectionTitle {
     font-family: Athelas-Bold;

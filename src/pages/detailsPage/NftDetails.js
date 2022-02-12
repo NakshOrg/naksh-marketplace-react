@@ -251,19 +251,28 @@ class NftDetails extends Component {
                             /> 
                         </div>
                         {isOverviewActive ? this.overview() : this.otherDetails()}
-                        <GradientBtn
-                            style={{marginTop:30, cursor: purchasable ? "pointer" : "no-drop", opacity: purchasable ? 1 : 0.6}}
-                            onClick={() => purchasable ? this.handleBuyNft() : alert("You cannot purchase your own nft")}
-                            content={
-                                <div>
-                                    {(purchasable && nft?.price) ? `PURCHASE FOR ${nft?.price}` : !purchasable ? 'You own this nft' : 'Unavailable'}
-                                    {(purchasable && nft?.price) && 
-                                    <span><img style={{marginTop:-2, marginLeft:3}} src={nearIcon} alt="near"/></span>}
-                                </div>
-                            }
-                        />
+                        <div className={classes.desktopBtn}>
+                            <GradientBtn
+                                style={{marginTop:30, cursor: purchasable ? "pointer" : "no-drop", opacity: purchasable ? 1 : 0.6}}
+                                onClick={() => purchasable ? this.handleBuyNft() : alert("You cannot purchase your own nft")}
+                                content={
+                                    <div>
+                                        {(purchasable && nft?.price) ? `PURCHASE FOR ${nft?.price}` : !purchasable ? 'You own this nft' : 'Unavailable'}
+                                        {(purchasable && nft?.price) && 
+                                        <span><img style={{marginTop:-2, marginLeft:3}} src={nearIcon} alt="near"/></span>}
+                                    </div>
+                                }
+                            />
+                        </div>
                     </Col>
                 </Row>
+                <div onClick={() => purchasable ? this.handleBuyNft() : alert("You cannot purchase your own nft")} className={classes.mobileFixedBtn}>
+                    <div>
+                        {(purchasable && nft?.price) ? `PURCHASE FOR ${nft?.price}` : !purchasable ? 'You own this nft' : 'Unavailable'}
+                        {(purchasable && nft?.price) && 
+                        <span><img style={{marginTop:-2, marginLeft:3}} src={nearIcon} alt="near"/></span>}
+                    </div>
+                </div>  
                 <div className={classes.bottomContent}>
                     <div className={classes.heading}>
                         More NFTs like this

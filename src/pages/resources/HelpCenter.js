@@ -24,7 +24,7 @@ export default class Blogs extends Component {
     render() { 
 
         return (
-            <Container style={{marginTop:95}}>
+            <Container fluid className={classes.helpContainer}>
                 <div className={classes.helpCenterTopGradient}/>
                 <div style={{...globalStyles.flexRowSpace, marginBottom:22}}>
                     <div className={classes.sectionTitle}>How can we help you?</div>

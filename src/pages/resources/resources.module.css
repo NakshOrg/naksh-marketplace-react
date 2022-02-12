@@ -92,6 +92,35 @@
     display: none;
 }
 
+.blogContainer {
+    border: 2px solid transparent;
+}
+
+.blogContainer:hover {
+    border: 2px solid #C56386;
+}
+
+.container {
+    padding: 90px 8%;
+}
+
+.helpContainer {
+    padding: 90px 8%;
+}
+
+.blogGradientOverlay {
+    position: absolute;
+    width: 60%;
+    top: 5%;
+    height: 50%;
+    background: linear-gradient(180deg, #379FFF 0%, rgba(55, 159, 255, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    right: 0%;
+    z-index: -1;
+}
+
 @media only screen and (max-width: 991px) {
     .mobileCardSpace {
         display: block;
@@ -111,5 +140,20 @@
 @media only screen and (max-width: 767px) {
     .mobileCardColSpace {
         display: block;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .sectionTitle {
+        font-size: 32px;
+    }    
+    .blogTitle {
+        font-size: 26px !important;
+    }
+    .blogDescription {
+        font-size: 14px !important;
+    }
+    .helpContainer {
+        padding: 90px 25px;
     }
 }

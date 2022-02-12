@@ -58,6 +58,10 @@
     padding: 0 8%;
 }
 
+.mobileFixedBtn {
+    display: none;
+}
+
 @media only screen and (max-width: 767px) {
     .artistName {
         margin-top: 20px !important;
@@ -65,8 +69,23 @@
 }
 
 @media only screen and (max-width: 575px) {
-    .containerPadding {
-        /* padding: 0 20px; */
+    .desktopBtn {
+        display: none;
+    }
+    .mobileFixedBtn {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-radius: 0;
+        height: 45px;
+        background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 12px;
+        letter-spacing: 1px;
+        z-index: 100;
     }
     .nftImage {
         border-radius:0px;

@@ -3,8 +3,8 @@ import Slider from "react-slick";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
 import classes from '../../pages/about/about.module.css';
-import "../../App.css";
 import { Spinner } from "react-bootstrap";
+import "../../App.css";
 
 function CarouselBtns({leftBtn, rightBtn}) {
     return <div className="carousel-btns">

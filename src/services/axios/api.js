@@ -1,5 +1,7 @@
-import axiosNoAuth from "./axiosNoAuth";
+import axios from "axios";
 
+import axiosNoAuth from "./axiosNoAuth";
+import configs from "../../configs";
 
 // GET
 
@@ -17,6 +19,9 @@ export const _getAllArtforms = () => axiosNoAuth.get('/artform/all');
 // POST
 
 export const _postArtist = (data) => axiosNoAuth.post('/artist/add', data);
+
+export const _postFeedback = (data) => axios.post(`${configs.clientBaseURL}/landing/feedback`, data);
+
 
 // PUT
 

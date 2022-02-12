@@ -542,6 +542,10 @@
   margin-right: 10px;
 }
 
+.icons-container:hover > div {
+  cursor: pointer !important;
+}
+
 .header-gradient {
   position: absolute;
   width: 45%;

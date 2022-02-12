@@ -21,6 +21,7 @@ import './uiComponents.css';
 import { Dropdown } from 'react-bootstrap';
 import { _getAllArtists } from '../../services/axios/api';
 import globalStyles from '../../globalStyles';
+import { helpers } from '../../constants';
 
 function Header() {
     
@@ -143,13 +144,13 @@ function Header() {
                             <Dropdown.Item onClick={() => history.push("/blogs")}>Blogs</Dropdown.Item>
                             <Dropdown.Item onClick={() => history.push("/helpcenter")} style={{marginTop:15}}>Help Center</Dropdown.Item>
                             <div style={{height:1, backgroundColor:"#fff", margin:"10px 0", opacity:0.27}}/>
-                            <Dropdown.Item onClick={() => history.push("/helpcenter")} style={{marginTop:15}}>
+                            <Dropdown.Item style={{marginTop:15}}>
                                 <div className="icons-container" style={{...globalStyles.flexRow}}>
-                                    <div><img style={{height:15}} src={discord} alt='discord'/></div>
-                                    <div><img style={{height:15}} src={instagram} alt='instagram'/></div>
-                                    <div><img style={{height:15}} src={twitter} alt='twitter'/></div>
-                                    <div><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
-                                    <div><img style={{height:15}} src={telegram} alt='telegram'/></div>
+                                    <div onClick={() => helpers.openInNewTab(configs.discord)}><img style={{height:15}} src={discord} alt='discord'/></div>
+                                    <div onClick={() => helpers.openInNewTab(configs.instagram)}><img style={{height:15}} src={instagram} alt='instagram'/></div>
+                                    <div onClick={() => helpers.openInNewTab(configs.twitter)}><img style={{height:15}} src={twitter} alt='twitter'/></div>
+                                    <div onClick={() => helpers.openInNewTab(configs.linkedin)}><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
+                                    <div onClick={() => helpers.openInNewTab(configs.telegram)}><img style={{height:15}} src={telegram} alt='telegram'/></div>
                                 </div>
                             </Dropdown.Item>
                         </Dropdown.Menu>
@@ -263,11 +264,11 @@ function Header() {
                     </motion.div>
                 </div>
                 <div className="icons-container" style={{...globalStyles.flexRow}}>
-                    <div><img style={{height:15}} src={discord} alt='discord'/></div>
-                    <div><img style={{height:15}} src={instagram} alt='instagram'/></div>
-                    <div><img style={{height:15}} src={twitter} alt='twitter'/></div>
-                    <div><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
-                    <div><img style={{height:15}} src={telegram} alt='telegram'/></div>
+                    <div onClick={() => helpers.openInNewTab(configs.discord)}><img style={{height:15}} src={discord} alt='discord'/></div>
+                    <div onClick={() => helpers.openInNewTab(configs.instagram)}><img style={{height:15}} src={instagram} alt='instagram'/></div>
+                    <div onClick={() => helpers.openInNewTab(configs.twitter)}><img style={{height:15}} src={twitter} alt='twitter'/></div>
+                    <div onClick={() => helpers.openInNewTab(configs.linkedin)}><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
+                    <div onClick={() => helpers.openInNewTab(configs.telegram)}><img style={{height:15}} src={telegram} alt='telegram'/></div>
                 </div>
                 <div style={{textAlign:'center', marginTop:30}}>
                     <div 

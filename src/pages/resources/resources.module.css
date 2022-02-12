@@ -41,6 +41,7 @@
     border-radius: 4px;
     text-align: center;
     padding: 10px 0;
+    cursor: pointer;
     margin-top: 10px;
 }
 
@@ -121,6 +122,33 @@
     z-index: -1;
 }
 
+.successMessage {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    /* backdrop-filter: blur(100px); */
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 5px;
+    height: 300px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.successTitle {
+    font-family:Athelas-Bold;
+    font-size:26px;
+}
+
+.successDescription {
+    font-weight:100;
+    font-size:20px;
+    line-height:26px; 
+    margin-top:5px;
+    width:300px;
+}
+
 @media only screen and (max-width: 991px) {
     .mobileCardSpace {
         display: block;
@@ -155,5 +183,24 @@
     }
     .helpContainer {
         padding: 90px 25px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .successTitle {
+        font-family:Athelas-Bold;
+        font-size:22px;
+        line-height:24px; 
+    }
+    .successDescription {
+        font-size:15px;
+        line-height:20px; 
+    }
+    .writeToUs {
+        font-size: 32px !important;
+        line-height: 34px !important;
+    }
+    .fillForm {
+        width: 90% !important;
     }
 }

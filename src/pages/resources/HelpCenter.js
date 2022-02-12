@@ -1,25 +1,54 @@
 import React, { Component } from 'react';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Col, Row, Container, Spinner } from 'react-bootstrap';
 import { FiExternalLink } from 'react-icons/fi';
 
+import { _postFeedback } from '../../services/axios/api';
 import MaterialInput from '../../components/uiComponents/MaterialInput';
 import discord from "../../assets/svgs/discord.svg";
 import instagram from "../../assets/svgs/instagram.svg";
 import linkedIn from "../../assets/svgs/linkedIn.svg"; 
-import telegram from "../../assets/svgs/telegram.svg";
+import telegram from "../../assets/svgs/telegram.svg"; 
 import twitter from "../../assets/svgs/twitter.svg";
+import party from "../../assets/svgs/party.svg";
 import sendMessage from "../../assets/svgs/sendMessage.svg";
 import globalStyles from '../../globalStyles';
 import classes from './resources.module.css';
+import configs from '../../configs';
+import { helpers } from '../../constants';
 
 export default class Blogs extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            name: "",
+            email: "",
+            message: "",
+            isEmailSent: false,
+            loading: false
         }
     }
 
+    handleSendMessage = () => {
+
+        const { name, email, message } = this.state;
+
+        if(name && email && message) {
+            this.setState({loading:true});
+            _postFeedback({name, email, message})
+            .then(res => {
+                this.setState({loading:false, isEmailSent:true});
+            })
+            .catch(err => {
+                this.setState({loading:false});
+                alert(err.response.data.error);
+            })
+
+        } else {
+            alert("All the fields are required!");
+        }
+
+    }
 
     render() { 
 
@@ -78,34 +107,62 @@ export default class Blogs extends Component {
                 </Row>
                 <Row style={{margin:"65px 0"}}>
                     <Col lg={6}>
-                        <div style={{fontSize:42, lineHeight:"40px", fontFamily:"Athelas-Bold"}}>Write to us and we'll reach out to you</div>
-                        <div style={{fontSize: "16px", opacity: 0.7, marginTop: "10px", letterSpacing: "0.5px", fontWeight: 100, width: "60%", lineHeight: "20px"}}>
+                        <div className={classes.writeToUs} style={{fontSize:42, lineHeight:"40px", fontFamily:"Athelas-Bold"}}>Write to us and we'll reach out to you</div>
+                        <div className={classes.fillForm} style={{fontSize: "16px", opacity: 0.7, marginTop: "10px", letterSpacing: "0.5px", fontWeight: 100, width: "60%", lineHeight: "20px"}}>
                             Fill out the form, and we'll reply to you soon.
                         </div>
                         <div className={classes.iconsContainer} style={{...globalStyles.flexRow, margin:"30px 0"}}>
-                            <div><img src={discord} alt='discord'/></div>
-                            <div><img src={instagram} alt='instagram'/></div>
-                            <div><img src={twitter} alt='twitter'/></div>
-                            <div><img src={linkedIn} alt='linkedIn'/></div>
-                            <div><img src={telegram} alt='telegram'/></div>
+                            <div onClick={() => helpers.openInNewTab(configs.discord)}><img src={discord} alt='discord'/></div>
+                            <div onClick={() => helpers.openInNewTab(configs.instagram)}><img src={instagram} alt='instagram'/></div>
+                            <div onClick={() => helpers.openInNewTab(configs.twitter)}><img src={twitter} alt='twitter'/></div>
+                            <div onClick={() => helpers.openInNewTab(configs.linkedin)}><img src={linkedIn} alt='linkedIn'/></div>
+                            <div onClick={() => helpers.openInNewTab(configs.telegram)}><img src={telegram} alt='telegram'/></div>
                         </div>
                     </Col>
+                    {!this.state.isEmailSent ?
                     <Col>
-                        <MaterialInput 
+                        <MaterialInput
+                            onChange={(e) => this.setState({name:e.target.value})} 
+                            value={this.state.name}
                             label="Enter your name"
                         />
                         <MaterialInput 
+                            onChange={(e) => this.setState({email:e.target.value})} 
+                            value={this.state.email}
                             label="Enter mail address"
                         />
                         <MaterialInput 
+                            onChange={(e) => this.setState({message:e.target.value})} 
+                            value={this.state.message}
                             label="Enter your message here"
                             type="textarea"
                             isTextArea={true}
                         />
-                        <div className={classes.sendBtn}>
-                            <img src={sendMessage} alt='sendMessage'/>
+                        <div onClick={this.handleSendMessage} className={classes.sendBtn}>
+                            {this.state.loading ?
+                            <Spinner 
+                                size={20} 
+                                animation="border"
+                                style={{
+                                    color:"#000",
+                                    cursor:"pointer",
+                                    height:20,
+                                    width:20,
+                                    borderWidth:2
+                                }}
+                            /> :
+                            <img src={sendMessage} alt='sendMessage'/>}
                         </div>
-                    </Col>
+                    </Col> :
+                    <Col style={{padding:0}}>
+                        <div className={classes.successMessage}>
+                            <img style={{height:65, marginBottom:15}} src={party} alt="party"/>
+                            <div className={classes.successTitle}>Thank you for writing to us! </div>
+                            <div className={classes.successDescription}>
+                                Please keep an eye on your inbox for a response from us!
+                            </div>
+                        </div>
+                    </Col>}
                     <div className={classes.helpCenterBottomGradient}/>
                 </Row>
             </Container>

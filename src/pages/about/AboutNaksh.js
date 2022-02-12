@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 
+import founder1 from '../../assets/images/founder1.jpg';
+import founder2 from '../../assets/images/founder2.jpg';
 import AboutCard from '../../components/about/AboutCard';
 import classes from './about.module.css';
 
@@ -68,18 +70,18 @@ export default function AboutNaksh() {
             <Row style={{margin:"75px 0"}}>
                 <Col style={{padding:0, paddingBottom:20}} lg={4} md={12}>
                     <div className={classes.foundersCaption}>The women behind Naksh</div>
-                    <div style={{fontSize: "16px", opacity: 0.7, marginTop: "15px", lineHeight: "25px"}}>Our co-founders envisioned Naksh at a NEAR Hackathon in May 2020. We have come a long way since then.</div>
+                    <div style={{fontSize: "16px", opacity: 0.7, marginTop: "12px", lineHeight: "25px"}}>Our co-founders envisioned Naksh at a NEAR Hackathon in May 2020. We have come a long way since then.</div>
                 </Col>
                 <Col className={classes.founderImg} lg={4} md={6}>
                     <div>
-                        <img style={{height:400, width:"100%", borderRadius:5, objectFit:"cover"}} src={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"} alt='co-founder'/>
+                        <img style={{height:400, width:"100%", borderRadius:5, objectFit:"cover"}} src={founder1} alt='co-founder'/>
                     </div>
                     <div style={{marginTop:15, fontFamily:'Athelas-Bold', fontSize:24, letterSpacing:0.4}}>Sri Lakshmi</div>
                     <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
                 </Col>
                 <Col className={classes.founderImg} style={{paddingRight:0}} lg={4} md={6}>
                     <div>
-                        <img style={{height:400, width:"100%", borderRadius:5, objectFit:"cover"}} src={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"} alt='co-founder'/>
+                        <img style={{height:400, width:"100%", borderRadius:5, objectFit:"cover"}} src={founder2} alt='co-founder'/>
                     </div>
                     <div style={{marginTop:15, fontFamily:'Athelas-Bold', fontSize:24, letterSpacing:0.4}}>Nivedita</div>
                     <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>

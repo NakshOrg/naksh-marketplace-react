@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
+import { motion } from 'framer-motion';
 
 import AboutCard from '../../components/about/AboutCard';
 import classes from './about.module.css';
@@ -11,33 +12,57 @@ export default function AboutNaksh() {
             <div className={classes.detailsGradientOverlay}/>
             {/* overlay gradient  */}
             <div className={classes.detailsGradientOverlayPink}/>
-            <div className={classes.sectionCaption}>
-                Naksh is constantly pushing the boundaries of what NFTs can do
-            </div>
-            <div className={classes.sectionSubHeading}>
-                The past and the future of art and art exchanges needed a bridge, and this is where we came up with the idea of an NFT marketplace catering to regional artists and traditional mediums.
-            </div>
+            <motion.div 
+                initial={{ x:-1000 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 1 }}
+            >
+                <div className={classes.sectionCaption}>
+                    Naksh is constantly pushing the boundaries of what NFTs can do
+                </div>
+                <div className={classes.sectionSubHeading}>
+                    The past and the future of art and art exchanges needed a bridge, and this is where we came up with the idea of an NFT marketplace catering to regional artists and traditional mediums.
+                </div>
+            </motion.div>
             <div className={classes.sectionTitle}>
                 With Naksh, you can
             </div>
             <Row>
                 <Col lg={4} md={6}>
-                    <AboutCard
-                        title={"Original Artworks"}
-                        content={"Paid works by some of the finest creators of India"}
-                    />
+                    <motion.div 
+                        initial={{ y:-2000 }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 1.2, delay:0.5 }}
+                    >
+                        <AboutCard
+                            title={"Original Artworks"}
+                            content={"Paid works by some of the finest creators of India"}
+                        />
+                    </motion.div>
                 </Col>
                 <Col lg={4} md={6}>
-                    <AboutCard
-                        title={"Community"}
-                        content={"A place to find new creators, build a community that lasts for a long time"}
-                    />
+                    <motion.div 
+                        initial={{ y:-2000 }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 1.2, delay:0.9 }}
+                    >
+                        <AboutCard
+                            title={"Community"}
+                            content={"A place to find new creators, build a community that lasts for a long time"}
+                        />
+                    </motion.div>
                 </Col>
                 <Col lg={4}>
-                    <AboutCard
-                        title={"NFT Collectibles"}
-                        content={"Create a collection of your favorite artworks minted by our creators"}
-                    />
+                    <motion.div 
+                        initial={{ y:-2000 }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 1.2, delay:1.3 }}
+                    >
+                        <AboutCard
+                            title={"NFT Collectibles"}
+                            content={"Create a collection of your favorite artworks minted by our creators"}
+                        />
+                    </motion.div>
                 </Col>
             </Row>
             <Row style={{margin:"75px 0"}}>

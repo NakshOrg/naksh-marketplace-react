@@ -40,13 +40,13 @@ export default function NearProtocol() {
     };
 
     return (
-        <Container fluid className={classes.nearcontainer}>
-            {/* <div className={classes.nearGradientOverlay}/>
-            <div className={classes.nearGradientOverlayPink}/> */}
-            <Row style={{display:"flex", alignItems:"center"}}>
-                <Col lg={4}>
-                    <div style={{fontFamily:'Athelas-Bold', fontSize:42}}>Why NEAR?</div>
-                    <div style={{fontSize:16, letterSpacing:0.5}}>At Naksh, we believe in not only talking the talk but also walking the walk. Our effort in creating a conscious marketplace led to the decision of working with the NEAR ecosystem.</div>
+        <Container fluid className={classes.nearContainer}>
+            <div className={classes.nearGradientOverlay}/>
+            <div className={classes.nearGradientOverlayPink}/>
+            <Row>
+                <Col className={classes.nearCol1} lg={4}>
+                    <div className={classes.nearCol1Title} style={{fontFamily:'Athelas-Bold', fontSize:42}}>Why NEAR?</div>
+                    <div className={classes.nearCol1Desc} style={{fontSize:16, letterSpacing:0.5}}>At Naksh, we believe in not only talking the talk but also walking the walk. Our effort in creating a conscious marketplace led to the decision of working with the NEAR ecosystem.</div>
                     <div 
                         onClick={walletSignIn}
                         className={classes.nearBtn}

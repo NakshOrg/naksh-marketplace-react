@@ -661,6 +661,19 @@
     height: 40px;
     width: 210px;
   }
+  .search-list-image {
+    height: 55px;
+    width: 55px;
+  }
+  .search-title {
+    font-size: 13px !important;
+  }
+  .search-name {
+    font-size: 11px !important;
+  }
+  .search-title-mobile {
+    font-size: 19px !important;
+  }
 }
 
 @media only screen and (max-width: 575px) {

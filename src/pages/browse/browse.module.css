@@ -36,7 +36,7 @@
 .exploreGradientPink {
     position: absolute;
     width: 50%;
-    bottom: -100%;
+    bottom: 0%;
     height: 60%;
     background: linear-gradient(180deg, #F56394 50%, rgba(245, 99, 148, 0) 100%);
     opacity: 0.4;

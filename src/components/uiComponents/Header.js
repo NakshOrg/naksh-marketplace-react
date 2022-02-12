@@ -93,6 +93,7 @@ function Header() {
     function walletSignOut() {
         walletInfo.signOut();
         dispatch({type: actionTypes.IS_WALLET_SIGNED_IN, payload: false});
+        history.replace("/");
     }
 
     function navigateItem(path) {
@@ -196,6 +197,7 @@ function Header() {
                     loading={loading}
                     resetSearch={resetSearch}
                     searchResults={searchResults}
+                    closeHeader={() => setShowHeaderContents(false)}
                 />
                 <div onClick={() => navigateItem("/browse")}>
                     <motion.div

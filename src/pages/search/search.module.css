@@ -43,6 +43,7 @@
     }
     .mobileSearchInput {
         display: flex;
+        width: 100%;
     }
 }
 

@@ -5,6 +5,7 @@ import uuid from 'react-uuid';
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import crossBtn from "../../assets/svgs/header-cross.svg";
 import 'react-spring-bottom-sheet/dist/style.css';
+import { motion } from 'framer-motion';
 
 import NftCard from '../../components/explore/NftCard';
 import ArtistCard from '../../components/explore/ArtistCard';

@@ -3,6 +3,7 @@ import React from 'react';
 import nearLogo from '../../assets/svgs/near-logo.svg';
 import classes from './explore.module.css';
 import globalStyles from '../../globalStyles';
+import { motion } from 'framer-motion';
 
 function NftCard(props) {
 
@@ -17,7 +18,11 @@ function NftCard(props) {
     } = props;
 
     return (
-        <div style={{zIndex:2}} onClick={onClick} className={classes.cardContainer}>
+        <motion.div
+            style={{zIndex:2}} onClick={onClick} className={classes.cardContainer}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+        >
             <img src={image} alt="nft"/>
             <div className={classes.cardTag}>
                 <div style={globalStyles.flexRowSpace}>
@@ -34,7 +39,7 @@ function NftCard(props) {
                     {/* <div style={{fontSize:11, opacity:0.67}}>{price}</div> */}
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

@@ -62,14 +62,36 @@
     display: none;
 }
 
+.ownedBtnFixed {
+    display: none;
+}
+
+.ownedBtn {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.8) 0%, rgba(49, 48, 65, 0.488) 100%);
+    backdrop-filter: blur(96.1806px);
+    height: 53px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    border-radius: 4px;
+    margin-top:30px;
+}
+
 @media only screen and (max-width: 767px) {
     .artistName {
         margin-top: 20px !important;
     }
+    .descriptionCol {
+        margin-top: 30px;
+    }
 }
 
 @media only screen and (max-width: 575px) {
-    .desktopBtn {
+    .desktopBtn, .ownedBtn {
         display: none;
     }
     .mobileFixedBtn {
@@ -86,6 +108,23 @@
         font-size: 12px;
         letter-spacing: 1px;
         z-index: 100;
+    }
+    .ownedBtnFixed {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-radius: 0;
+        height: 50px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 12px;
+        letter-spacing: 1px;
+        z-index: 100;
+        background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.8) 0%, rgba(49, 48, 65, 0.488) 100%);
+        backdrop-filter: blur(96.1806px);
+        text-transform: uppercase;
     }
     .nftImage {
         border-radius:0px;

@@ -2,11 +2,12 @@ import { useState, useRef } from "react";
 import Slider from "react-slick";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
+import classes from '../../pages/about/about.module.css';
 import "../../App.css";
 import { Spinner } from "react-bootstrap";
 
 function CarouselBtns({leftBtn, rightBtn}) {
-    return <div style={{marginTop:10, marginLeft:30}} className="carousel-btns">
+    return <div className="carousel-btns">
         <span onClick={leftBtn} id="prev" style={{marginRight:25, cursor:"pointer"}}>
         <svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="24.5" cy="24.5" r="23.5" stroke="url(#paint0_linear_2:778)" stroke-width="2"/>
@@ -40,7 +41,7 @@ function CarouselItem({stats, content, loading}) {
         <div className="carousel-slide-item">
             <div className="carousel-slide-item-content">
                 <div className="carousel-slide-item-content-stats">
-                    {loading ? <Spinner animation="border" size={20}/> : stats}
+                    {loading ? <Spinner style={{borderWidth:5}} animation="border" size={20}/> : stats}
                 </div>
                 <div className="carousel-slide-item-content-caption">{content}</div>
             </div>
@@ -69,12 +70,20 @@ export default function Carousel({ loading, slideData }) {
     autoplay: true,
     autoplaySpeed: 5000,
     arrows: false,
+    responsive: [
+        {
+          breakpoint: 801,
+          settings: {
+            swipe: true
+          }
+        }
+    ],
     swipe: false,
     beforeChange: (_, next) => setCarouselIndex(next)
   };
 
   return (
-    <div className="App">
+    <div className={classes.carouselContainer}>
         <Slider ref={slick} {...settings}>
         {carouselData.map((item, i) => (
             <div key={i} className={i === carouselIndex ? "slide activeSlide" : "slide"}>

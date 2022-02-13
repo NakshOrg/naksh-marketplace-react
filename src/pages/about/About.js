@@ -11,8 +11,6 @@ export default class About extends Component {
         return (
             <div style={{marginTop:160}}>
                 <AboutNaksh/>
-                {/* <OurArtists/> */}
-                {/* <NearProtocol/> */}
             </div>
         )
     }

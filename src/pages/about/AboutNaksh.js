@@ -77,14 +77,18 @@ export default function AboutNaksh() {
                         <img style={{height:400, width:"100%", borderRadius:5, objectFit:"cover"}} src={founder1} alt='co-founder'/>
                     </div>
                     <div style={{marginTop:15, fontFamily:'Athelas-Bold', fontSize:24, letterSpacing:0.4}}>Sri Lakshmi</div>
-                    <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+                    <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5, fontWeight:100}}>
+                        Sri Lakshmi pursued her Master's in the field of Fashion Retail Management in London and has since acquired various management positions across different companies. She currently oversees the financial planning and execution at Naksh and aims to expand Naksh's domain of operations to other verticals soon.
+                    </div>
                 </Col>
                 <Col className={classes.founderImg} style={{paddingRight:0}} lg={4} md={6}>
                     <div>
                         <img style={{height:400, width:"100%", borderRadius:5, objectFit:"cover"}} src={founder2} alt='co-founder'/>
                     </div>
                     <div style={{marginTop:15, fontFamily:'Athelas-Bold', fontSize:24, letterSpacing:0.4}}>Nivedita</div>
-                    <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+                    <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5, fontWeight:100}}>
+                        Nivedita Vivek pursued her Master's in the field of Fashion Retail Management in London, after which she took up various Social Media Marketing roles. She currently handles operations and future collaborations at Naksh and aims to enter the tech ecosystem soon.
+                    </div>
                 </Col>
             </Row>
         </Container>

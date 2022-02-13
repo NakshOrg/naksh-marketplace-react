@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Col, Row, Container, Spinner } from 'react-bootstrap';
 import { FiExternalLink } from 'react-icons/fi';
+import { motion } from "framer-motion"
 
 import { _postFeedback } from '../../services/axios/api';
 import MaterialInput from '../../components/uiComponents/MaterialInput';
@@ -62,47 +63,73 @@ export default class Blogs extends Component {
                     <Col lg={8} md={12}>
                         <Row>
                             <Col md={6} sm={12}>
-                                <div className={classes.sectionCard}>
+                                <motion.div 
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => helpers.openInNewTab(configs.familiarWithNaksh)} 
+                                    className={classes.sectionCard}
+                                >
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Get familiar with Naksh</div>
-                                    <div className={classes.sectionCardDescription}>Everything you need to know about Naksh</div>
-                                </div>
+                                    <div className={classes.sectionCardDescription}>Creating an account, buying an NFT and other introductory topics for new users.</div>
+                                </motion.div>
                             </Col>
                             <div className={classes.mobileCardColSpace}/>
                             <Col md={6} sm={12}>
-                                <div className={classes.sectionCard}>
+                                <motion.div 
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => helpers.openInNewTab(configs.nakshFunctioning)} 
+                                    className={classes.sectionCard}
+                                >
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Naksh and its functioning</div>
-                                    <div className={classes.sectionCardDescription}>Everything about blockchain, wallets used and gas fee</div>
-                                </div>
+                                    <div className={classes.sectionCardDescription}>Gas fee, blockchain support and other questions regarding Naksh's functioning.</div>
+                                </motion.div>
                             </Col>
                         </Row>
                         <div style={{marginTop:20}}/>
                         <Row>
                             <Col md={6} sm={12}>
-                                <div className={classes.sectionCard}>
+                                <motion.div 
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => helpers.openInNewTab(configs.existingUsers)} 
+                                    className={classes.sectionCard}
+                                >
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Questions for existing users</div>
-                                    <div className={classes.sectionCardDescription}>Everything you need to know about Naksh</div>
-                                </div>            
+                                    <div className={classes.sectionCardDescription}>Checking the history of an NFT, Making an offer and other queries for account holders.</div>
+                                </motion.div>
                             </Col>
                             <div className={classes.mobileCardColSpace}/>
                             <Col md={6} sm={12}>
-                                <div className={classes.sectionCard}>
+                                <motion.div 
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => helpers.openInNewTab(configs.nftOwners)} 
+                                    className={classes.sectionCard}
+                                >
                                     <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                                     <div className={classes.sectionCardTitle}>Questions for NFT owners</div>
-                                    <div className={classes.sectionCardDescription}>Everything about blockchain, wallets used and gas fee</div>
-                                </div>
+                                    <div className={classes.sectionCardDescription}>Finances, Reselling and Visibility of NFTs for owners, collectors and artists.</div>
+                                </motion.div>
                             </Col>
                         </Row>
                     </Col>
                     <div className={classes.mobileCardSpace}/>
                     <Col lg={4} md={12}>
-                        <div style={{height:"100%"}} className={classes.sectionCard}>
+                        <motion.div 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => helpers.openInNewTab(configs.faq)} 
+                            style={{height:"100%", cursor:"pointer"}} 
+                            className={classes.sectionCard}
+                        >
                             <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                             <div className={classes.sectionCardTitle}>Frequently asked questions</div>
                             <div className={classes.sectionCardDescription}>Everything about blockchain, wallets used and gas fee</div>
-                        </div>
+                        </motion.div>
                     </Col>
                 </Row>
                 <Row style={{margin:"65px 0"}}>

@@ -19,7 +19,7 @@ export default function Home() {
 
     return (
         <Container fluid style={{height:"100vh"}}>
-            <Row style={{height:"100vh"}}>
+            <Row>
                 <Col style={{display:"flex"}} lg={5} md={5} sm={12}>
                     <motion.div 
                         className={classes.artSectionContentContainer}
@@ -43,7 +43,7 @@ export default function Home() {
                     <div className={classes.artSectionCarouselDesktop}>
                         <DesktopCarousel/>
                     </div>
-                    <div className={classes.artSectionCarouselMobile}> 
+                    <div style={{marginTop:60}} className={classes.artSectionCarouselMobile}> 
                         <SwipingCarousel/>
                     </div>
                 </Col>

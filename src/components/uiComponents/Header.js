@@ -157,7 +157,7 @@ function Header() {
                     </Dropdown>
                 </div>
                 {isWalletSignedIn ?
-                <Dropdown>
+                <Dropdown style={{position:"absolute", right:"7%"}}>
                     <Dropdown.Toggle className='profile-icon' style={{backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                         <img style={{height:40, width:40, borderRadius:40, objectFit:"cover"}} src={userData?.image ?? profileIcon} alt="profileIcon"/>
                         {" "}<FiChevronDown size={15} color="#fff"/>

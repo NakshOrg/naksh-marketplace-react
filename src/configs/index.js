@@ -41,5 +41,12 @@ export default {
     telegram: "https://t.me/nakshofficial",
     instagram: "https://www.instagram.com/nakshmarketplace/",
     linkedin: "https://www.linkedin.com/company/naksh-marketplace/",
-    twitter: "https://twitter.com/NakshMarket"
+    twitter: "https://twitter.com/NakshMarket",
+    faq: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lunna",
+    familiarWithNaksh: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luznI",
+    nakshFunctioning: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lusLk",
+    existingUsers: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lu4ng",
+    nftOwners: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luUoZ",
+    nearWebsite: "Near.org",
+    nakshMedium: "https://medium.com/@naksh.org"
 }

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import { FiFacebook, FiGlobe, FiSearch } from 'react-icons/fi';
+import { FiExternalLink, FiFacebook, FiGlobe, FiSearch } from 'react-icons/fi';
 import { BsInstagram } from 'react-icons/bs';
 import { helpers } from '../../constants';
 
@@ -9,6 +9,7 @@ import BlogCard from '../../components/blogs/BlogCard';
 import globalStyles from '../../globalStyles';
 import classes from './resources.module.css';
 import Spinner from '../../components/uiComponents/Spinner';
+import configs from '../../configs';
 
 export default class Blogs extends Component {
 
@@ -97,6 +98,10 @@ export default class Blogs extends Component {
                         />
                         <FiSearch style={{opacity:0.8, position:'absolute', top:'22%', left:15}} size={22}/>
                     </div> */}
+                    <div onClick={() => helpers.openInNewTab(configs.nakshMedium)} style={{...globalStyles.flexRow, cursor:"pointer"}}>
+                        <div style={{marginRight:10, fontSize:"1rem"}}>View all</div>
+                        <FiExternalLink size={20} color='#fff'/>
+                    </div>
                 </div>
                 <Row>
                     {blogs.map((blog, i) => {

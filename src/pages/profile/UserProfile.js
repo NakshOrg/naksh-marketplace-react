@@ -122,9 +122,18 @@ class UserProfile extends Component {
 
     }
 
+    emptyState() {
+        return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
+            <div style={{fontSize:16, opacity:0.7}}>Buy NFTs to create a collection here!</div>
+            <div onClick={() => this.props.history.push("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+                <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+            </div>
+        </div>
+    }
+
     render() { 
 
-        const { activeTab, loading } = this.state;
+        const { activeTab, ownedNfts, loading } = this.state;
 
         if(loading) return <Spinner/>;
 
@@ -140,10 +149,10 @@ class UserProfile extends Component {
                             <div style={{margin:"30px auto", width:"100%"}}>
                                 <div style={{...globalStyles.flexRow, justifyContent:"center"}}>
                                     <div>
-                                        <div style={{fontWeight: activeTab == "owned" ? "bold" : "400", opacity: activeTab == "owned" ? 1 : 0.7, fontSize:12, cursor:'pointer', letterSpacing:1.5}}>
-                                            OWNED
+                                        <div style={{fontWeight: "bold", fontSize:12, letterSpacing:1.5}}>
+                                            NFTS OWNED
                                         </div>
-                                        <div style={{height:3, background:"#fff", width:8, borderRadius:100, margin:"2.5px auto"}}/>
+                                        {/* <div style={{height:3, background:"#fff", width:8, borderRadius:100, margin:"2.5px auto"}}/> */}
                                     </div>
                                     {/* <div onClick={() => this.setState({activeTab:"saved"})} style={{fontWeight: activeTab == "saved" ? "bold" : "400", opacity: activeTab == "saved" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
                                         SAVED
@@ -162,7 +171,7 @@ class UserProfile extends Component {
                                 />  */}
                             </div>
                             <Row>
-                                {this.renderNfts()}
+                                {ownedNfts.length !== 0 ? this.renderNfts() : this.emptyState()}
                             </Row>
                         </Col>
                     </Row>

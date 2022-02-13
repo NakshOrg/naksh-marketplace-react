@@ -201,7 +201,7 @@ class EditProfile extends Component {
                     }
                     <div>
                         <div className={classes.supportedFormats}>
-                            Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
+                        Upload your profile picture here. Your picture will be public.
                         </div>
                         <label htmlFor="addImg" style={{position:'relative', cursor:'pointer'}}>
                             <input onChange={(e) => this.handleImage(e)} id="addImg" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>

@@ -155,3 +155,10 @@
         height:425px;
     }
 }
+
+@media only screen and (max-width: 430px) {
+    .glowBtnText {
+        font-size: 10px !important;
+        margin: 0 auto !important;
+    }
+}

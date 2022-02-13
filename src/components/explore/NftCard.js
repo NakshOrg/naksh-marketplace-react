@@ -18,10 +18,10 @@ function NftCard(props) {
     } = props;
 
     return (
-        <motion.div
+        <div
             style={{zIndex:2}} onClick={onClick} className={classes.cardContainer}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            // whileHover={{ scale: 1.1 }}
+            // whileTap={{ scale: 0.9 }}
         >
             <img src={image} alt="nft"/>
             <div className={classes.cardTag}>
@@ -39,7 +39,7 @@ function NftCard(props) {
                     {/* <div style={{fontSize:11, opacity:0.67}}>{price}</div> */}
                 </div>
             </div>
-        </motion.div>
+        </div>
     )
 }
 

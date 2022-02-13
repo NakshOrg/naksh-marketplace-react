@@ -23,7 +23,7 @@
   
 .weOfferCardWrapper {
     background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
-    backdrop-filter: blur(100px);
+    /* backdrop-filter: blur(100px); */
     border-radius: 5px;
     display: flex;
     text-align: center;

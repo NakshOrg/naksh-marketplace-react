@@ -55,7 +55,7 @@ export default function ArtistDetails() {
         .then(({ data }) => {
 
             const functions = new NearHelperFunctions(walletInfo); 
-            functions.getAllNfts(true)
+            functions.getAllNfts()
             .then(res => {
                 const filteredNfts = res.filter(item => item?.artist?._id === params.id);
                 setArtworks(filteredNfts);

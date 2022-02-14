@@ -87,8 +87,7 @@ export default function AboutNaksh() {
                     </div>
                     <div style={{marginTop:15, fontFamily:'Athelas-Bold', fontSize:24, letterSpacing:0.4}}>Nivedita</div>
                     <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5, fontWeight:100}}>
-                        Nivedita Vivek pursued her Master's in the field of Fashion Retail Management in London, after which she took up various Social Media Marketing roles. She currently handles operations and future collaborations at Naksh and aims to enter the tech ecosystem soon.
-                    </div>
+                    Nivedita Vivek pursued her Master's from the same institution as her co-founder Lakshmi, where the duo first met. Post this, she took up various Social Media Marketing roles and has now directed her focus towards handling operations and future collaborations at Naksh. She aims to enter the tech ecosystem soon.                    </div>
                 </Col>
             </Row>
         </Container>

@@ -128,7 +128,7 @@ export default class Blogs extends Component {
                         >
                             <FiExternalLink style={{position:'absolute', top:8, right:8}} size={20} color='#fff'/>
                             <div className={classes.sectionCardTitle}>Frequently asked questions</div>
-                            <div className={classes.sectionCardDescription}>Everything about blockchain, wallets used and gas fee</div>
+                            <div className={classes.sectionCardDescription}>Answers to common questions you may have!</div>
                         </motion.div>
                     </Col>
                 </Row>

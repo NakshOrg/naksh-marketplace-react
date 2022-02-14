@@ -42,7 +42,7 @@ export default {
     instagram: "https://www.instagram.com/nakshmarketplace/",
     linkedin: "https://www.linkedin.com/company/naksh-marketplace/",
     twitter: "https://twitter.com/NakshMarket",
-    faq: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lunna",
+    faq: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luyT4",
     familiarWithNaksh: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luznI",
     nakshFunctioning: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lusLk",
     existingUsers: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lu4ng",

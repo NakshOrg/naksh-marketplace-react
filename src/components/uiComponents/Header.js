@@ -191,7 +191,7 @@ function Header() {
                     variants={list}
                     className='header-contents-container'
                 >
-                <div className='header-gradient'/>
+                {/* <div className='header-gradient'/> */}
                 <MobileSearchInput
                     keyword={keyword}
                     onChange={(e) => setkeyword(e.target.value)}

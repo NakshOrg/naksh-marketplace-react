@@ -87,7 +87,7 @@ export default class Blogs extends Component {
 
         return (
             <Container fluid className={classes.container}>
-                <div className={classes.blogGradientOverlay}/>
+                {/* <div className={classes.blogGradientOverlay}/> */}
                 <div style={{...globalStyles.flexRowSpace, marginBottom:22}}>
                     <div className={classes.sectionTitle}>Naksh Blogs</div>
                     {/* <div style={{position:'relative', width:'40%'}}>

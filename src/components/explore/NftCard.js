@@ -1,9 +1,10 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import nearLogo from '../../assets/svgs/near-logo.svg';
 import classes from './explore.module.css';
 import globalStyles from '../../globalStyles';
-import { motion } from 'framer-motion';
 
 function NftCard(props) {
 
@@ -23,7 +24,13 @@ function NftCard(props) {
             // whileHover={{ scale: 1.1 }}
             // whileTap={{ scale: 0.9 }}
         >
-            <img src={image} alt="nft"/>
+                {/* <LazyLoadImage
+                    alt={"image"}
+                    src={image}
+                    // height={image.height}
+                    // width={image.width} 
+                /> */}
+            {/* <img src={image} alt="nft"/> */}
             <div className={classes.cardTag}>
                 <div style={globalStyles.flexRowSpace}>
                     <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{title}</div>

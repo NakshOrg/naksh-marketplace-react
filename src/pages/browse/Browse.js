@@ -23,7 +23,6 @@ class Browse extends Component {
         this.state = {
             loading: true,
             allNfts: [],
-            filterData: [],
             totalNfts: [],
             page: 8,
             currentSort: staticValues.sortFilter[0].name,
@@ -65,7 +64,6 @@ class Browse extends Component {
             this.setState({
                 totalNfts,
                 allNfts:firstSetOfData, 
-                filterData:firstSetOfData, 
                 loading:false
             });
         })
@@ -79,33 +77,36 @@ class Browse extends Component {
 
     applyFilters = (isMobile) => {
         
-        const { filterData, currentSort } = this.state;
-        const copiedFilterArr = [...filterData];
-        let result;
+        console.log(this.state.page, 'pae');
+        const { totalNfts, currentSort } = this.state;
+        const copiedFilterArr = [...totalNfts];
+        let result, filteredNfts;
 
         if(currentSort === "Newest first") {
             copiedFilterArr.sort(function(a, b) {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });
-            result = copiedFilterArr;
+            filteredNfts = copiedFilterArr;
         } else if(currentSort === "Oldest first") {
             copiedFilterArr.sort(function(a, b) {
                 return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
             });
-            result = copiedFilterArr;
+            filteredNfts = copiedFilterArr;
         } else if(currentSort === "Price - High to low") {
-            result = copiedFilterArr.sort(function(a, b) {
+            filteredNfts = copiedFilterArr.sort(function(a, b) {
                 return b.price - a.price;
             });
         } else {
-            result = copiedFilterArr.sort(function(a, b) {
+            filteredNfts = copiedFilterArr.sort(function(a, b) {
                 return a.price - b.price;
             });
         }
 
+        result = filteredNfts.slice(0, 8);
+
         if(isMobile) return this.setState({allNfts:result, open: false});
 
-        this.setState({allNfts:result});
+        this.setState({allNfts:result, totalNfts:filteredNfts});
     }
 
     resetFilters = () => {
@@ -122,14 +123,11 @@ class Browse extends Component {
             ...prevState,
             page: prevState.page + 8
         }), () => {
-            const allNfts = [...this.state.filterData];
+            const allNfts = [...this.state.allNfts];
             const nextSetOfData = totalNfts.slice(this.state.page - 8, this.state.page);
             nextSetOfData.map(item => allNfts.push(item));
             this.setState({
-                allNfts:allNfts, 
-                filterData:allNfts
-            }, () => {
-                this.applyFilters();
+                allNfts: allNfts
             });
         });
 
@@ -178,8 +176,8 @@ class Browse extends Component {
                     <div style={{marginBottom:50}}/>
                     <div className={classes.exploreGradientPink}/>
                 </div>
-                <div style={{width:160, textAlign:'center', margin:'0 auto', marginBottom: 70}} className="connect-near" onClick={this.handleMoreData}>
-                    more data
+                <div className={classes.viewMore} onClick={this.handleMoreData}>
+                    VIEW MORE
                 </div>
                 <div onClick={() => this.setState({open:true})} className={classes.mobileFixedBtn}>
                     FILTER

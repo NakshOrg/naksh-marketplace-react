@@ -104,6 +104,24 @@
     letter-spacing: 1px;
 }
 
+.viewMore {
+    width: 160px;
+    text-align: center;
+    margin: 0px auto 70px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
+.viewMore:hover {
+    background-color: #fff;
+    color: #000;
+    transition: .4s;
+}
+
 /* MEDIA QUERIES */
 
 @media only screen and (max-width: 860px) {

@@ -44,8 +44,8 @@ export default function NearProtocol() {
 
     return (
         <Container fluid className={classes.nearContainer}>
-            {/* <div className={classes.nearGradientOverlay}/>
-            <div className={classes.nearGradientOverlayPink}/> */}
+            <div className={classes.nearGradientOverlay}/>
+            <div className={classes.nearGradientOverlayPink}/>
             <Row>
                 <Col className={classes.nearCol1} lg={4}>
                     <div className={classes.nearCol1Title} style={{fontFamily:'Athelas-Bold', fontSize:42}}>Why NEAR?</div>

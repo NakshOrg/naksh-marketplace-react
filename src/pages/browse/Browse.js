@@ -24,6 +24,8 @@ class Browse extends Component {
             loading: true,
             allNfts: [],
             filterData: [],
+            totalNfts: [],
+            page: 8,
             currentSort: staticValues.sortFilter[0].name,
             open: false
         }
@@ -55,11 +57,15 @@ class Browse extends Component {
         
         functions.getAllNfts()
         .then(res => {
-            const reversedAllNfts = [...res];
-            const reversedFilterNfts = [...res];
+            const result = res.sort(function(a, b) {
+                return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+            });
+            const totalNfts = result;
+            const firstSetOfData = totalNfts.slice(0, this.state.page);
             this.setState({
-                allNfts:reversedAllNfts.reverse(), 
-                filterData:reversedFilterNfts.reverse(), 
+                totalNfts,
+                allNfts:firstSetOfData, 
+                filterData:firstSetOfData, 
                 loading:false
             });
         })
@@ -78,9 +84,15 @@ class Browse extends Component {
         let result;
 
         if(currentSort === "Newest first") {
+            copiedFilterArr.sort(function(a, b) {
+                return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+            });
             result = copiedFilterArr;
         } else if(currentSort === "Oldest first") {
-            result = copiedFilterArr.reverse();
+            copiedFilterArr.sort(function(a, b) {
+                return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
+            });
+            result = copiedFilterArr;
         } else if(currentSort === "Price - High to low") {
             result = copiedFilterArr.sort(function(a, b) {
                 return b.price - a.price;
@@ -100,6 +112,27 @@ class Browse extends Component {
         this.setState({
             currentSort: staticValues.sortFilter[0].name
         });
+    }
+
+    handleMoreData = () => {
+
+        const { totalNfts } = this.state;
+
+        this.setState(prevState => ({
+            ...prevState,
+            page: prevState.page + 8
+        }), () => {
+            const allNfts = [...this.state.filterData];
+            const nextSetOfData = totalNfts.slice(this.state.page - 8, this.state.page);
+            nextSetOfData.map(item => allNfts.push(item));
+            this.setState({
+                allNfts:allNfts, 
+                filterData:allNfts
+            }, () => {
+                this.applyFilters();
+            });
+        });
+
     }
 
     renderNfts = () => {
@@ -125,7 +158,7 @@ class Browse extends Component {
 
         return (
             <Container fluid className={classes.container}>
-                {/* <div className={classes.exploreGradientBlue}/> */}
+                <div className={classes.exploreGradientBlue}/>
                 <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                     <div className={classes.sectionTitle}>Explore NFTs</div>
                     <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
@@ -143,7 +176,10 @@ class Browse extends Component {
                         {this.renderNfts()}
                     </Row>   
                     <div style={{marginBottom:50}}/>
-                    {/* <div className={classes.exploreGradientPink}/> */}
+                    <div className={classes.exploreGradientPink}/>
+                </div>
+                <div style={{width:160, textAlign:'center', margin:'0 auto', marginBottom: 70}} className="connect-near" onClick={this.handleMoreData}>
+                    more data
                 </div>
                 <div onClick={() => this.setState({open:true})} className={classes.mobileFixedBtn}>
                     FILTER

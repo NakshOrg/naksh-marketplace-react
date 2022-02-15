@@ -4,7 +4,7 @@ const { keyStores } = nearAPI;
 
 const isDevelopment = window.location.host === "localhost:3000";
 const isStaging = window.location.host === "marketdev.naksh.org";
-const isProduction = window.location.host === "market.naksh.org";
+const isProduction = window.location.host === "naksh.org";
 
 const testnetConfig = {
     networkId: "testnet",
@@ -32,7 +32,7 @@ export default {
     nakshMarketWallet: (isDevelopment || isStaging) ? 'market1.abhishekvenunathan.testnet' : 'market1.naksh.near',
     appUrl: isDevelopment ? "http://localhost:3000" :
     isStaging ? "http://marketdev.naksh.org" :
-    "https://market.naksh.org",
+    "https://www.naksh.org",
     walletConfig: (isDevelopment || isStaging) ? testnetConfig : mainnetConfig,
     isProduction,
     isStaging,

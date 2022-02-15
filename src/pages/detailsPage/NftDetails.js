@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
+import uuid from 'react-uuid';
 import { utils } from 'near-api-js';
-import Modal from '../../components/uiComponents/Modal';
+import { WhatsappShareButton, FacebookShareCount, WorkplaceShareButton } from "react-share";
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
@@ -18,7 +19,7 @@ import classes from './details.module.css';
 import { helpers } from '../../constants';
 import { _getAllArtists } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
-import uuid from 'react-uuid';
+import Modal from '../../components/uiComponents/Modal';
 
 class NftDetails extends Component {
 
@@ -54,6 +55,26 @@ class NftDetails extends Component {
         }
 
     }
+
+    handleOnSubmit = async () => {
+        const response = await fetch(this.state.nft.metadata.media);
+        // here image is url/location of image
+        const blob = await response.blob();
+        const file = new File([blob], 'share.jpg', {type: blob.type});
+        console.log(file);
+        if(navigator.share) {
+          await navigator.share({
+            title: this.state.nft.metadata?.title,
+            text: "Take a look at my beautiful nft",
+            url: window.location.href,
+            files: [file]     
+          })
+            .then(() => console.log('Successful share'))
+            .catch((error) => console.log('Error in sharing', error));
+        }else {
+          console.log(`system does not support sharing files.`);
+        }
+      }
 
     fetchNft = () => {
 
@@ -227,11 +248,19 @@ class NftDetails extends Component {
                                 <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                     <FiBookmark size={22} color="#130F26"/>
                                 </span>
-                                <span style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6}}>
+                                <span onClick={() => this.handleOnSubmit(nft.metadata.media)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6}}>
                                     <FiMoreVertical size={22} color="#130F26"/>
                                 </span>
                             </div>
                         </div>
+                        {/* <WhatsappShareButton
+                            title={nft?.metadata?.title}
+                            separator={"/%0A"}
+                            style={{height:50, width:50, background:"#fff", color:'red'}} 
+                            url={window.location.href}
+                        >
+                            whatsapp
+                        </WhatsappShareButton> */}
                         {(purchasable && nft?.price) && <div style={{marginTop:5}}>
                             <span style={{fontSize:15, opacity:0.6}}>Price:</span> 
                             <span style={{marginLeft:5, fontSize:17}}>{nft?.price} <img style={{marginTop:-2, marginLeft:-1}} src={nearIcon} alt="near"/></span>

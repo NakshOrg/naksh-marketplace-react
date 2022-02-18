@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown as DropDown } from 'react-bootstrap';
 import { FiChevronDown } from 'react-icons/fi'
 
-function Dropdown({ title, content }) {
+function Dropdown({ title, content, onChange }) {
     return (
         <DropDown style={{width:'100%'}}>
             <DropDown.Toggle style={{width:'100%'}} variant="success" id="dropdown-basic">
@@ -14,7 +14,7 @@ function Dropdown({ title, content }) {
                 </div>
             </DropDown.Toggle>
             <DropDown.Menu style={{padding:15, fontSize:15, minWidth:'12rem'}} id="dropdown-basic-content">
-                {content}
+                {content.map((item, i) => <DropDown.Item onClick={() => onChange(item)} key={i} style={{marginTop: i > 0 && 15}}>{item.name}</DropDown.Item>)}
             </DropDown.Menu>
         </DropDown>
     )

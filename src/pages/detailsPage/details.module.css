@@ -4,8 +4,14 @@
     background-color: rgb(0, 5, 19);
     position: absolute;
     top: -22px;
-    left: 40%;
+    left: 33%;
     padding: 0 20px;
+}
+.heading {
+    font-size: 30px;
+    font-family: Athelas-regular;
+    text-align: center;
+    margin: 20px 0;
 }
 .detailsGradientOverlay {
     position: absolute;
@@ -30,4 +36,121 @@
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: 0%;
     z-index: -1;
+}
+.iconsContainer > div {
+    background-color: #fff;
+    border-radius: 35px;
+    height: 35px;
+    width: 35px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-right: 15px;
+}
+
+.nftImage {
+    border-radius:6px;
+    width:63.5%
+}
+
+.container {
+    margin-top:105px;
+    padding: 0 8%;
+}
+
+.mobileFixedBtn {
+    display: none;
+}
+
+.ownedBtnFixed {
+    display: none;
+}
+
+.ownedBtn {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.8) 0%, rgba(49, 48, 65, 0.488) 100%);
+    backdrop-filter: blur(96.1806px);
+    height: 53px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    border-radius: 4px;
+    margin-top:30px;
+}
+
+@media only screen and (max-width: 767px) {
+    .artistName {
+        margin-top: 20px !important;
+    }
+    .descriptionCol {
+        margin-top: 30px;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .desktopBtn, .ownedBtn {
+        display: none;
+    }
+    .mobileFixedBtn {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-radius: 0;
+        height: 45px;
+        background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 12px;
+        letter-spacing: 1px;
+        z-index: 100;
+    }
+    .ownedBtnFixed {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-radius: 0;
+        height: 50px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 12px;
+        letter-spacing: 1px;
+        z-index: 100;
+        background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.8) 0%, rgba(49, 48, 65, 0.488) 100%);
+        backdrop-filter: blur(96.1806px);
+        text-transform: uppercase;
+    }
+    .nftImage {
+        border-radius:0px;
+        width:100%
+    }
+    .heading {
+        font-size: 26px;
+        margin: 25px 0 12px 0;
+        text-align: left;
+        line-height: 30px !important;
+    }
+    .descriptionCol {
+        margin-top: 10px;
+        padding: 0 35px;
+    }
+    .container {
+        margin-top: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    .bottomContent {
+        padding: 0 25px;
+    }
+    .artistName {
+        font-size: 36px !important;
+        line-height: 38px !important;
+        margin-top: 10px !important;
+    }
 }

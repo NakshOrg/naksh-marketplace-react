@@ -1,11 +1,24 @@
 .artSectionTitle {
     font-size: 2.5em;
 }
-  
+ 
+.artSectionCarouselMobile {
+    display: none;
+    /* margin-bottom: 50px; */
+}
+
 .artSectionContent {
     margin-left: 0;
     align-self: center;
     font-family: 'Athelas-Bold';
+    font-size: 38px;
+    width: 90%;
+}
+
+.artSectionContentContainer {
+    align-self:"center";
+    padding-left:16%;
+    margin: auto 0;
 }
 
 .artworkGradientOverlay {
@@ -18,4 +31,86 @@
     filter: blur(150px);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     left: 2%;
+}
+
+.artSectionCarouselDesktop {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.img1 {
+    width: 6.5%;
+    position: relative;
+}
+  
+.img2 {
+    width: 86%;
+    margin: 0 7px;
+    position: relative;
+}
+  
+.img3 {
+    width: 6.5%;
+    position: relative;
+}
+  
+
+@media only screen and (max-width: 1112px) {
+    .artSectionContent {
+        font-size: 32px;
+        /* width: 90%; */
+    }    
+}
+
+@media only screen and (max-width: 976px) {
+    .artSectionContent {
+        font-size: 29px;
+    }    
+}
+
+@media only screen and (max-width: 767px) {
+    #btnContainer {
+        margin:0 auto;
+    }
+    .artSectionCarouselDesktop {
+        display: none;
+    }
+    .artSectionContent {
+        text-align: center;
+        padding: 0 10%;
+        margin-bottom: 30px;
+        width: 100%;
+    }
+    .artSectionContentContainer {
+        padding: 0;
+        margin: 0;
+        margin-top: 90px;
+    }
+    .artSectionCarouselMobile {
+        display: block;
+        /* margin-top: -40px; */
+    }
+
+}
+
+@media only screen and (max-width: 430px) {
+    .artSectionContent {
+        font-size: 25px
+    }
+    .glowBtnText {
+        font-size: 10px;
+        margin-left: 5px !important;
+    }
+    .artworkGradientOverlay {
+        position: absolute;
+        width: 50%;
+        top: 5%;
+        height: 60%;
+        background: linear-gradient(180deg, #379FFF 103%, rgba(55, 159, 255, 0) 100%);
+        opacity: 0.3;
+        filter: blur(150px);
+        transform: matrix(-1, 0, 0, 1, 0, 0);
+        left: 0%;
+    }
 }

@@ -13,4 +13,142 @@
     filter: blur(150px);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     left: 2%;
-  }
+}
+
+.container {
+    margin-top:95px;
+    padding:0 8%;
+}
+
+.exploreGradientBlue {
+    position: absolute;
+    width: 45%;
+    top: 5%;
+    height: 60%;
+    background: linear-gradient(180deg, #379FFF 100%, rgba(55, 159, 255, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    z-index: -1;
+    left: 0%;
+}
+
+.exploreGradientPink {
+    position: absolute;
+    width: 50%;
+    bottom: 0%;
+    height: 60%;
+    background: linear-gradient(180deg, #F56394 50%, rgba(245, 99, 148, 0) 100%);
+    opacity: 0.4;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    right: 0%;
+    z-index: -1;
+}
+
+.nftContainer {
+    margin-top:55px
+}
+
+.mobileFixedBtn {
+    display: none;
+}
+
+.pill {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.8) 0%, rgba(49, 48, 65, 0.488) 100%);
+    backdrop-filter: blur(96.1806px);
+    border-radius: 5px;
+    padding: 7px 14px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-weight: 100;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pillActive {
+    background: linear-gradient(47.03deg, rgba(9, 131, 250, 0.2) 0%, rgba(219, 95, 121, 0.2) 48.09%, rgba(9, 131, 250, 0.2) 98.23%);
+    backdrop-filter: blur(96.1806px);
+    border-radius: 5px;
+    border: 1px solid #C56386;
+}
+
+.pillsContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.clearBtn {
+    width: 45%;
+    border-radius: 5px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 11px;
+    border: 1px solid;
+    letter-spacing: 2px;
+}
+
+.applyBtn {
+    width: 45%;
+    border-radius: 5px;
+    height: 40px;
+    background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.viewMore {
+    width: 160px;
+    text-align: center;
+    margin: 0px auto 70px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
+.viewMore:hover {
+    background-color: #fff;
+    color: #000;
+    transition: .4s;
+}
+
+/* MEDIA QUERIES */
+
+@media only screen and (max-width: 860px) {
+    .container {
+        padding:0 20px;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .desktopHeaderSection {
+        display: none !important;
+    }
+    .mobileFixedBtn {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-radius: 0;
+        height: 45px;
+        background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+    .nftContainer {
+        margin-top:30px
+    }
+}

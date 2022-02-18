@@ -1,0 +1,208 @@
+.sectionTitle {
+    font-family: 'Athelas-Bold';
+    font-size: 42px;
+}
+
+.sectionCard {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    backdrop-filter: blur(100px);
+    border-radius: 5px;
+    padding: 25px 22px;
+    height: 100%;
+    cursor: pointer;
+}
+
+.sectionCardTitle {
+    font-family: 'Athelas-Bold';
+    font-size: 24px;
+    width: 56%;
+    line-height: 26px;
+}
+
+.sectionCardDescription {
+    font-weight: 100;
+    font-size: 16px;
+    margin-top: 12px;
+    width: 80%;
+}
+
+.iconsContainer > div {
+    background-color: #fff;
+    border-radius: 35px;
+    height: 35px;
+    width: 35px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.sendBtn {
+    background: #FFFFFF;
+    border-radius: 4px;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.helpCenterTopGradient {
+    position: absolute;
+    width: 45%;
+    top: 5%;
+    height: 60%;
+    background: linear-gradient(180deg, #379FFF 10%, rgba(55, 159, 255, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    left: 2%;
+    z-index: -1;
+}
+
+.helpCenterBottomGradient {
+    position: absolute;
+    width: 30%;
+    height: 50%;
+    bottom: -40%;
+    right: 0%;
+    height: 60%;
+    background: linear-gradient(180deg, #F56394 100%, rgba(245, 99, 148, 0) 100%);
+    opacity: 0.3;
+    filter: blur(240px);
+    z-index: -1;
+}
+
+.mobileCardSpace {
+    margin-top: 20px;
+    display: none;
+}
+
+.mobileCardColSpace {
+    margin-top: 20px;
+    display: none;
+}
+
+.iconsContainerDesktop {
+    /* margin: 30px 0; */
+    /* margin-top: 100px; */
+    /* display: none; */
+}
+
+.iconsContainerMobile {
+    /* margin: 30px 0; */
+    /* margin-top: 100px; */
+    display: none;
+}
+
+.blogContainer {
+    border: 2px solid transparent;
+}
+
+.blogContainer:hover {
+    border: 2px solid #C56386;
+}
+
+.container {
+    padding: 90px 8%;
+}
+
+.helpContainer {
+    padding: 90px 8%;
+}
+
+.blogGradientOverlay {
+    position: absolute;
+    width: 60%;
+    top: 5%;
+    height: 50%;
+    background: linear-gradient(180deg, #379FFF 0%, rgba(55, 159, 255, 0) 100%);
+    opacity: 0.3;
+    filter: blur(150px);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    right: 0%;
+    z-index: -1;
+}
+
+.successMessage {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    /* backdrop-filter: blur(100px); */
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 5px;
+    height: 300px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.successTitle {
+    font-family:Athelas-Bold;
+    font-size:26px;
+}
+
+.successDescription {
+    font-weight:100;
+    font-size:20px;
+    line-height:26px; 
+    margin-top:5px;
+    width:300px;
+}
+
+@media only screen and (max-width: 991px) {
+    .mobileCardSpace {
+        display: block;
+    }
+    .iconsContainer {
+        text-align: center;
+        margin-top: 30px;
+        justify-content: center !important;
+    }
+    .iconsContainerMobile {
+        /* margin: 30px 0; */
+        /* margin-top: 100px; */
+        display: flex !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .mobileCardColSpace {
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .sectionTitle {
+        font-size: 32px;
+    }    
+    .blogTitle {
+        font-size: 26px !important;
+    }
+    .blogDescription {
+        font-size: 14px !important;
+    }
+    .helpContainer {
+        padding: 90px 25px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .successTitle {
+        font-family:Athelas-Bold;
+        font-size:22px;
+        line-height:24px; 
+    }
+    .successDescription {
+        font-size:15px;
+        line-height:20px; 
+    }
+    .writeToUs {
+        font-size: 32px !important;
+        line-height: 34px !important;
+    }
+    .fillForm {
+        width: 90% !important;
+    }
+}

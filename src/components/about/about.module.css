@@ -1,0 +1,85 @@
+.weOfferCardContainer {
+    margin: 0 125px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weOfferCardTitle {
+    font-family: AthelasBold;
+    font-size: 28px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+} 
+
+.weOfferCardDescription {
+    font-size: 18px;
+    font-weight: 100;
+    line-height: 25px;
+    margin-top: 2px;
+    padding: 0 25px;
+    min-height: 100px;
+    letter-spacing: 0.1px;
+}
+  
+.weOfferCardWrapper {
+    background: linear-gradient(92.18deg, rgba(38, 37, 52, 0.5) 0%, rgba(49, 48, 65, 0.305) 100%);
+    /* backdrop-filter: blur(100px); */
+    border-radius: 5px;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 280px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 20px;
+    /* background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%); */
+}
+  
+.weOfferCardHoverItemContent {
+    padding: 15px;
+}
+  
+.weOfferCardWrapper:hover {
+    /* background: linear-gradient(94.83deg, #0085FF -0.81%, #FF5963 107.02%); */
+    height: 280px;
+}
+  
+.weOfferCardWrapperBlack {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 99%;
+    height: 326px;
+    border-radius: 5px;
+    background: transparent;
+}
+  
+.weOfferCardWrapperBlack:hover {
+    background: black;
+}
+  
+  
+.weOfferCardItem {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 99%;
+    height: 326px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+  
+.weOfferCardItem:hover {
+    background: linear-gradient(47.03deg, rgba(9, 131, 250, 0.2) 0%, rgba(219, 95, 121, 0.2) 48.09%, rgba(9, 131, 250, 0.2) 98.23%), linear-gradient(92.18deg, rgba(98, 127, 156, 0.2)0%, rgba(49, 48, 65, 0.305) 100%);
+    /* backdrop-filter: blur(100px); */
+    transition: transform .5s;
+    transform: scale(1.045);
+}
+
+@media only screen and (max-width: 991px) {
+    
+}
+  

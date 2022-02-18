@@ -10,3 +10,49 @@
     left: 0%;
     z-index: -1;
 }
+
+.mobileSearchInput {
+    display: none;
+}
+
+.container {
+    margin-top:105px;
+    padding: 0 8%;
+}
+
+/* ******************** MEDIA QUERIES ******************** */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .searchResultsTitle {
+        display: none;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 860px) {
+    .container {
+        margin-top:80px;
+        padding: 0 25px;
+    }
+    .searchResultsTitle {
+        display: none;
+    }
+    .artistsTab {
+        margin-left: 0 !important;
+    }
+    .mobileSearchInput {
+        display: flex;
+        width: 100%;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}
+

@@ -2,7 +2,7 @@ import React from 'react';
 
 import './uiComponents.css';
 
-export const PrimaryBtn = ({ onClick, style, content }) => {
+export const GradientBtn = ({ onClick, style, content }) => {
     return (
         <div 
             onClick={onClick}
@@ -27,3 +27,14 @@ export const PrimaryBtn = ({ onClick, style, content }) => {
     )
 }
 
+export const OutlineBtn = ({ onClick, style, text }) => {
+    return (
+        <div 
+            onClick={onClick}
+            className='outline-btn'
+            style={{...style}}
+        >
+            {text}
+        </div>
+    )
+}

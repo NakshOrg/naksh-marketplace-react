@@ -248,7 +248,7 @@ class NftDetails extends Component {
                                 <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                     <FiBookmark size={22} color="#130F26"/>
                                 </span>
-                                <span onClick={() => this.handleOnSubmit(nft.metadata.media)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6}}>
+                                <span style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                     <FiMoreVertical size={22} color="#130F26"/>
                                 </span>
                             </div>

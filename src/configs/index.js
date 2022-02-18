@@ -32,7 +32,7 @@ export default {
     nakshMarketWallet: (isDevelopment || isStaging) ? 'market1.abhishekvenunathan.testnet' : 'market1.naksh.near',
     appUrl: isDevelopment ? "http://localhost:3000" :
     isStaging ? "http://marketdev.naksh.org" :
-    "https://www.naksh.org",
+    "https://naksh.org",
     walletConfig: (isDevelopment || isStaging) ? testnetConfig : mainnetConfig,
     isProduction,
     isStaging,

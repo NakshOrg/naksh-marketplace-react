@@ -25,7 +25,7 @@ export default function Home() {
                             <h1 className={classes.artSectionContent}>
                                 An NFT marketplace fuelled by art communities from all over India
                             </h1>
-                            <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+                            <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" style={{zIndex:100}}>
                                 <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                             </div>
                         </div>

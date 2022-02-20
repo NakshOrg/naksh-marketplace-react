@@ -1,19 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
+import NearHelperFunctions from '../../services/nearHelperFunctions';
+import * as actionTypes from '../../redux/actions/actionTypes';
 import SwipingCarousel from '../../components/uiComponents/SwipingCarousel';
-import classes from './home.module.css';
 import DesktopCarousel from '../../components/uiComponents/DesktopCarousel';
+import classes from './home.module.css';
 
 
 export default function Home() {
 
+    const walletInfo = useSelector(state => state.nearReducer.walletInfo);
+    const dispatch = useDispatch();
     const history = useHistory();
 
     const variants = {
         visible: { opacity: 1 },
         hidden: { opacity: 0 },
+    }
+
+    useEffect(() => {
+
+        if(walletInfo) {
+            getAllNfts();
+        }
+
+    }, [walletInfo]);
+
+    function getAllNfts() {
+        const functions = new NearHelperFunctions(walletInfo); 
+
+        functions.getAllNfts()
+        .then(res => {
+            console.log(res, "res");
+            dispatch({type:actionTypes.ALL_NFTS, payload:res});
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     return (

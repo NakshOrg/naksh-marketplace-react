@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { BsArrowRight } from 'react-icons/bs';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
@@ -8,6 +8,7 @@ import uuid from 'react-uuid';
 
 import globalStyles from '../../globalStyles';
 import './uiComponents.css';
+import { useSelector } from 'react-redux';
 
 
 function List({type, image, title, icon, name, onClick}) {
@@ -26,6 +27,8 @@ function List({type, image, title, icon, name, onClick}) {
 export function MobileSearchInput({ keyword, onChange, loading, resetSearch, searchResults, closeHeader }) {
 
     const history = useHistory();
+    const nfts = useSelector(state => state.dataReducer.allNfts);
+
     const [show, setShow] = useState(false);
 
     return (
@@ -115,6 +118,8 @@ export function MobileSearchInput({ keyword, onChange, loading, resetSearch, sea
 export function Search({ keyword, onChange, loading, resetSearch, searchResults }) {
 
     const history = useHistory();
+    const nfts = useSelector(state => state.dataReducer.allNfts);
+
     const [show, setShow] = useState(false);
 
     return (
@@ -125,7 +130,6 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResults 
                 <input
                     style={{paddingRight:45}}
                     onFocus={() => setShow(true)} 
-                    // onBlur={show}
                     onChange={onChange}
                     value={keyword}
                     className="search-bar search-bar-desktop" 

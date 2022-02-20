@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
+    allNfts: [],
     headerSearchLoading: false,
     searchLoading: false,
     searchResults: [],
@@ -10,6 +11,11 @@ const initialState = {
 
 const dataReducer = (state = initialState, action) => {
     switch (action.type){
+        case actionTypes.ALL_NFTS:
+            return {
+                ...state,
+                allNfts: action.payload
+            }
         case actionTypes.SEARCH_RESULTS:
             return {
                 ...state,

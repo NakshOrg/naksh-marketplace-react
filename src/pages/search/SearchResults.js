@@ -19,13 +19,13 @@ export default function SearchResults() {
     const history = useHistory();
     const dispatch = useDispatch();
     const userData = useSelector(state => state.nearReducer.userData);
-    const searchResults = useSelector(state => state.dataReducer.searchResults);
+    const searchResultsArtists = useSelector(state => state.dataReducer.searchResultsArtists);
+    const searchResultsNfts = useSelector(state => state.dataReducer.searchResultsNfts);
     const loading = useSelector(state => state.dataReducer.headerSearchLoading);
     const searchKeyword = useSelector(state => state.dataReducer.searchKeyword);
 
     const [isNftActive, setIsNftActive] = useState(true);
     const [keyword, setkeyword] = useState("");
-    const dummyArr = new Array(5).fill("");
 
     useEffect(() => {
         if(params.keyword === "artists") {
@@ -56,28 +56,33 @@ export default function SearchResults() {
 
     const renderTabs = () => {
         if(isNftActive) {
-            return dummyArr.map(item => {
+            if(searchResultsNfts.length === 0) {
+                return <div style={{fontFamily:"Athes-Bold", fontSize:25, textAlign:"center", marginTop:55}}>
+                    {`Sorry! No results found for ${searchKeyword}!`}
+                </div>
+            }
+            return searchResultsNfts.map(item => {
                 return <Fragment key={uuid()}>
                     <Col style={{marginBottom:20}} lg={3} md={4} sm={6} xs={12}>
                         <NftCard
-                            image={"https://watcher.guru/news/wp-content/uploads/2021/08/Alien-1002.png.webp"}
-                            title={"Tanjore Painting"}
-                            nearFee={"31000Ⓝ"}
-                            price={"$121,000,000"}
-                            artistName={"Sharmila S"}
-                            artistImage={"https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZmVtYWxlJTIwcG9ydHJhaXR8ZW58MHx8MHx8&w=1000&q=80"}
+                            onClick={() => history.push(`/nftdetails/${item.token_id}`)}
+                            image={item.metadata.media}
+                            title={item.metadata.title}
+                            name={item?.artist?.name}
+                            artistImage={item?.artist?.image}
+                            type="nft"
+                            nearFee={item?.price}
                         />
                     </Col>
                 </Fragment> 
             });
         } else {
-
-            if(searchResults.length === 0) {
+            if(searchResultsArtists.length === 0) {
                 return <div style={{fontFamily:"Athes-Bold", fontSize:25, textAlign:"center"}}>
                     {`Sorry! No results found for ${searchKeyword}!`}
                 </div>
             }
-            return searchResults.map(artist => {
+            return searchResultsArtists.map(artist => {
                 return <Col key={uuid()} style={{marginBottom:70}} lg={3} md={4} sm={6} xs={12}>
                     <ArtistCard
                         onClick={() => history.push(`/ourartists/${artist._id}`)}
@@ -105,21 +110,21 @@ export default function SearchResults() {
                     onChange={(e) => setkeyword(e.target.value)}
                     loading={loading}
                     resetSearch={resetSearch}
-                    searchResults={searchResults}
+                    searchResultsArtists={searchResultsArtists}
                 />
             </div>
             <div>
                 <div style={{...globalStyles.flexRow, marginTop:20}}>
-                    {/* <div onClick={() => setIsNftActive(true)} style={{fontWeight: !isNftActive ? "400" : "bold", fontSize:12, cursor:'pointer', letterSpacing:1.5}}>
+                    <div onClick={() => setIsNftActive(true)} style={{fontWeight: !isNftActive ? "400" : "bold", fontSize:12, cursor:'pointer', letterSpacing:1.5, marginRight:20}}>
                         NFTS
-                    </div> */}
+                    </div>
                     <div className={classes.artistsTab} onClick={() => setIsNftActive(false)} style={{fontWeight: isNftActive ? "400" : "bold", fontSize:12, marginLeft:0, cursor:'pointer', letterSpacing:1.5}}>
                         ARTISTS
                     </div>
                 </div>
                 {/* bottom indicator */}
                 <motion.div 
-                    animate={{ x: isNftActive ? 10 : 25 }}
+                    animate={{ x: isNftActive ? 10 : 80 }}
                     transition={{ duration: 0.5 }}
                     style={{height:4, background:"#fff", width:11, borderRadius:100}}
                 /> 

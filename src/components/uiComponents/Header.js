@@ -31,7 +31,8 @@ function Header() {
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
     const userData = useSelector(state => state.nearReducer.userData);
-    const searchResults = useSelector(state => state.dataReducer.searchResults);
+    const searchResultsArtists = useSelector(state => state.dataReducer.searchResultsArtists);
+    const searchResultsNfts = useSelector(state => state.dataReducer.searchResultsNfts);
     const loading = useSelector(state => state.dataReducer.headerSearchLoading);
 
     const [keyword, setkeyword] = useState("");
@@ -74,9 +75,7 @@ function Header() {
     const menuStyle = {
         padding:15,
         fontSize:15, 
-        // background: "rgba(0, 5, 19, 0.7)", 
         backdropFilter: "blur(20px)",
-        // transform: "translate(0px, 45px)",
         marginTop: 12,
         borderTopLeftRadius: "0px",
         borderTopRightRadius: "0px"
@@ -115,7 +114,8 @@ function Header() {
                     onChange={(e) => setkeyword(e.target.value)}
                     loading={loading}
                     resetSearch={resetSearch}
-                    searchResults={searchResults}
+                    searchResultsArtists={searchResultsArtists}
+                    searchResultsNfts={searchResultsNfts}
                 />
             </div>
             <div className='header-nav-container'>
@@ -199,7 +199,8 @@ function Header() {
                     onChange={(e) => setkeyword(e.target.value)}
                     loading={loading}
                     resetSearch={resetSearch}
-                    searchResults={searchResults}
+                    searchResultsArtists={searchResultsArtists}
+                    searchResultsNfts={searchResultsNfts}
                     closeHeader={() => setShowHeaderContents(false)}
                 />
                 <div onClick={() => navigateItem("/browse")}>

@@ -4,7 +4,8 @@ const initialState = {
     allNfts: [],
     headerSearchLoading: false,
     searchLoading: false,
-    searchResults: [],
+    searchResultsArtists: [],
+    searchResultsNfts: [],
     searchKeyword: "",
     page: 1
 }
@@ -17,9 +18,18 @@ const dataReducer = (state = initialState, action) => {
                 allNfts: action.payload
             }
         case actionTypes.SEARCH_RESULTS:
+            const results = [];
+            state.allNfts.map(nft => {
+                const title = nft?.metadata?.title;
+                const regexTest = title.match(new RegExp(action.payload.searchKeyword, 'gi'));
+                if(regexTest) {
+                    results.push(nft);
+                } 
+            });
             return {
                 ...state,
-                searchResults: action.payload.artists,
+                searchResultsArtists: action.payload.artists,
+                searchResultsNfts: results,
                 searchKeyword: action.payload.searchKeyword
             }
         case actionTypes.HEADER_SEARCH_LOADING:

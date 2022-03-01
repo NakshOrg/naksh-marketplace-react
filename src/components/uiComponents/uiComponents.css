@@ -104,7 +104,13 @@
   width: 90%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  overflow-y: scroll;
+  max-height: 380px;
   padding: 20px;
+}
+
+.search-dropdown::-webkit-scrollbar {
+  display: none;
 }
 
 .search-list-image {

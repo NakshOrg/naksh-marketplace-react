@@ -5,7 +5,7 @@ import configs from "../../configs";
 
 // GET
 
-export const _getLandingPageData = () => fetch('https://api.naksh.org/client/landing/data');
+export const _getLandingPageData = () => fetch('http://apidev.naksh.org/client/landing/data');
 
 export const _getAllArtists = (params) => axiosNoAuth.get('/artist/all', {params});
 

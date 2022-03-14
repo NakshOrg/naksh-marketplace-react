@@ -100,8 +100,8 @@ export default function ArtistDetails() {
 
     return (
         <div className={classes.container}>
-            <div className={classes.detailsGradientOverlay}/>
-            <div className={classes.detailsGradientOverlayPink}/>
+            {/* <div className={classes.detailsGradientOverlay}/>
+            <div className={classes.detailsGradientOverlayPink}/> */}
             <Row>
                 <Col style={{padding:0}} lg={7}  md={7}>
                     <div style={{textAlign:"center"}}>

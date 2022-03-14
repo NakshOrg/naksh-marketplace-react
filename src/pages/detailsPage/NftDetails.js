@@ -229,8 +229,8 @@ class NftDetails extends Component {
 
         return (
             <div className={classes.container}>
-                <div className={classes.detailsGradientOverlay}/>
-                <div className={classes.detailsGradientOverlayPink}/>
+                {/* <div className={classes.detailsGradientOverlay}/>
+                <div className={classes.detailsGradientOverlayPink}/> */}
                 <Row>
                     <Col lg={7} md={7}>
                         <div style={{textAlign:"center"}}>

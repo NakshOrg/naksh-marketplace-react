@@ -99,7 +99,7 @@ export default function SearchResults() {
     return (
         <Container fluid className={classes.container}>
             {/* overlay gradient  */}
-            <div className={classes.searchGradientOverlay}/>
+            {/* <div className={classes.searchGradientOverlay}/> */}
             <div className={classes.searchResultsTitle} style={{fontSize:36}}>
                 <span style={{fontFamily:"Athelas-Regular", opacity:0.6}}>Search results for</span> 
                 <span style={{fontFamily:"Athelas-Bold"}}>{" "} {searchKeyword}</span>

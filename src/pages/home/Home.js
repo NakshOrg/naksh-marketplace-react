@@ -55,7 +55,7 @@ export default function Home() {
                                 <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                             </div>
                         </div>
-                        <div className={classes.artworkGradientOverlay}/>
+                        {/* <div className={classes.artworkGradientOverlay}/> */}
                     </div>
                 </Col>
                 <Col style={{padding:0}} lg={7} md={7} sm={12}>

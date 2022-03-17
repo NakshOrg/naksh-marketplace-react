@@ -176,9 +176,10 @@ class Browse extends Component {
                     <div style={{marginBottom:50}}/>
                     {/* <div className={classes.exploreGradientPink}/> */}
                 </div>
+                {this.state.allNfts.length !== this.state.totalNfts.length && 
                 <div className={classes.viewMore} onClick={this.handleMoreData}>
                     VIEW MORE
-                </div>
+                </div>}
                 <div onClick={() => this.setState({open:true})} className={classes.mobileFixedBtn}>
                     FILTER
                 </div>  

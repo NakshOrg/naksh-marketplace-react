@@ -5,8 +5,6 @@ import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import uuid from 'react-uuid';
-import { utils } from 'near-api-js';
-import { WhatsappShareButton, FacebookShareCount, WorkplaceShareButton } from "react-share";
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';

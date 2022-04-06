@@ -11,9 +11,9 @@ export default function AboutNaksh() {
     return (
         <Container fluid className={classes.container}>
             {/* overlay gradient  */}
-            {/* <div className={classes.detailsGradientOverlay}/> */}
+            <div className={classes.detailsGradientOverlay}/>
             {/* overlay gradient  */}
-            {/* <div className={classes.detailsGradientOverlayPink}/> */}
+            <div className={classes.detailsGradientOverlayPink}/>
             <motion.div 
                 initial={{ x:-1000 }}
                 animate={{ x: 0 }}

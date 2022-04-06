@@ -94,9 +94,9 @@ export default function OurArtists() {
 
             <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:80, marginTop:5}}/>
             {/* overlay gradient  */}
-            {/* <div className={classes.detailsGradientOverlay}/> */}
+            <div className={classes.detailsGradientOverlay}/>
             {/* overlay gradient  */}
-            {/* <div className={classes.detailsGradientOverlayPink}/> */}
+            <div className={classes.detailsGradientOverlayPink}/>
             {loading ?
             <div style={{width:"100%", textAlign:"center", marginTop:50}}>
                 <Spinner animation="border" color='#fff' size={20}/>

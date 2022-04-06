@@ -156,7 +156,7 @@ class Browse extends Component {
 
         return (
             <Container fluid className={classes.container}>
-                {/* <div className={classes.exploreGradientBlue}/> */}
+                <div className={classes.exploreGradientBlue}/>
                 <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                     <div className={classes.sectionTitle}>Explore NFTs</div>
                     <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
@@ -174,7 +174,7 @@ class Browse extends Component {
                         {this.renderNfts()}
                     </Row>   
                     <div style={{marginBottom:50}}/>
-                    {/* <div className={classes.exploreGradientPink}/> */}
+                    <div className={classes.exploreGradientPink}/>
                 </div>
                 {this.state.allNfts.length !== this.state.totalNfts.length && 
                 <div className={classes.viewMore} onClick={this.handleMoreData}>

@@ -54,7 +54,7 @@ export default function EditProfile(props) {
         .then(({ data: { artists } }) => {
             
             if(artists.length !== 0) {
-                console.log(artists[0]);
+
                 setProfileAlreadyCreated(true);
                 setArtistId(artists[0]._id);
                 setName(artists[0].name);
@@ -94,7 +94,7 @@ export default function EditProfile(props) {
             wallet: walletInfo.getAccountId() 
         }
 
-        const stateObj = {email:email, website:website, facebook:facebook, instagram:instagram, twitter:twitter, description:description};
+        const stateObj = {email:email, website:website, facebook:facebook, instagram:instagram, description:description};
         const stateEntries =  Object.entries(stateObj);
 
         stateEntries.map(entry => {

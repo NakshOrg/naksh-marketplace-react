@@ -128,7 +128,8 @@
     }
     .nftImage {
         border-radius:0px;
-        width:100%
+        width:100%;
+        margin-top: 52px;
     }
     .heading {
         font-size: 26px;

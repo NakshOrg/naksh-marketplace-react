@@ -55,7 +55,7 @@ export default class Blogs extends Component {
 
         return (
             <Container fluid className={classes.helpContainer}>
-                {/* <div className={classes.helpCenterTopGradient}/> */}
+                <div className={classes.helpCenterTopGradient}/>
                 <div style={{...globalStyles.flexRowSpace, marginBottom:22}}>
                     <div className={classes.sectionTitle}>How can we help you?</div>
                 </div>
@@ -190,7 +190,7 @@ export default class Blogs extends Component {
                             </div>
                         </div>
                     </Col>}
-                    {/* <div className={classes.helpCenterBottomGradient}/> */}
+                    <div className={classes.helpCenterBottomGradient}/>
                 </Row>
             </Container>
         )

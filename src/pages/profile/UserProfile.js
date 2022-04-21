@@ -139,7 +139,7 @@ class UserProfile extends Component {
 
         return (
             <div>
-                {/* <div className={classes.gradientCover1} /> */}
+                <div className={classes.gradientCover1} />
                 <Container fluid className={classes.container}>
                     <Row>
                         <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>

@@ -68,7 +68,7 @@ export default function Home() {
                     </div>
                 </Col>
             </Row>
-            <Row className='footer'>
+            <Row style={{padding:"0 6%"}}>
                 <Col>
                     <Footer/>
                 </Col>

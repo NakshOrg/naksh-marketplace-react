@@ -14,6 +14,7 @@ import { OutlineBtn } from '../../components/uiComponents/Buttons';
 import { _getAllArtforms, _getAllArtists } from '../../services/axios/api';
 import Dropdown from '../../components/uiComponents/Dropdown';
 import { staticValues } from '../../constants';
+import Footer from '../../components/uiComponents/Footer';
 
 export default function OurArtists() {
 
@@ -154,6 +155,7 @@ export default function OurArtists() {
                         </div> 
                     </div>
                 </BottomSheet>  
+                <Footer/>
             {/* <OutlineBtn
                 text="VIEW MORE"
                 style={{margin:"20px auto", fontFamily:"Athelas-Regular", borderRadius:2, fontSize:12, letterSpacing:"1px", textAlign:'center'}}

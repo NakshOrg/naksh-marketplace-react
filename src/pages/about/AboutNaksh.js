@@ -6,6 +6,7 @@ import founder1 from '../../assets/images/founder1.jpg';
 import founder2 from '../../assets/images/founder2.jpg';
 import AboutCard from '../../components/about/AboutCard';
 import classes from './about.module.css';
+import Footer from '../../components/uiComponents/Footer';
 
 export default function AboutNaksh() {
     return (
@@ -66,6 +67,7 @@ export default function AboutNaksh() {
                         />
                     </motion.div>
                 </Col>
+                <Footer/>
             </Row>
             {/* <Row style={{margin:"75px 0"}}>
                 <Col style={{padding:0, paddingBottom:20}} lg={4} md={12}>

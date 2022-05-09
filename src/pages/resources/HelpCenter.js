@@ -16,6 +16,7 @@ import globalStyles from '../../globalStyles';
 import classes from './resources.module.css';
 import configs from '../../configs';
 import { helpers } from '../../constants';
+import Footer from '../../components/uiComponents/Footer';
 
 export default class Blogs extends Component {
 
@@ -192,6 +193,7 @@ export default class Blogs extends Component {
                     </Col>}
                     <div className={classes.helpCenterBottomGradient}/>
                 </Row>
+                <Footer/>
             </Container>
         )
     }

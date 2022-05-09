@@ -31,7 +31,7 @@ function Footer() {
     
 
     return (
-        <div style={{backgroundColor:"#000513"}}>
+        <div className='footer' style={{backgroundColor:"transparent"}}>
             <div style={{padding:"30px 0", ...globalStyles.flexRowSpace}}>
                 <div>
                     <img style={{marginBottom:25}} src={logo} alt="logo"/>

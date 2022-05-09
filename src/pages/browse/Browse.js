@@ -8,6 +8,7 @@ import 'react-spring-bottom-sheet/dist/style.css';
 import { motion } from 'framer-motion';
 import { useHistory } from 'react-router-dom';
 
+import Footer from '../../components/uiComponents/Footer';
 import NftCard from '../../components/explore/NftCard';
 import ArtistCard from '../../components/explore/ArtistCard';
 import Spinner from '../../components/uiComponents/Spinner';
@@ -199,7 +200,8 @@ export default function Browse() {
                         APPLY FILTER
                     </div> 
                 </div>
-            </BottomSheet>              
+            </BottomSheet>   
+            <Footer/>           
         </Container>
     )
 

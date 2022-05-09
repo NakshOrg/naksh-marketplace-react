@@ -67,7 +67,7 @@ export default function AboutNaksh() {
                     </motion.div>
                 </Col>
             </Row>
-            <Row style={{margin:"75px 0"}}>
+            {/* <Row style={{margin:"75px 0"}}>
                 <Col style={{padding:0, paddingBottom:20}} lg={4} md={12}>
                     <div className={classes.foundersCaption}>The women behind Naksh</div>
                     <div style={{fontSize: "16px", opacity: 0.7, marginTop: "12px", lineHeight: "25px"}}>Our co-founders envisioned Naksh at a NEAR Hackathon in May 2020. We have come a long way since then.</div>
@@ -89,7 +89,7 @@ export default function AboutNaksh() {
                     <div style={{fontSize:16, opacity:0.7, lineHeight:"20px", letterSpacing:0.5, fontWeight:100}}>
                     Nivedita Vivek pursued her Master's from the same institution as her co-founder Lakshmi, where the duo first met. Post this, she took up various Social Media Marketing roles and has now directed her focus towards handling operations and future collaborations at Naksh. She aims to enter the tech ecosystem soon.                    </div>
                 </Col>
-            </Row>
+            </Row> */}
         </Container>
     )
 }

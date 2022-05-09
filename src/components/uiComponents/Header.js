@@ -40,6 +40,14 @@ function Header() {
 
     const isSearchPage = location.pathname === "/searchresults/nfts" || location.pathname === "/searchresults/artists";
 
+    useEffect(() => {
+
+        if (!isSearchPage) {
+            resetSearch();
+        }
+
+    }, [location]);
+
     const list = {
         visible: { opacity: 1 },
         hidden: { opacity: 0 },
@@ -107,7 +115,7 @@ function Header() {
             <div style={{display:'flex', alignItems:'center', width:'50%'}}>
                 <NavLink style={{color:"#fff", position:"relative"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
-                    <div className='beta'>Beta</div>
+                    {/* <div className='beta'>Beta</div> */}
                 </NavLink>
                 <Search
                     keyword={keyword}

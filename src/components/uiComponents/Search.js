@@ -45,7 +45,7 @@ export function MobileSearchInput({ keyword, onChange, loading, resetSearch, sea
 
     return (
         <>
-        {show && <div onClick={() => setShow(false)} style={{background:"black", opacity:0, height:"100%", width:"100%", position:"absolute", top:0, left:0, zIndex:0}}/>}
+        {show && <div onClick={() => setShow(false)} style={{background:"black", opacity:0, height:"100%", width:"100%", position:"absolute", top:0, left:0, zIndex:1}}/>}
         <div>
             <div style={{position:"relative"}}>
                 <input
@@ -166,7 +166,7 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResultsA
 
     return (
         <>
-        {show && <div onClick={() => setShow(false)} style={{background:"black", opacity:0, height:"100vh", width:"100vw", position:"absolute", top:0, left:0, zIndex:0}}/>}
+        {show && <div onClick={() => setShow(false)} style={{background:"black", opacity:0, height:"100vh", width:"100vw", position:"absolute", top:0, left:0, zIndex:1}}/>}
         <div style={{position:'relative', width:'100%'}}>
             <div>
                 <input

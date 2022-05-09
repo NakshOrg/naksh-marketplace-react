@@ -8,6 +8,7 @@ import * as actionTypes from '../../redux/actions/actionTypes';
 import SwipingCarousel from '../../components/uiComponents/SwipingCarousel';
 import DesktopCarousel from '../../components/uiComponents/DesktopCarousel';
 import classes from './home.module.css';
+import Footer from '../../components/uiComponents/Footer';
 
 
 export default function Home() {
@@ -65,6 +66,11 @@ export default function Home() {
                     <div style={{marginTop:60}} className={classes.artSectionCarouselMobile}> 
                         <SwipingCarousel/>
                     </div>
+                </Col>
+            </Row>
+            <Row className='footer'>
+                <Col>
+                    <Footer/>
                 </Col>
             </Row>
         </Container>

@@ -102,6 +102,7 @@
   position: absolute;
   margin-top: 5px;
   width: 90%;
+  z-index: 1;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   overflow-y: scroll;
@@ -634,6 +635,9 @@
     margin: 0 20px 25px 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+  }
+  .footer {
+    display: none;
   }
 }
 

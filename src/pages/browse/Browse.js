@@ -7,7 +7,9 @@ import crossBtn from "../../assets/svgs/header-cross.svg";
 import 'react-spring-bottom-sheet/dist/style.css';
 import { motion } from 'framer-motion';
 import { useHistory } from 'react-router-dom';
+import { FiX } from 'react-icons/fi';
 
+import { PriceDropdown } from '../../components/uiComponents/Dropdown';
 import Footer from '../../components/uiComponents/Footer';
 import NftCard from '../../components/explore/NftCard';
 import ArtistCard from '../../components/explore/ArtistCard';
@@ -29,6 +31,12 @@ export default function Browse() {
     const [totalNfts, setTotalNfts] = useState([]);
     const [page, setPage] = useState(8);
     const [currentSort, setCurrentSort] = useState(staticValues.sortFilter[0].name);
+    const [priceRanges, setPriceRanges] = useState(                [
+        {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false},
+        {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false},
+        {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false},
+        {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false}
+    ]);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -59,6 +67,20 @@ export default function Browse() {
             });
             const totalNfts = result;
             const firstSetOfData = totalNfts.slice(0, page);
+            let copiedPriceRanges = [...priceRanges];
+            totalNfts.map(item => {
+                const price = Number(item.price);
+                if (price >= 1 && price < 10) {
+                    copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
+                } else if (price >= 10 && price <= 49) {
+                    copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
+                } else if (price >= 50 && price < 100) {
+                    copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
+                } else if (price >= 100 && price <= 200) {
+                    copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
+                }
+            });
+            setPriceRanges(copiedPriceRanges);
             setAllNfts(firstSetOfData);
             setTotalNfts(totalNfts);
             setLoading(false);
@@ -68,6 +90,28 @@ export default function Browse() {
             alert("something went wrong!");
             setLoading(false);
         });
+
+    }
+
+    const handleFilterChange = (index) => {
+        const copiedFilterArr = [...totalNfts];
+        const copiedArr = [...priceRanges];
+        copiedArr.map((item, i) => {
+            if(i === index) {
+                item.checked = !item.checked;
+            }
+        });
+        setPriceRanges(copiedArr);
+        const selectedPriceRanges = copiedArr.filter(item => item.checked);
+        console.log(selectedPriceRanges);
+        // copiedFilterArr.map(item => {
+        //     const price = Number(item.price);
+        //     if (price >= 1 && price < 10) {
+        //     } else if (price >= 10 && price <= 49) {
+        //     } else if (price >= 50 && price < 100) {
+        //     } else if (price >= 100 && price <= 200) {
+        //     }
+        // });
 
     }
 
@@ -112,9 +156,7 @@ export default function Browse() {
     }
 
     const handleMoreData = () => {
-
         setPage(page => page + 8);
-
     }
 
     const renderNfts = () => {
@@ -141,16 +183,42 @@ export default function Browse() {
             <div className={classes.exploreGradientBlue}/>
             <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                 <div className={classes.sectionTitle}>Explore NFTs</div>
-                <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
-                    <div style={{marginLeft:13}}/>
-                    <Dropdown 
-                        title={currentSort}
-                        content={staticValues.sortFilter}
-                        onChange={(val) => setCurrentSort(val.name)}
-                    />
+                <div style={{...globalStyles.flexRow}}>
+                    <div>
+                        <PriceDropdown 
+                            title={"Price range"}
+                            content={staticValues.sortFilter}
+                            priceRanges={priceRanges}
+                            onChange={handleFilterChange}
+                        />
+                    </div>
+                    <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
+                        <div style={{marginLeft:13}}/>
+                        <Dropdown 
+                            title={currentSort}
+                            content={staticValues.sortFilter}
+                            onChange={(val) => setCurrentSort(val.name)}
+                        />
+                    </div>
                 </div>
             </div>
             <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
+            {priceRanges.some(item => item.checked) ?
+             <div style={{flexDirection:"row-reverse", ...globalStyles.flexRow, margin:"6px 0"}}>
+                {priceRanges.map((item, index) => {
+                    if(item.checked) {
+                        return <div key={uuid()} style={{marginRight:7, border:"1px solid rgba(255, 255, 255, 0.6)", fontSize:14, padding: "8px 16px", borderRadius:8, fontWeight:"400", ...globalStyles.flexRow, backgroundColor:"#12192B", flexWrap:"wrap"}}>
+                        <div>
+                            {item.label}
+                        </div>
+                        <div style={{marginLeft:5, cursor:"pointer"}} onClick={() => handleFilterChange(index)}>
+                            <FiX color="#fff" size={20}/>
+                        </div>
+                    </div>
+                    }
+                })}
+            </div> :
+            <div style={{margin:"56px 0"}}></div>}
             <div className={classes.nftContainer}>
                 <Row>
                     {renderNfts()}

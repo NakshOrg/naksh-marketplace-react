@@ -37,7 +37,7 @@ function Footer() {
                     <img style={{marginBottom:25}} src={logo} alt="logo"/>
                     <div className="icons-container" style={{...globalStyles.flexRow}}>
                         <div style={{marginRight:18}} onClick={() => helpers.openInNewTab(configs.discord)}><img style={{height:15}} src={discord} alt='discord'/></div>
-                        <div style={{marginRight:18}} nClick={() => helpers.openInNewTab(configs.instagram)}><img style={{height:15}} src={instagram} alt='instagram'/></div>
+                        <div style={{marginRight:18}} onClick={() => helpers.openInNewTab(configs.instagram)}><img style={{height:15}} src={instagram} alt='instagram'/></div>
                         <div style={{marginRight:18}} onClick={() => helpers.openInNewTab(configs.twitter)}><img style={{height:15}} src={twitter} alt='twitter'/></div>
                         <div style={{marginRight:18}} onClick={() => helpers.openInNewTab(configs.linkedin)}><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
                         <div style={{marginRight:18}} onClick={() => helpers.openInNewTab(configs.telegram)}><img style={{height:15}} src={telegram} alt='telegram'/></div>

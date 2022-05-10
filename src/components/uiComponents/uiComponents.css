@@ -114,6 +114,16 @@
   display: none;
 }
 
+#dropdown-basic-content::-webkit-scrollbar {
+  width: 4px;
+  background-color: #212529;
+}
+ 
+#dropdown-basic-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(94.83deg, #0084ff6b -0.81%, #ff596473 107.02%);
+  outline: none;
+}
+
 .search-list-image {
   height: 70px;
   width: 70px;

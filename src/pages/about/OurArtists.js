@@ -15,6 +15,9 @@ import { _getAllArtforms, _getAllArtists } from '../../services/axios/api';
 import Dropdown from '../../components/uiComponents/Dropdown';
 import { staticValues } from '../../constants';
 import Footer from '../../components/uiComponents/Footer';
+import jsonData from '../../constants/states.json';
+
+const stateOptions = jsonData.states;
 
 export default function OurArtists() {
 
@@ -26,8 +29,9 @@ export default function OurArtists() {
         sortBy: 'createdAt', 
         sort: -1,
         createdBy: 0
-    });
+    }); 
     const [selectedArtform, setSelectedArtform] = useState("All Artforms");
+    const [selectedLocation, setSelectedLocation] = useState("Location");
     const history = useHistory();
 
     useEffect(() => {
@@ -65,12 +69,26 @@ export default function OurArtists() {
         })
     }
     
-    function handleFilterChange(item) {
-        setSelectedArtform(item.name);
-        setFilterParams(prevState => ({
-            ...prevState,
-            artform: item._id
-        }));
+    function handleFilterChange(item, type) {
+
+        if (type === "artform") {
+            setSelectedArtform(item.name);
+            setFilterParams(prevState => ({
+                ...prevState,
+                artform: item._id
+            }));
+        } else {
+            setSelectedLocation(item.value);
+            setFilterParams(prevState => ({
+                ...prevState,
+                state: item.value
+            }));
+        }
+    }
+
+    function clearFilters() {
+        setSelectedArtform("All Artforms");
+        setSelectedLocation("Location");
     }
 
     return (
@@ -83,12 +101,17 @@ export default function OurArtists() {
             </div>
             <div style={{...globalStyles.flexRowSpace, marginTop:100}}>
                 <div style={{margin:0}} className={classes.sectionTitle}>Our artists</div>
-                <div className={classes.desktopFilter} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
-                    <div style={{marginLeft:13}}/>
+                <div className={classes.desktopFilter} style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                     <Dropdown 
                         title={selectedArtform}
                         content={artforms}
-                        onChange={handleFilterChange}
+                        onChange={(item) => handleFilterChange(item, "artform")}
+                    />
+                    <div style={{marginLeft:20}}/>
+                    <Dropdown 
+                        title={selectedLocation}
+                        content={stateOptions}
+                        onChange={(item) => handleFilterChange(item, "location")}
                     />
                 </div>
             </div>
@@ -111,7 +134,7 @@ export default function OurArtists() {
                             image={artist.image}
                             name={artist.name}
                             artform={artist?.artform?.name ?? "-----"}
-                            place={artist.city ?? "-----"}
+                            place={artist.state ?? "-----"}
                         />
                     </Link>
                 </Col>})}
@@ -123,7 +146,8 @@ export default function OurArtists() {
                     open={open}
                     onDismiss={() => setOpen(false)}
                     header={false}
-                    snapPoints={({ minHeight, maxHeight }) => [minHeight*1.8, maxHeight]}
+                    style={{height:300}}
+                    snapPoints={({ minHeight, maxHeight }) => [minHeight*1.8, 600]}
                 >
                     <img 
                         onClick={() => setOpen(false)}
@@ -138,7 +162,7 @@ export default function OurArtists() {
                             {artforms.map(item => {
                                 return <div
                                     key={uuid()} 
-                                    onClick={() => handleFilterChange(item)}
+                                    onClick={() => handleFilterChange(item, "artform")}
                                     className={`${classes.pill} ${selectedArtform === item.name ? classes.pillActive : ""}`}
                                 >
                                     {item.name}
@@ -146,8 +170,23 @@ export default function OurArtists() {
                             }
                         </div>
                     </div>
+                    <div style={{marginTop:35}}>
+                        <div style={{fontFamily:"Athelas-Bold", fontSize:18}}>Location</div>
+                        <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:8}}/>
+                        <div style={{height:200, overflowY:"scroll"}} className={classes.pillsContainer}>
+                            {stateOptions.map(item => {
+                                return <div
+                                    key={uuid()} 
+                                    onClick={() => handleFilterChange(item, "state")}
+                                    className={`${classes.pill} ${selectedLocation === item.value ? classes.pillActive : ""}`}
+                                >
+                                    {item.label}
+                                </div>})
+                            }
+                        </div>
+                    </div>
                     <div style={{...globalStyles.flexRowSpace, position: "absolute", width: "87%", bottom: "20px"}}>
-                        <div className={classes.clearBtn} onClick={() => setSelectedArtform("All Artforms")}>
+                        <div className={classes.clearBtn} onClick={clearFilters}>
                             CLEAR FILTER
                         </div>  
                         <div className={classes.applyBtn} onClick={() => setOpen(false)}>

@@ -89,7 +89,7 @@ export default function SearchResults() {
                         image={artist.image}
                         name={artist.name}
                         artform={artist?.artform?.name}
-                        place={artist.city}
+                        place={artist.state}
                     />
                 </Col>
             });

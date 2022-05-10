@@ -143,7 +143,7 @@ export function MobileSearchInput({ keyword, onChange, loading, resetSearch, sea
                                             image={item.image}
                                             title={item.name}
                                             icon={<HiOutlineLocationMarker size={17} color='#FFFFFF' style={{opacity:0.7}}/>}
-                                            name={item?.city}
+                                            name={item?.state}
                                             type="artist"
                                         />
                                     })}
@@ -259,7 +259,7 @@ export function Search({ keyword, onChange, loading, resetSearch, searchResultsA
                                             image={item.image}
                                             title={item.name}
                                             icon={<HiOutlineLocationMarker size={17} color='#FFFFFF' style={{opacity:0.7}}/>}
-                                            name={item?.city}
+                                            name={item?.state}
                                             type="artist"
                                         />
                                     })}

@@ -13,8 +13,21 @@ function Dropdown({ title, content, onChange }) {
                     <FiChevronDown size={20} />
                 </div>
             </DropDown.Toggle>
-            <DropDown.Menu style={{padding:15, fontSize:15, minWidth:'12rem'}} id="dropdown-basic-content">
-                {content.map((item, i) => <DropDown.Item onClick={() => onChange(item)} key={i} style={{marginTop: i > 0 && 15}}>{item.name}</DropDown.Item>)}
+            <DropDown.Menu style={{padding:15, fontSize:15, height:200, minWidth:'12rem', overflowY:"scroll"}} id="dropdown-basic-content">
+                {content.map((item, i) => 
+                <DropDown.Item 
+                    onClick={() => onChange(item)} 
+                    key={i} 
+                    style={{
+                        marginTop: i > 0 && 15,
+                        width: 130, 
+                        whiteSpace: "nowrap", 
+                        overflow: "hidden", 
+                        textOverflow: "ellipsis"
+                    }}
+                >
+                    {item.name ?? item.label}
+                </DropDown.Item>)}
             </DropDown.Menu>
         </DropDown>
     )

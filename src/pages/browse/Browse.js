@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import uuid from 'react-uuid';
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import crossBtn from "../../assets/svgs/header-cross.svg";
 import 'react-spring-bottom-sheet/dist/style.css';
-import { motion } from 'framer-motion';
 import { useHistory } from 'react-router-dom';
 import { FiX } from 'react-icons/fi';
 
 import { PriceDropdown } from '../../components/uiComponents/Dropdown';
 import Footer from '../../components/uiComponents/Footer';
 import NftCard from '../../components/explore/NftCard';
-import ArtistCard from '../../components/explore/ArtistCard';
 import Spinner from '../../components/uiComponents/Spinner';
 import classes from './browse.module.css';
 import Dropdown from '../../components/uiComponents/Dropdown';
@@ -29,14 +27,16 @@ export default function Browse() {
     const [loading, setLoading] = useState(true);
     const [allNfts, setAllNfts] = useState([]);
     const [totalNfts, setTotalNfts] = useState([]);
-    const [page, setPage] = useState(8);
-    const [currentSort, setCurrentSort] = useState(staticValues.sortFilter[0].name);
-    const [priceRanges, setPriceRanges] = useState(                [
-        {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false},
-        {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false},
-        {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false},
-        {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false}
-    ]);
+    const [filterParams, setFilterParams] = useState({
+        sort: staticValues.sortFilter[0].name,
+        priceRange: [
+            {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
+            {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
+            {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
+            {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:200}
+        ],
+        limit: 8
+    });
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -46,15 +46,10 @@ export default function Browse() {
     }, [walletInfo]);
 
     useEffect(() => {
-        applyFilters();
-    }, [currentSort]);
-
-    useEffect(() => {
-        const copiedArr = [...allNfts];
-        const nextSetOfData = totalNfts.slice(page - 8, page);
-        nextSetOfData.map(item => copiedArr.push(item));
-        setAllNfts(copiedArr);
-    }, [page]);
+        if(totalNfts.length !== 0) {
+            applyFilters();
+        }
+    }, [filterParams]);
 
     const fetchNfts = () => {
 
@@ -66,8 +61,9 @@ export default function Browse() {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });
             const totalNfts = result;
-            const firstSetOfData = totalNfts.slice(0, page);
-            let copiedPriceRanges = [...priceRanges];
+            const firstSetOfData = totalNfts.slice(0, filterParams.limit);
+            const copiedPriceRanges = [...filterParams.priceRange];
+            // to add nft count in filter
             totalNfts.map(item => {
                 const price = Number(item.price);
                 if (price >= 1 && price < 10) {
@@ -80,7 +76,10 @@ export default function Browse() {
                     copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
                 }
             });
-            setPriceRanges(copiedPriceRanges);
+            setFilterParams(state => ({
+                ...state,
+                priceRange: copiedPriceRanges
+            }));
             setAllNfts(firstSetOfData);
             setTotalNfts(totalNfts);
             setLoading(false);
@@ -93,70 +92,88 @@ export default function Browse() {
 
     }
 
-    const handleFilterChange = (index) => {
-        const copiedFilterArr = [...totalNfts];
-        const copiedArr = [...priceRanges];
-        copiedArr.map((item, i) => {
-            if(i === index) {
-                item.checked = !item.checked;
-            }
-        });
-        setPriceRanges(copiedArr);
-        const selectedPriceRanges = copiedArr.filter(item => item.checked);
-        console.log(selectedPriceRanges);
-        // copiedFilterArr.map(item => {
-        //     const price = Number(item.price);
-        //     if (price >= 1 && price < 10) {
-        //     } else if (price >= 10 && price <= 49) {
-        //     } else if (price >= 50 && price < 100) {
-        //     } else if (price >= 100 && price <= 200) {
-        //     }
-        // });
+    const handleFilterChange = (value, type) => {
+
+        if (type === "sort") {
+            setFilterParams(state => ({
+                ...state,
+                sort: value.name
+            }));
+        } else { 
+            const copiedArr = [...filterParams.priceRange];
+            copiedArr.map((item, i) => {
+                if(i === value) {
+                    item.checked = !item.checked;
+                }
+            });
+            setFilterParams(state => ({
+                ...state,
+                priceRange: copiedArr
+            }));
+        }
 
     }
 
     const applyFilters = (isMobile) => {
-        
-        const copiedFilterArr = [...totalNfts];
-        let result, filteredNfts;
 
-        if(currentSort === "Newest first") {
-            copiedFilterArr.sort(function(a, b) {
+        let firstSetOfData, copiedFilterArr = [...totalNfts];
+
+        const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
+
+        if (filterParams.sort === "Newest first") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });
-            filteredNfts = copiedFilterArr;
-        } else if(currentSort === "Oldest first") {
-            copiedFilterArr.sort(function(a, b) {
+        } else if (filterParams.sort === "Oldest first") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
             });
-            filteredNfts = copiedFilterArr;
-        } else if(currentSort === "Price - High to low") {
-            filteredNfts = copiedFilterArr.sort(function(a, b) {
+        } else if (filterParams.sort === "Price - High to low") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return b.price - a.price;
             });
         } else {
-            filteredNfts = copiedFilterArr.sort(function(a, b) {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return a.price - b.price;
             });
         }
 
-        result = filteredNfts.slice(0, 8);
-
-        if(isMobile) {
-            setAllNfts(result);
-            setOpen(false);
-        } else {
-            setAllNfts(result);
-            setTotalNfts(filteredNfts);
+        if(selectedPriceRanges.length !== 0) {
+            const resultArr = [];
+            selectedPriceRanges.map(selRange => {
+                copiedFilterArr.filter(item => {
+                    const price = Number(item.price);
+                    if (price >= selRange.min && price <= selRange.max) {
+                        resultArr.push(item);
+                    }
+                });
+            });
+            copiedFilterArr = resultArr;
         }
+
+        firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
+
+        setAllNfts(firstSetOfData);
     }
 
     const resetFilters = () => {
-        setCurrentSort(staticValues.sortFilter[0].name);
+        setFilterParams(state => ({
+            ...state,
+            sort: staticValues.sortFilter[0].name,
+            priceRange: [
+                {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
+                {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
+                {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
+                {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:200}
+            ]
+        }));
     }
 
     const handleMoreData = () => {
-        setPage(page => page + 8);
+        setFilterParams(state => ({
+            ...state,
+            limit: state.limit + 8
+        }));
     }
 
     const renderNfts = () => {
@@ -184,28 +201,28 @@ export default function Browse() {
             <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                 <div className={classes.sectionTitle}>Explore NFTs</div>
                 <div style={{...globalStyles.flexRow}}>
-                    <div>
+                    <div className={classes.desktopHeaderSection}>
                         <PriceDropdown 
                             title={"Price range"}
                             content={staticValues.sortFilter}
-                            priceRanges={priceRanges}
-                            onChange={handleFilterChange}
+                            priceRanges={filterParams.priceRange}
+                            onChange={(val) => handleFilterChange(val, "price")}
                         />
                     </div>
                     <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
                         <div style={{marginLeft:13}}/>
                         <Dropdown 
-                            title={currentSort}
+                            title={filterParams.sort}
                             content={staticValues.sortFilter}
-                            onChange={(val) => setCurrentSort(val.name)}
+                            onChange={(val) => handleFilterChange(val, "sort")}
                         />
                     </div>
                 </div>
             </div>
             <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
-            {priceRanges.some(item => item.checked) ?
-             <div style={{flexDirection:"row-reverse", ...globalStyles.flexRow, margin:"6px 0"}}>
-                {priceRanges.map((item, index) => {
+            {filterParams.priceRange.some(item => item.checked) ?
+             <div className={classes.desktopHeaderSection} style={{flexDirection:"row-reverse", ...globalStyles.flexRow, margin:"6px 0"}}>
+                {filterParams.priceRange.map((item, index) => {
                     if(item.checked) {
                         return <div key={uuid()} style={{marginRight:7, border:"1px solid rgba(255, 255, 255, 0.6)", fontSize:14, padding: "8px 16px", borderRadius:8, fontWeight:"400", ...globalStyles.flexRow, backgroundColor:"#12192B", flexWrap:"wrap"}}>
                         <div>
@@ -226,7 +243,7 @@ export default function Browse() {
                 <div style={{marginBottom:50}}/>
                 <div className={classes.exploreGradientPink}/>
             </div>
-            {allNfts.length !== totalNfts.length && 
+            {allNfts.length >= 8 && 
             <div className={classes.viewMore} onClick={handleMoreData}>
                 VIEW MORE
             </div>}
@@ -237,6 +254,7 @@ export default function Browse() {
                 open={open}
                 onDismiss={() => setOpen(false)}
                 header={false}
+                style={{height:300}}
                 snapPoints={({ minHeight, maxHeight }) => [minHeight*1.8, maxHeight]}
             >
                 <img 
@@ -252,10 +270,25 @@ export default function Browse() {
                         {staticValues.sortFilter.map(item => {
                             return <div
                                 key={uuid()} 
-                                onClick={() => setCurrentSort(item.name)}
-                                className={`${classes.pill} ${currentSort === item.name ? classes.pillActive : ""}`}
+                                onClick={() => handleFilterChange(item, "sort")}
+                                className={`${classes.pill} ${filterParams.sort === item.name ? classes.pillActive : ""}`}
                             >
                                 {item.name}
+                            </div>})
+                        }
+                    </div>
+                </div>
+                <div style={{marginTop:35}}>
+                    <div style={{fontFamily:"Athelas-Bold", fontSize:18}}>Price range</div>
+                    <div style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:8}}/>
+                    <div className={classes.pillsContainer}>
+                        {filterParams.priceRange.map((item, index) => {
+                            return <div
+                                key={uuid()} 
+                                onClick={() => handleFilterChange(index)}
+                                className={`${classes.pill} ${item.checked ? classes.pillActive : ""}`}
+                            >
+                                {item.label}
                             </div>})
                         }
                     </div>
@@ -264,7 +297,7 @@ export default function Browse() {
                     <div className={classes.clearBtn} onClick={resetFilters}>
                         CLEAR FILTER
                     </div>  
-                    <div className={classes.applyBtn} onClick={() => applyFilters(true)}>
+                    <div className={classes.applyBtn} onClick={() => setOpen(false)}>
                         APPLY FILTER
                     </div> 
                 </div>

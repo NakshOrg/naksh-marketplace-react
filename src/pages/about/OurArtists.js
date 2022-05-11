@@ -176,10 +176,10 @@ export default function OurArtists() {
                         <div style={{height:200, overflowY:"scroll"}} className={classes.pillsContainer}>
                             {stateOptions.map(item => {
                                 return <div
-                                    key={uuid()} 
-                                    onClick={() => handleFilterChange(item, "state")}
-                                    className={`${classes.pill} ${selectedLocation === item.value ? classes.pillActive : ""}`}
-                                >
+                                        key={uuid()} 
+                                        onClick={() => handleFilterChange(item, "state")}
+                                        className={`${classes.pill} ${selectedLocation === item.value ? classes.pillActive : ""}`}
+                                    >
                                     {item.label}
                                 </div>})
                             }

@@ -177,7 +177,6 @@ export default function Browse() {
     }
 
     const renderNfts = () => {
-
         return allNfts.map(nft => {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
@@ -238,7 +237,9 @@ export default function Browse() {
             <div style={{margin:"56px 0"}}></div>}
             <div className={classes.nftContainer}>
                 <Row>
-                    {renderNfts()}
+                    {allNfts.length === 0 ?
+                    <div style={{margin:"125px 0", fontSize:32, display:"flex", justifyContent:"center"}}>No results found!</div> :
+                    renderNfts()}
                 </Row>   
                 <div style={{marginBottom:50}}/>
                 <div className={classes.exploreGradientPink}/>

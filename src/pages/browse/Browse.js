@@ -33,7 +33,8 @@ export default function Browse() {
             {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
             {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
             {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
-            {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:200}
+            {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:199},
+            {label:"200 - 300 NEAR", value:"200 - 300 NEAR", noOfNfts:0, checked:false, min:200, max:300}
         ],
         limit: 8
     });
@@ -72,8 +73,10 @@ export default function Browse() {
                     copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
                 } else if (price >= 50 && price < 100) {
                     copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
-                } else if (price >= 100 && price <= 200) {
+                } else if (price >= 100 && price < 200) {
                     copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
+                } else if (price >= 200 && price <= 300) {
+                    copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
                 }
             });
             setFilterParams(state => ({
@@ -164,7 +167,8 @@ export default function Browse() {
                 {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
                 {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
                 {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
-                {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:200}
+                {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:200},
+                {label:"200 - 300 NEAR", value:"200 - 300 NEAR", noOfNfts:0, checked:false, min:200, max:300}
             ]
         }));
     }

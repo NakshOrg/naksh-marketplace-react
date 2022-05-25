@@ -41,10 +41,10 @@ export function PriceDropdown({ title, content, onChange, priceRanges }) {
         <DropDown style={{width:'100%'}}>
             <DropDown.Toggle style={{width:'100%'}} variant="success" id="dropdown-basic">
                 <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
-                    <div style={{fontWeight:500, fontSize:15, marginRight:10, width:130}}>
-                        { selectedPriceRanges.length === 0 ? title :
-                        `${title} (${selectedPriceRanges.length})`}
-                        {/* {title} */}
+                    <div style={{fontWeight:500, fontSize:15, width:130}}>
+                        { selectedPriceRanges.length === 0 ? 
+                        <div style={{marginLeft:-40}}>{title}</div> :
+                        <div style={{marginLeft:-15}}>{`${title} (${selectedPriceRanges.length})`}</div> }
                     </div>
                     <FiChevronDown size={20} />
                 </div>

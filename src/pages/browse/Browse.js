@@ -185,7 +185,7 @@ export default function Browse() {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
                     onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
-                    image={nft.metadata.media}
+                    image={nft?.metadata?.extra?.nftThumbnailUrl ?? nft.metadata.media}
                     title={nft.metadata.title}
                     nearFee={nft.price}
                     artistName={nft?.artist?.name} 

@@ -33,6 +33,8 @@ export default function EditProfile(props) {
     const [artistId, setArtistId] = useState("");
     const [image, setImage] = useState(null);
     const [imageRaw, setImageRaw] = useState(null);
+    const [coverImage, setCoverImage] = useState(null);
+    const [coverImageRaw, setCoverImageRaw] = useState(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [wallet, setWallet] = useState("");
@@ -81,8 +83,20 @@ export default function EditProfile(props) {
         setImageRaw(e.target.files[0]);
     }
 
+    const handleCoverImage = async (e) => {
+        const res = await helpers.readImage(e);
+        setCoverImage(res[0]);
+        setCoverImageRaw(e.target.files[0]);
+    }
+
     const buildImgTag = () => {
         return <img className={classes.imgStyle} src={image} alt='icon'/> 
+    } 
+
+    const buildCoverImgTag = () => {
+        return <div className={classes.uploadCover}>
+            <img style={{width:100}} src={coverImage} alt='icon'/> 
+        </div>
     } 
 
     const saveProfile = async () => {
@@ -112,6 +126,15 @@ export default function EditProfile(props) {
             }
         }
 
+        if(coverImageRaw !== null) {
+            const urlRes = await _getPresignedUrl({"module": "artist", "totalFiles": 1});
+            const uploadRes = await _uploadFileAws(urlRes.data.urls[0].url, coverImageRaw, coverImageRaw.type);
+            
+            if(uploadRes.status === 200) {
+                data["coverImage"] = urlRes.data.urls[0].Key
+            }
+        }
+console.log(data, 'final data');
         if(profileAlreadyCreated) {
             updateArtist(data);
         } else {
@@ -184,7 +207,7 @@ export default function EditProfile(props) {
                 }
                 <div>
                     <div className={classes.supportedFormats}>
-                    Upload your profile picture here. Your picture will be public.
+                        Upload your profile picture here. Your picture will be public.
                     </div>
                     <label htmlFor="addImg" style={{position:'relative', cursor:'pointer'}}>
                         <input onChange={(e) => handleImage(e)} id="addImg" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
@@ -194,17 +217,23 @@ export default function EditProfile(props) {
                     </label>
                 </div>
             </div>
-            {/* <div className={classes.label}>
+            <div className={classes.label}>
                 COVER PICTURE
             </div>
-            <div className={classes.uploadCover}>
-                <div style={{fontSize:14, opacity:0.66, letterSpacing:0.5, fontWeight:100, width:"40%", marginBottom:15}}>
-                    Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
+            {coverImage ?
+                buildCoverImgTag() :
+                <div className={classes.uploadCover}>
+                    <div style={{fontSize:14, opacity:0.66, letterSpacing:0.5, fontWeight:100, width:"40%", marginBottom:15}}>
+                        Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
+                    </div>
+                    <label htmlFor="addCoverImg" style={{position:'relative', cursor:'pointer'}}>
+                        <input onChange={(e) => handleCoverImage(e)} id="addCoverImg" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
+                        <OutlineBtn
+                            text="UPLOAD FILE"
+                        />
+                    </label>
                 </div>
-                <OutlineBtn
-                    text="UPLOAD FILE"
-                />
-            </div> */}
+            }
             {/* <div className={classes.gradientCover}>
                 <div style={{fontWeight:500, fontSize:16, marginRight:10}}>
                     Or use our default gradients:

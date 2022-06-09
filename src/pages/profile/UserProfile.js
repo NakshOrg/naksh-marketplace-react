@@ -14,6 +14,7 @@ import { _getAllArtists } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Spinner from '../../components/uiComponents/Spinner';
 import uuid from 'react-uuid';
+import { staticValues } from '../../constants';
 
 
 export default function UserProfile(props) {
@@ -57,6 +58,7 @@ export default function UserProfile(props) {
     const getArtist = () => {
         _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
         .then(({ data: { artists } }) => {
+            console.log(artists[0], 'artissss');
             setArtist(artists[0]);
             getOwnedNfts();        
         })
@@ -128,7 +130,16 @@ export default function UserProfile(props) {
 
     return (
         <div>
-            <div className={classes.profileCover} />
+            {artist.coverStatus === 0 ? 
+            <div 
+                style={{background:artist.coverGradient}} 
+                className={classes.profileCover} 
+            /> :
+            <img 
+                className={classes.profileCover}
+                src={artist.coverImage} 
+                alt='cover'
+            />}
             <Container fluid className={classes.container}>
                 <Row>
                     <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>

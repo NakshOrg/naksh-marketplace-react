@@ -58,8 +58,7 @@
     width: 100%;
 }
 .profileCover {
-    height: 210px;
-    margin-top: 15px;
+    height: 225px;
     width: 100%;
     object-fit: cover;
 }

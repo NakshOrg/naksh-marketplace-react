@@ -67,7 +67,11 @@ export default function EditProfile(props) {
                 setWallet(artists[0].wallet);
                 setDescription(artists[0].description);
                 setImage(artists[0].image);
-                artists[0].coverImage && setCoverImage(artists[0].coverImage);
+                if(artists[0].coverStatus === 1) {
+                    setCoverImage(artists[0].coverImage);
+                } else {
+                    setSelectedGradient(artists[0].coverGradient);
+                }
                 artists[0].facebook &&  setFacebook(artists[0].facebook);
                 artists[0].website &&  setWebsite(artists[0].website);
                 artists[0].instagram && setInstagram(artists[0].instagram);
@@ -107,11 +111,11 @@ export default function EditProfile(props) {
         return <div style={{position:"relative"}} onMouseLeave={() => setShowOptions(false)} onMouseOver={() => setShowOptions(true)} className={classes.uploadCover}>
             <img 
                 style={{
-                    "width": '100%',
-                    "height": '180px',
-                    "object-fit": 'cover',
-                    "border-radius": '8px',
-                    "opacity": showOptions ? 0.5 : 1
+                    width: '100%',
+                    height: '180px',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    opacity: showOptions ? 0.5 : 1
                 }}
                 src={coverImage} 
                 alt='icon'

@@ -128,7 +128,7 @@ export default function UserProfile(props) {
 
     return (
         <div>
-            <div className={classes.gradientCover1} />
+            <div className={classes.profileCover} />
             <Container fluid className={classes.container}>
                 <Row>
                     <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>

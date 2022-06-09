@@ -9,7 +9,7 @@ import cameraIcon from '../../assets/svgs/camera.svg'
 import { GradientBtn, OutlineBtn } from '../../components/uiComponents/Buttons';
 import MaterialInput from '../../components/uiComponents/MaterialInput';
 import Spinner from '../../components/uiComponents/Spinner';
-import { helpers } from '../../constants';
+import { helpers, staticValues } from '../../constants';
 import globalStyles from '../../globalStyles';
 import * as actionTypes from '../../redux/actions/actionTypes';
 import { _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws } from '../../services/axios/api';
@@ -27,14 +27,16 @@ export default function EditProfile(props) {
     const location = useLocation();
     
     const [loading, setLoading] = useState(true);
+    const [showOptions, setShowOptions] = useState(false);
     const [value, setValue] = useState("owned");
-    const [selectedGradient, setSelectedGradient] = useState(1);
+    const [selectedGradient, setSelectedGradient] = useState(staticValues.gradients[0]);
     const [showModal, setShowModal] = useState(false);
     const [artistId, setArtistId] = useState("");
     const [image, setImage] = useState(null);
-    const [imageRaw, setImageRaw] = useState(null);
+    const [imageRaw, setImageRaw] = useState(null); 
     const [coverImage, setCoverImage] = useState(null);
     const [coverImageRaw, setCoverImageRaw] = useState(null);
+    const [coverStatus, setCoverStatus] = useState(0); // 0 gradient 1 image
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [wallet, setWallet] = useState("");
@@ -44,6 +46,7 @@ export default function EditProfile(props) {
     const [instagram, setInstagram] = useState("");
     const [twitter, setTwitter] = useState("");
     const [profileAlreadyCreated, setProfileAlreadyCreated] = useState("false");
+
 
     useEffect(() => {
         if(walletInfo) {
@@ -64,6 +67,7 @@ export default function EditProfile(props) {
                 setWallet(artists[0].wallet);
                 setDescription(artists[0].description);
                 setImage(artists[0].image);
+                artists[0].coverImage && setCoverImage(artists[0].coverImage);
                 artists[0].facebook &&  setFacebook(artists[0].facebook);
                 artists[0].website &&  setWebsite(artists[0].website);
                 artists[0].instagram && setInstagram(artists[0].instagram);
@@ -77,6 +81,11 @@ export default function EditProfile(props) {
         });
     }
 
+    const handleGradient = (index) => {
+        setSelectedGradient(staticValues.gradients[index]);
+        setCoverStatus(0);
+    }
+
     const handleImage = async (e) => {
         const res = await helpers.readImage(e);
         setImage(res[0]);
@@ -87,6 +96,7 @@ export default function EditProfile(props) {
         const res = await helpers.readImage(e);
         setCoverImage(res[0]);
         setCoverImageRaw(e.target.files[0]);
+        setCoverStatus(1);
     }
 
     const buildImgTag = () => {
@@ -94,8 +104,39 @@ export default function EditProfile(props) {
     } 
 
     const buildCoverImgTag = () => {
-        return <div className={classes.uploadCover}>
-            <img style={{width:100}} src={coverImage} alt='icon'/> 
+        return <div style={{position:"relative"}} onMouseLeave={() => setShowOptions(false)} onMouseOver={() => setShowOptions(true)} className={classes.uploadCover}>
+            <img 
+                style={{
+                    "width": '100%',
+                    "height": '180px',
+                    "object-fit": 'cover',
+                    "border-radius": '8px',
+                    "opacity": showOptions ? 0.5 : 1
+                }}
+                src={coverImage} 
+                alt='icon'
+            /> 
+            {showOptions && <div style={{position:"absolute"}}>
+                <div style={globalStyles.flexRow}>
+                    <label htmlFor="replaceCover" style={{position:'relative', cursor:'pointer'}}>
+                        <input onChange={(e) => handleCoverImage(e)} id="replaceCover" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
+                        <OutlineBtn
+                            style={{fontWeight:"bold", fontSize:14}}
+                            text="Replace"
+                        />
+                    </label>
+                    <div 
+                        onClick={() => {
+                            setCoverImage(null);
+                            setImageRaw(null);
+                            setCoverStatus(0);
+                        }} 
+                        style={{fontWeight:"bold", marginLeft:35, fontSize:14, cursor:"pointer"}}
+                    >
+                        Remove
+                    </div>
+                </div>
+            </div>}
         </div>
     } 
 
@@ -105,9 +146,14 @@ export default function EditProfile(props) {
 
         let data = {
             name: name,
-            wallet: walletInfo.getAccountId() 
+            wallet: walletInfo.getAccountId(),
+            coverStatus
         }
 
+        if(coverStatus === 0) {
+            data['coverGradient'] = selectedGradient;
+        }
+        
         const stateObj = {email:email, website:website, facebook:facebook, instagram:instagram, twitter:twitter, description:description};
         const stateEntries =  Object.entries(stateObj);
 
@@ -134,7 +180,7 @@ export default function EditProfile(props) {
                 data["coverImage"] = urlRes.data.urls[0].Key
             }
         }
-console.log(data, 'final data');
+
         if(profileAlreadyCreated) {
             updateArtist(data);
         } else {
@@ -234,20 +280,25 @@ console.log(data, 'final data');
                     </label>
                 </div>
             }
-            {/* <div className={classes.gradientCover}>
-                <div style={{fontWeight:500, fontSize:16, marginRight:10}}>
-                    Or use our default gradients:
+            <div style={{position:"relative"}}>
+                <div style={{background:selectedGradient}} className={classes.gradientCover}>
+                    <div style={{fontWeight:500, fontSize:16, marginRight:10}}>
+                        Or use our default gradients:
+                    </div>
+                    <div onClick={() => handleGradient(0)} style={{border: selectedGradient == staticValues.gradients[0] ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer1}>
+                        <div className={classes.color1}/>
+                    </div>
+                    <div onClick={() => handleGradient(1)} style={{border: selectedGradient == staticValues.gradients[1] ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer2}>
+                        <div className={classes.color2}/>
+                    </div>
+                    <div onClick={() => handleGradient(2)} style={{border: selectedGradient == staticValues.gradients[2] ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer3}>
+                        <div className={classes.color3}/>
+                    </div>
                 </div>
-                <div onClick={() => this.setState({ selectedGradient:1 })} style={{border: selectedGradient == 1 ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer1}>
-                    <div className={classes.color1}/>
-                </div>
-                <div onClick={() => this.setState({ selectedGradient:2 })} style={{border: selectedGradient == 2 ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer2}>
-                    <div className={classes.color2}/>
-                </div>
-                <div onClick={() => this.setState({ selectedGradient:3 })} style={{border: selectedGradient == 3 ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer3}>
-                    <div className={classes.color3}/>
-                </div>
-            </div> */}
+                {coverImage &&
+                <div style={{background:"#000", opacity:0.4, zIndex:3, position:"absolute", margin:0, top:0, left:0, cursor:"no-drop"}} className={classes.gradientCover}>
+                </div>}
+            </div>
             <div style={{marginBottom:5}} className={classes.label}>
                 ABOUT YOU
             </div>

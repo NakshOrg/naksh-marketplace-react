@@ -217,7 +217,7 @@ function Header() {
                         animate="visible"
                         variants={item}
                     >
-                        browsey
+                        browse
                     </motion.div>
                 </div>
                 {isWalletSignedIn && <div onClick={() => navigateItem("/userprofile")}>
@@ -226,7 +226,7 @@ function Header() {
                         animate="visible"
                         variants={item}
                     >
-                        Profiley
+                        Profile
                     </motion.div>
                 </div>}
                 <div onClick={() => navigateItem("/aboutnaksh")}>
@@ -235,7 +235,7 @@ function Header() {
                         animate="visible"
                         variants={item}
                     >
-                        About NAKSHY
+                        About NAKSH
                     </motion.div>
                 </div>
                 <div onClick={() => navigateItem("/ourartists")}>

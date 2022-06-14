@@ -189,7 +189,7 @@ function Header() {
             <div style={{...globalStyles.flexRowSpace, width:"100%"}}>
                 <NavLink style={{color:"#fff", position:"relative"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
-                    <div className='beta'>Beta</div>
+                    {/* <div className='beta'>Beta</div> */}
                 </NavLink>
                 {(!showHeaderContents && !isSearchPage) &&  <div onClick={() => setShowHeaderContents(true)}>
                     <img src={hamburgerMenu} alt="hamburger-menu"/>

@@ -217,7 +217,7 @@ function Header() {
                         animate="visible"
                         variants={item}
                     >
-                        browse
+                        browsey
                     </motion.div>
                 </div>
                 {isWalletSignedIn && <div onClick={() => navigateItem("/userprofile")}>

@@ -226,7 +226,7 @@ function Header() {
                         animate="visible"
                         variants={item}
                     >
-                        Profile
+                        Profiley
                     </motion.div>
                 </div>}
                 <div onClick={() => navigateItem("/aboutnaksh")}>

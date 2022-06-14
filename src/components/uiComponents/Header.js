@@ -235,7 +235,7 @@ function Header() {
                         animate="visible"
                         variants={item}
                     >
-                        About NAKSH
+                        About NAKSHY
                     </motion.div>
                 </div>
                 <div onClick={() => navigateItem("/ourartists")}>

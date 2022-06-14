@@ -18,5 +18,5 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd prod/naksh-marketplace-react
-            sudo git pull
+            git pull
             sudo systemctl restart nginx

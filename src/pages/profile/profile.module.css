@@ -47,14 +47,20 @@
     margin-top:35px;
     margin-bottom:15px;
 }
-.gradientCover1 {
-    background: linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%);
+.gradientCover {
     opacity: 0.9;
-    height: 230px;
+    height: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px;
+    margin-top: 15px;
     width: 100%;
+}
+.profileCover {
+    height: 225px;
+    width: 100%;
+    object-fit: cover;
 }
 .color1 {
     height: 24px;
@@ -97,7 +103,8 @@
     align-items:center; 
     justify-content:center; 
     flex-direction: column; 
-    padding:25px 0; 
+    height: 180px;
+    /* padding:25px 0;  */
     border-radius:8px;
 }
 

@@ -10,6 +10,7 @@ import globalStyles from '../../globalStyles';
 import classes from './resources.module.css';
 import Spinner from '../../components/uiComponents/Spinner';
 import configs from '../../configs';
+import Footer from '../../components/uiComponents/Footer';
 
 export default class Blogs extends Component {
 
@@ -135,6 +136,7 @@ export default class Blogs extends Component {
                         </Col>
                     })}
                 </Row>
+                <Footer/>
             </Container>
         )
     }

@@ -9,6 +9,7 @@ import visitNear from '../../assets/svgs/visitNear.svg';
 import classes from './about.module.css';
 import configs from '../../configs';
 import { helpers } from '../../constants';
+import Footer from '../../components/uiComponents/Footer';
 
 
 export default function NearProtocol() {
@@ -61,6 +62,7 @@ export default function NearProtocol() {
                     <Carousel slideData={slideData} loading={loading}/>    
                 </Col>
             </Row>
+            {/* <Footer/> */}
         </Container>
     )
 }

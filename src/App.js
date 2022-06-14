@@ -4,12 +4,15 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
 import thunk from 'redux-thunk';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ReactGA from 'react-ga';
 
 import Header from './components/uiComponents/Header';
 import Routes from './routes';
 import reducer from './redux';
 import { establishWalletConnection } from './redux/actions/actions';
 import './App.css';
+
+ReactGA.initialize('G-54RZ2BX11S');
 
 function App() {
 

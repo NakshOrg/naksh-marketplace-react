@@ -1,0 +1,22 @@
+name: Development Deploy
+
+on:
+  push:
+    branches: [ development ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd dev/naksh-marketplace-react
+            git pull
+            sudo systemctl restart nginx

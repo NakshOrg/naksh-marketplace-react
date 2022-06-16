@@ -4,7 +4,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
 import thunk from 'redux-thunk';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 import Header from './components/uiComponents/Header';
 import Routes from './routes';

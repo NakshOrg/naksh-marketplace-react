@@ -19,4 +19,5 @@ jobs:
           script: |
             cd prod/naksh-marketplace-react
             git pull
+            cd
             sudo systemctl restart nginx

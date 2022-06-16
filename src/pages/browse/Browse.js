@@ -7,6 +7,7 @@ import crossBtn from "../../assets/svgs/header-cross.svg";
 import 'react-spring-bottom-sheet/dist/style.css';
 import { useHistory } from 'react-router-dom';
 import { FiX } from 'react-icons/fi';
+import ReactGA from 'react-ga4';
 
 import { PriceDropdown } from '../../components/uiComponents/Dropdown';
 import Footer from '../../components/uiComponents/Footer';
@@ -18,6 +19,9 @@ import { staticValues } from '../../constants';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import globalStyles from '../../globalStyles';
 
+// ReactGA.initialize('G-54RZ2BX11S');
+
+ReactGA.send({ hitType: "pageview", page: "Browse" });
 
 export default function Browse() {
 

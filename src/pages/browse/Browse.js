@@ -22,6 +22,14 @@ import globalStyles from '../../globalStyles';
 // ReactGA.initialize('G-54RZ2BX11S');
 
 ReactGA.send({ hitType: "pageview", page: "Browse" });
+ReactGA.event({
+    category: "your category",
+    action: "your action",
+    label: "your label", // optional
+    value: 99, // optional, must be a number
+    nonInteraction: true, // optional, true/false
+    transport: "xhr", // optional, beacon/xhr/image
+  });
 
 export default function Browse() {
 

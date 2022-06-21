@@ -29,7 +29,7 @@ export const _uploadFileAws = (url, file, type) => (
     axiosNoAuth.put(url, file, {headers: {
         'Content-Type': type
     }})
-) 
+);
 
 // PATCH
 

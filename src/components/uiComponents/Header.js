@@ -131,7 +131,7 @@ function Header() {
                     <Dropdown>
                         <NavLink style={{color:"#fff"}} to="/browse">
                             <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
-                                BROWSER
+                                BROWSE
                             </Dropdown.Toggle>
                         </NavLink>
                     </Dropdown>

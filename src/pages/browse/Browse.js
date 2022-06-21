@@ -19,9 +19,7 @@ import { staticValues } from '../../constants';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import globalStyles from '../../globalStyles';
 
-ReactGA.initialize('G-54RZ2BX11S');
-console.log(ReactGA,'ReactGA');
-ReactGA.send({ hitType: "pageview", page: "/Browse" });
+ReactGA.send({ hitType: "pageview", page: "browse" });
 ReactGA.event({
     category: "your category",
     action: "your action",

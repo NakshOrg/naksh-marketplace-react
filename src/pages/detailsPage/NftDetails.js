@@ -5,6 +5,7 @@ import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import uuid from 'react-uuid';
+import toast from 'react-hot-toast';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
@@ -84,6 +85,10 @@ export default function NftDetails(props) {
                 res.data.artists.length !== 0 && setOwnerData(res.data.artists[0]);
                 setNft(nft);
                 setMoreNfts(moreNfts.reverse());
+                const query = new URLSearchParams(location.search);
+                if(query.get("transactionHashes")) {
+                    toast.success('NFT successfully purchased!');
+                }
                 setLoading(false);
             })
             .catch(err => {
@@ -143,8 +148,9 @@ export default function NftDetails(props) {
                     </div>
                 </div>
                 <div style={{marginLeft:30}}>
+                    {console.log(ownerData, 'ownerData')}
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
-                    <div style={globalStyles.flexRow}>
+                    <div onClick={() => history.push('/userprofile', {ownerAccountId:nft?.owner_id})} style={{...globalStyles.flexRow, cursor:"pointer"}}>
                         <img
                             style={{height:30, width:30, borderRadius:30, objectFit:'cover'}}
                             src={ownerData?.image ?? profileSvg }

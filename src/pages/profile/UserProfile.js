@@ -10,7 +10,7 @@ import NftCard from '../../components/explore/NftCard';
 import globalStyles from '../../globalStyles';
 import classes from './profile.module.css';
 import { connect, useSelector } from 'react-redux';
-import { _getAllArtists } from '../../services/axios/api';
+import { _getAllArtists, _getOneArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Spinner from '../../components/uiComponents/Spinner';
 import uuid from 'react-uuid';
@@ -25,12 +25,14 @@ export default function UserProfile(props) {
     const params = useParams(); 
     const history = useHistory();
     const location = useLocation();
+    const accountId = location?.state?.ownerAccountId ? location?.state?.ownerAccountId : walletInfo.getAccountId();
     
     const [loading, setLoading] = useState(true);
     const [artist, setArtist] = useState("");
     const [ownedNfts, setOwnedNfts] = useState([]);
+    const [noUserFound, setNoUserFound] = useState(false);
     const [activeTab, setActiveTab] = useState("owned");
-
+    
     useEffect(() => {
         if(walletInfo) {
             getArtist();
@@ -39,10 +41,8 @@ export default function UserProfile(props) {
 
 
     const getOwnedNfts = () => {
-
         const functions = new NearHelperFunctions(walletInfo); 
-
-        functions.getOwnedNfts()
+        functions.getOwnedNfts(accountId)
         .then(res => {
             setOwnedNfts(res);
             setLoading(false);
@@ -56,13 +56,15 @@ export default function UserProfile(props) {
     }
  
     const getArtist = () => {
-        _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
-        .then(({ data: { artists } }) => {
-            console.log(artists[0], 'artissss');
-            setArtist(artists[0]);
+        _getAllArtists({wallet: accountId, sortBy: 'createdAt', sort: -1})
+        .then(({ data }) => {
+            setArtist(data.artists[0]);
             getOwnedNfts();        
         })
         .catch(err => {
+            if (err.response.data.error == "wallet with value accountId fails to match the NEAR testnet pattern") {
+                setNoUserFound(true);
+            }
             setLoading(false);
         });
     }
@@ -77,7 +79,7 @@ export default function UserProfile(props) {
             />
             <div style={{fontFamily:"Athelas-bold", fontSize:24, marginTop:10}}>{artist?.name}</div>
             <div style={{opacity:0.7, fontSize:13, color:"#fff", letterSpacing:1, marginTop:4, wordBreak: "break-word", padding: "0 30px"}}>
-                {walletInfo?.getAccountId()}
+                {artist?.wallet}
             </div>
             <div style={{opacity:0.9, fontSize:15, color:"#fff", letterSpacing:1, marginTop:17}}>
                 {artist?.description}
@@ -93,9 +95,11 @@ export default function UserProfile(props) {
                     <FiGlobe color='#000' size={16}/>
                 </div>
             </div> */}
+            {/* location?.state?.ownerAccountId */}
+            {walletInfo?.getAccountId() === location?.state?.ownerAccountId &&
             <div onClick={() => history.push('/editprofile')} className={classes.editBtn}>
                 EDIT PROFILE
-            </div>
+            </div>}
         </div>
     }
 
@@ -127,6 +131,10 @@ export default function UserProfile(props) {
     }
 
     if(loading) return <Spinner/>;
+
+    if (noUserFound) return <div style={{textAlign:"center", fontSize:24, marginTop:160}}>
+        No user found!
+    </div>
 
     return (
         <div>

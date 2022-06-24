@@ -200,7 +200,7 @@ export default function EditProfile(props) {
         _postArtist(data)
         .then(res => {
             setLoading(false);
-            history.push('/userprofile');
+            history.goBack();
             // this.props.alert.success('Artist added successfully!', {timeout:2000});
         })
         .catch(err => {
@@ -214,7 +214,7 @@ export default function EditProfile(props) {
         .then(({ data: { artist }}) => {
             dispatch({type: actionTypes.USER_DATA, payload:artist});
             setLoading(false);
-            history.push('/userprofile');
+            history.goBack();
             // this.props.alert.success('Artist updated successfully!', {timeout:2000});
         })
         .catch(err => {

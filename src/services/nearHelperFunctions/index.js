@@ -110,21 +110,21 @@ export default function NearHelperFunctions(wallet) {
 
   }
 
-  this.getOwnedNfts = async () => {
-    
+  this.getOwnedNfts = async (accountId) => {
+    console.log(accountId, "ll");
     const res = await wallet.account()
     .viewFunction(
       configs.nakshContractWallet, 
       'nft_tokens_for_owner', 
       { 
-        account_id: wallet.getAccountId(), 
+        account_id: accountId, 
         from_index: "0", 
-        limit: 1000 
+        limit: 1000
       }
     );
 
     const { data: { artists } } = await _getAllArtists({sortBy: 'createdAt', sort: -1});
-    const item = artists.find(item => item.wallet === wallet.getAccountId());
+    const item = artists.find(item => item.wallet === accountId);
     res.map(nft => nft['artist'] = item);   
 
     return res;

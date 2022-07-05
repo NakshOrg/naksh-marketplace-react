@@ -37,7 +37,7 @@ export default {
     isProduction,
     isStaging,
     isDevelopment,
-    discord: "https://discord.gg/CefEghdvsj",
+    discord: "https://discord.gg/FEuh4bxcfx",
     telegram: "https://t.me/nakshofficial",
     instagram: "https://www.instagram.com/nakshmarketplace/",
     linkedin: "https://www.linkedin.com/company/naksh-marketplace/",

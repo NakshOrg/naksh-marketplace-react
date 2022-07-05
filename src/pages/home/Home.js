@@ -44,38 +44,38 @@ export default function Home() {
     }
 
     return (
-        <div style={{marginTop:100}}>
-            <DesktopCarousel/>
-        </div>
-        // <Container fluid style={{height:"100vh"}}>
-        //     <Row>
-        //         <Col style={{display:"flex"}} lg={5} md={5} sm={12}>
-        //             <div className={classes.artSectionContentContainer}>
-        //                 <div className={classes.artSectionTitle}>
-        //                     <h1 className={classes.artSectionContent}>
-        //                         An NFT marketplace fuelled by art communities from all over India
-        //                     </h1>
-        //                     <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" style={{zIndex:100}}>
-        //                         <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
-        //                     </div>
-        //                 </div>
-        //                 <div className={classes.artworkGradientOverlay}/>
-        //             </div>
-        //         </Col>
-        //         <Col style={{padding:0}} lg={7} md={7} sm={12}>
-        //             <div className={classes.artSectionCarouselDesktop}>
-        //                 <DesktopCarousel/>
-        //             </div>
-        //             <div style={{marginTop:60}} className={classes.artSectionCarouselMobile}> 
-        //                 <SwipingCarousel/>
-        //             </div>
-        //         </Col>
-        //     </Row>
-        //     <Row style={{padding:"0 6%"}}>
-        //         <Col>
-        //             <Footer/>
-        //         </Col>
-        //     </Row>
-        // </Container>
+        // <div style={{marginTop:100}}>
+        //     <DesktopCarousel/>
+        // </div>
+        <Container fluid style={{height:"100vh"}}>
+            <Row>
+                <Col style={{display:"flex"}} lg={5} md={5} sm={12}>
+                    <div className={classes.artSectionContentContainer}>
+                        <div className={classes.artSectionTitle}>
+                            <h1 className={classes.artSectionContent}>
+                                An NFT marketplace fuelled by art communities from all over India
+                            </h1>
+                            <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" style={{zIndex:100}}>
+                                <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+                            </div>
+                        </div>
+                        <div className={classes.artworkGradientOverlay}/>
+                    </div>
+                </Col>
+                <Col style={{padding:0}} lg={7} md={7} sm={12}>
+                    <div className={classes.artSectionCarouselDesktop}>
+                        <DesktopCarousel/>
+                    </div>
+                    <div style={{marginTop:60}} className={classes.artSectionCarouselMobile}> 
+                        <SwipingCarousel/>
+                    </div>
+                </Col>
+            </Row>
+            <Row style={{padding:"0 6%"}}>
+                <Col>
+                    <Footer/>
+                </Col>
+            </Row>
+        </Container>
     )
 }

@@ -19,69 +19,69 @@ import "./uiComponents.css";
 
 const AutoplaySlider = withAutoplay(AwesomeSlider);
 
-// export function DesktopCarousel() {
-//   return <AutoplaySlider
-//     play={true}
-//     cancelOnInteraction={false} // should stop playing on user interaction
-//     interval={3500}
-//     organicArrows={false}
-//     animation="openAnimation"
-//     // fillParent={true}
-//     bullets={false}
-//     className="desktop-carousel"
-//   >
-//     <div style={{background:"#000513"}}>
-//       <img style={{marginLeft:70}} src={art1} alt="art1"/>
-//     </div>
-//     {/* <div style={{background:"#000513"}}>
-//       <img style={{marginLeft:70}} src={art2} alt="art2"/>
-//     </div> */}
-//     <div style={{background:"#000513"}}>
-//       <img style={{objectFit:"contain"}} src={art3} alt="art3"/>
-//     </div>
-//     <div style={{background:"#000513"}}>
-//       <img style={{objectFit:"contain"}} src={art4} alt="art4"/>
-//     </div>
-//     <div style={{background:"#000513"}}>
-//       <img style={{marginLeft:70}} src={art5} alt="art5"/>
-//     </div>
-//     <div style={{background:"#000513"}}>
-//       <img style={{marginLeft:70}} src={art6} alt="art6"/>
-//     </div>
-//   </AutoplaySlider>
-// };
+export default function DesktopCarousel() {
+  return <AutoplaySlider
+    play={true}
+    cancelOnInteraction={false} // should stop playing on user interaction
+    interval={3500}
+    organicArrows={false}
+    animation="openAnimation"
+    // fillParent={true}
+    bullets={false}
+    className="desktop-carousel"
+  >
+    <div style={{background:"#000513"}}>
+      <img style={{marginLeft:70}} src={art1} alt="art1"/>
+    </div>
+    {/* <div style={{background:"#000513"}}>
+      <img style={{marginLeft:70}} src={art2} alt="art2"/>
+    </div> */}
+    <div style={{background:"#000513"}}>
+      <img style={{objectFit:"contain"}} src={art3} alt="art3"/>
+    </div>
+    <div style={{background:"#000513"}}>
+      <img style={{objectFit:"contain"}} src={art4} alt="art4"/>
+    </div>
+    <div style={{background:"#000513"}}>
+      <img style={{marginLeft:70}} src={art5} alt="art5"/>
+    </div>
+    <div style={{background:"#000513"}}>
+      <img style={{marginLeft:70}} src={art6} alt="art6"/>
+    </div>
+  </AutoplaySlider>
+};
 
-const DesktopCarousel = () => {
-  const [card, setCard] = useState(null);
-  const onCardChange = (event) => {
-    console.log("Card", event);
-  }
+// const DesktopCarousel = () => {
+//   const [card, setCard] = useState(null);
+//   const onCardChange = (event) => {
+//     console.log("Card", event);
+//   }
   
-  return (
-    <div className="main">
-      <StackedCarousel
-        autoRotate={false}
-        onCardChange={onCardChange}
-        containerClassName={"container"}
-        cardClassName="card"
-        leftButton={<button>{"<"}</button>}
-        rightButton={<button>{">"}</button>}
-      >
-        <div style={{background:"blue"}} key={'child1'}>
-          <h2>1 Card</h2>
-        </div>
-        <div style={{background:"yellow"}} key={'child2'}>
-          <h2>2 Card</h2>
-        </div>
-        <div style={{background:"green"}} key={'child3'}>
-          <h2>3 Card</h2>
-        </div>
-        <div style={{background:"red"}} key={'child4'}>
-          <h2>4 Card</h2>
-        </div>
-      </StackedCarousel>
-      </div>
-  )
-}
+//   return (
+//     <div className="main">
+//       <StackedCarousel
+//         autoRotate={false}
+//         onCardChange={onCardChange}
+//         containerClassName={"container"}
+//         cardClassName="card"
+//         leftButton={<button>{"<"}</button>}
+//         rightButton={<button>{">"}</button>}
+//       >
+//         <div style={{background:"blue"}} key={'child1'}>
+//           <h2>1 Card</h2>
+//         </div>
+//         <div style={{background:"yellow"}} key={'child2'}>
+//           <h2>2 Card</h2>
+//         </div>
+//         <div style={{background:"green"}} key={'child3'}>
+//           <h2>3 Card</h2>
+//         </div>
+//         <div style={{background:"red"}} key={'child4'}>
+//           <h2>4 Card</h2>
+//         </div>
+//       </StackedCarousel>
+//     </div>
+//   )
+// }
 
-export default DesktopCarousel;
+// export default DesktopCarousel;

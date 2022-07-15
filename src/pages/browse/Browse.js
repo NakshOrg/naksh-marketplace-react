@@ -18,19 +18,25 @@ import Dropdown from '../../components/uiComponents/Dropdown';
 import { staticValues } from '../../constants';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import globalStyles from '../../globalStyles';
+import SuggestionNfts from './SuggestionNfts';
+import Tabs from '../../components/uiComponents/Tabs';
 
-ReactGA.send({ hitType: "pageview", page: "browse" });
-ReactGA.event({
-    category: "your category",
-    action: "your action",
-    label: "your label", // optional
-    value: 99, // optional, must be a number
-    nonInteraction: true, // optional, true/false
-    transport: "xhr", // optional, beacon/xhr/image
-  });
+// ReactGA.send({ hitType: "pageview", page: "browse" });
+// ReactGA.event({
+//     category: "your category",
+//     action: "your action",
+//     label: "your label", // optional
+//     value: 99, // optional, must be a number
+//     nonInteraction: true, // optional, true/false
+//     transport: "xhr", // optional, beacon/xhr/image
+// });
 
 export default function Browse() {
 
+    const tabContents = [
+        {tabName: "NFT", x:40, }, // x is a hard coded value for animating bottom bar
+        {tabName: "COLLECTIONS", x:140, },
+    ];
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const history = useHistory();
 
@@ -211,9 +217,20 @@ export default function Browse() {
     return (
         <Container fluid className={classes.container}>
             <div className={classes.exploreGradientBlue}/>
-            <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
-                <div className={classes.sectionTitle}>Explore NFTs</div>
-                <div style={{...globalStyles.flexRow}}>
+            <div style={{...globalStyles.flexRowSpace}}>
+                <div className={classes.sectionTitle}>Discover extraordinary NFTs</div>
+                <div className={classes.sectionTitle2}>
+                    Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
+                </div>
+            </div>
+            <SuggestionNfts
+                allNfts={allNfts}
+            />
+            <div style={{marginTop:80}}>
+                <Tabs 
+                    tabContents={tabContents} 
+                />
+                <div style={{...globalStyles.flexCenter, marginTop:30}}>
                     <div className={classes.desktopHeaderSection}>
                         <PriceDropdown 
                             title={"Price range"}
@@ -231,8 +248,8 @@ export default function Browse() {
                         />
                     </div>
                 </div>
+                <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginTop:25}}/>
             </div>
-            <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
             {filterParams.priceRange.some(item => item.checked) ?
              <div className={classes.desktopHeaderSection} style={{flexDirection:"row-reverse", ...globalStyles.flexRow, margin:"6px 0"}}>
                 {filterParams.priceRange.map((item, index) => {

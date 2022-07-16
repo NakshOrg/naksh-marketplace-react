@@ -15,6 +15,7 @@ export const _getPresignedUrl = (data) => axiosNoAuth.post('/file/upload', data)
 
 export const _getAllArtforms = () => axiosNoAuth.get('/artform/all');
 
+export const _getTrendingNft = () => axiosNoAuth.post('/nft/trending');
 
 // POST
 

@@ -26,6 +26,8 @@
     "react-share": "^4.4.0",
     "react-slick": "^0.28.1",
     "react-snap": "^1.23.0",
+    "react-spring": "^9.5.2",
+    "react-spring-3d-carousel-2": "^1.0.1",
     "react-spring-bottom-sheet": "^3.4.0",
     "react-stacked-carousel": "^1.1.4",
     "react-uuid": "^1.0.2",

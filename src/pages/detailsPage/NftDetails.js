@@ -97,7 +97,7 @@ export default function NftDetails(props) {
             });
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("something went wrong!");
             setLoading(false);
         });
@@ -148,7 +148,7 @@ export default function NftDetails(props) {
                     </div>
                 </div>
                 <div style={{marginLeft:30}}>
-                    {console.log(ownerData, 'ownerData')}
+                    {/* {console.log(ownerData, 'ownerData')} */}
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
                     <div onClick={() => history.push('/userprofile', {ownerAccountId:nft?.owner_id})} style={{...globalStyles.flexRow, cursor:"pointer"}}>
                         <img

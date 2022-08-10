@@ -24,12 +24,9 @@ export default function NearProtocol() {
         _getLandingPageData()
         .then(res => res.json())
         .then(res => {
-            console.log(res);
-            setSlideData(res);
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
             setLoading(false);
         });
     }, [])

@@ -24,7 +24,7 @@ export const establishWalletConnection = () => {
         dispatch({type: actionTypes.GET_WALLET_INFO, payload: wallet});
       })
       .catch(err => {
-        console.log(err, "error from wallet establishment");
+        // console.log(err, "error from wallet establishment");
       });
     }
 }

@@ -35,11 +35,11 @@ export default function Home() {
 
         functions.getAllNfts()
         .then(res => {
-            console.log(res, "res");
+            // console.log(res, "res");
             dispatch({type:actionTypes.ALL_NFTS, payload:res});
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
         });
     }
 

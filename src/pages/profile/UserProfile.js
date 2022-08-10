@@ -48,7 +48,7 @@ export default function UserProfile(props) {
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("something went wrong!");
             setLoading(false);
         });

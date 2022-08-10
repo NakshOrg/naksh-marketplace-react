@@ -88,12 +88,12 @@ export default class Blogs extends Component {
         _getLandingPageData()
         .then(res => res.json())
         .then(res => {
-            console.log(res, "rrr");
+            // console.log(res, "rrr");
             // this.setState({blogs: res.mediumData})
             this.setState({loading: false});
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             this.setState({loading: false});
         });
     }

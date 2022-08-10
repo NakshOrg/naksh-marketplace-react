@@ -111,7 +111,7 @@ export default function NearHelperFunctions(wallet) {
   }
 
   this.getOwnedNfts = async (accountId) => {
-    console.log(accountId, "ll");
+    // console.log(accountId, "ll");
     const res = await wallet.account()
     .viewFunction(
       configs.nakshContractWallet, 

@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import uuid from 'react-uuid';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
+import ArtistCard from '../../components/explore/ArtistCard';
 import Tabs from '../../components/uiComponents/Tabs';
 import classes from './browse.module.css';
 import nearLogo from '../../assets/svgs/near-logo.svg';
@@ -45,14 +46,16 @@ function PrevArrow({ onClick }) {
     </div>
 }
 
-function SuggestionNfts({ allNfts }) {
+function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
 
-    const history = useHistory();
     const tabContents = [
         {tabName: "RECENTLY ADDED", x:100, }, // x is a hard coded value for animating bottom bar
-        {tabName: "TRENDING NftS", x:240, },
+        {tabName: "TRENDING Nfts", x:240, },
         {tabName: "TOP-SELLING ARTISTS", x:400, }
     ];
+    const history = useHistory();
+    const [currentTab, setCurrentTab] = useState(tabContents[0]);
+
 
     function NftCard(props) {
 
@@ -77,32 +80,62 @@ function SuggestionNfts({ allNfts }) {
         </div>
     }
 
+    function Contents() {
+        
+        return (
+            <div style={{marginTop:20}}>
+                <Slider {...settings}>
+                    { 
+                        currentTab.tabName === 'RECENTLY ADDED' ?
+                        recentlyAdded.map(item => {
+                            return <div key={uuid()}>
+                                <NftCard
+                                    onClick={() => history.push(`/nftdetails/${item.token_id}`)}
+                                    image={item?.metadata?.extra?.nftThumbnailUrl ?? item.metadata.media}
+                                    title={item.metadata.title}
+                                    nearFee={item.price}
+                                    artistName={item?.artist?.name} 
+                                    artistImage={item?.artist?.image}
+                                />
+                            </div>
+                        }) :
+                        currentTab.tabName === 'TRENDING Nfts' ?
+                        trendingNfts.map(item => {
+                            return <div key={uuid()}>
+                                <NftCard
+                                    onClick={() => history.push(`/nftdetails/${item.token_id}`)}
+                                    image={item?.metadata?.extra?.nftThumbnailUrl ?? item.metadata.media}
+                                    title={item.metadata.title}
+                                    nearFee={item.price}
+                                    artistName={item?.artist?.name} 
+                                    artistImage={item?.artist?.image}
+                                />
+                            </div>
+                        }) :
+                        trendingArtists.map(artist => {
+                            return <div key={uuid()}>
+                                <ArtistCard
+                                    onClick={() => history.push(`/ourartists/${artist._id}`)}
+                                    image={artist.image}
+                                    name={artist.name}
+                                    artform={artist?.artform?.name ?? "-----"}
+                                    place={artist.state ?? "-----"}
+                                />
+                            </div>
+                        })
+                    }
+                </Slider>
+            </div>
+        )
+    }
+
     return (
         <div style={{marginTop:70}}>
             <Tabs 
-                tabContents={tabContents} 
+                tabContents={tabContents}
+                currentTab={setCurrentTab}
             />
-            {
-                allNfts.length !== 0 &&
-                <div style={{marginTop:20}}>
-                    <Slider {...settings}>
-                        {
-                            allNfts.map(item => {
-                                return <div key={uuid()}>
-                                    <NftCard
-                                        onClick={() => history.push(`/nftdetails/${item.token_id}`)}
-                                        image={item?.metadata?.extra?.nftThumbnailUrl ?? item.metadata.media}
-                                        title={item.metadata.title}
-                                        nearFee={item.price}
-                                        artistName={item?.artist?.name} 
-                                        artistImage={item?.artist?.image}
-                                    />
-                                </div>
-                            })
-                        }
-                    </Slider>
-                </div>
-            }
+            <Contents/>
        </div>
     );
 }

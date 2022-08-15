@@ -20,6 +20,7 @@ import NearHelperFunctions from '../../services/nearHelperFunctions';
 import globalStyles from '../../globalStyles';
 import SuggestionNfts from './SuggestionNfts';
 import Tabs from '../../components/uiComponents/Tabs';
+import { _getAllArtists, _getTrendingNft } from '../../services/axios/api';
 
 // ReactGA.send({ hitType: "pageview", page: "browse" });
 // ReactGA.event({
@@ -42,7 +43,9 @@ export default function Browse() {
 
     const [loading, setLoading] = useState(true);
     const [allNfts, setAllNfts] = useState([]);
-    const [totalNfts, setTotalNfts] = useState([]);
+    const [totalNfts, setTotalNfts] = useState([]); 
+    const [trendingNfts, setTrendingNfts] = useState([]);
+    const [trendingArtists, setTrendingArtists] = useState([]);
     const [filterParams, setFilterParams] = useState({
         sort: staticValues.sortFilter[0].name,
         priceRange: [
@@ -57,7 +60,12 @@ export default function Browse() {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        getTrendingArtists();
+    }, [])
+
+    useEffect(() => {
         if(walletInfo) {
+            getTrendingNfts();
             fetchNfts();
         }
     }, [walletInfo]);
@@ -68,9 +76,35 @@ export default function Browse() {
         }
     }, [filterParams]);
 
+    const getTrendingArtists = () => {
+        _getAllArtists({ sortBy:"trending",sort:1 })
+        .then(({ data: { artists } }) => {
+            setTrendingArtists(artists);
+        });
+    }
+
+    const getTrendingNfts = () => {
+
+        const functions = new NearHelperFunctions(walletInfo);
+
+        functions.getAllNfts()
+        .then (res => {
+            _getTrendingNft({ blockchain: 0 })
+            .then(({ data: { nfts }}) => {
+                const trendingArr = [];
+                nfts.map(n => {
+                    const r = res.find(r => r.token_id === n.token);
+                    trendingArr.push(r);
+                });
+                setTrendingNfts(trendingArr);
+            });
+        })
+
+    }
+
     const fetchNfts = () => {
 
-        const functions = new NearHelperFunctions(walletInfo); 
+        const functions = new NearHelperFunctions(walletInfo);
         
         functions.getAllNfts()
         .then(res => {
@@ -224,7 +258,9 @@ export default function Browse() {
                 </div>
             </div>
             <SuggestionNfts
-                allNfts={allNfts}
+                recentlyAdded={allNfts}
+                trendingNfts={trendingNfts}
+                trendingArtists={trendingArtists}
             />
             <div style={{marginTop:80}}>
                 <Tabs 

@@ -5,13 +5,18 @@ import uuid from 'react-uuid';
 import classes from '../../pages/browse/browse.module.css';
 import globalStyles from '../../globalStyles';
 
-function Tabs({ tabContents }) {
+function Tabs({ tabContents, currentTab }) {
 
     const [activeTab, setActiveTab] = useState(tabContents[0]);
 
     function renderActiveClassName (type) {
         if (type === activeTab.tabName) return classes.activeTab;
         return classes.inActiveTab;
+    }
+
+    function active(item) {
+        currentTab(item);
+        setActiveTab(item);
     }
 
     return (
@@ -23,7 +28,7 @@ function Tabs({ tabContents }) {
                             return <div 
                                 key={uuid()} 
                                 className={renderActiveClassName(item.tabName)} 
-                                onClick={() => setActiveTab(item)}
+                                onClick={() => active(item)}
                             >
                                 {item.tabName}
                             </div>

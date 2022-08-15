@@ -16,7 +16,7 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import { _getAllArtists } from '../../services/axios/api';
+import { _getAllArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
 
@@ -41,15 +41,18 @@ export default function NftDetails(props) {
             setLoading(true);
             fetchNft();
         }
-    }, [walletInfo]);
+    }, [walletInfo, location.pathname]);
 
-    useEffect(() => {
-        if(walletInfo) {
-            setLoading(true);
-            fetchNft();
+    const updateTrendings = async (token, artistId) => {
+        const params = {
+            token: token,
+            blockchain: 0,
+            artist: artistId
         }
-    }, [location.pathname]);
+        await _updateTrendingNftOrArtist(params) 
+    }
 
+    // _updateTrendingNftOrArtist
     // const handleOnSubmit = async () => {
     //     const response = await fetch(nft.metadata.media);
     //     // here image is url/location of image
@@ -82,6 +85,7 @@ export default function NftDetails(props) {
             
             _getAllArtists({wallet: nft?.owner_id, sortBy: 'createdAt', sort: -1})
             .then(res => {
+                updateTrendings(nft.token_id, res.data.artists[0]._id);
                 res.data.artists.length !== 0 && setOwnerData(res.data.artists[0]);
                 setNft(nft);
                 setMoreNfts(moreNfts.reverse());

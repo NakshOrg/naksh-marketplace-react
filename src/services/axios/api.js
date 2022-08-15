@@ -15,7 +15,7 @@ export const _getPresignedUrl = (data) => axiosNoAuth.post('/file/upload', data)
 
 export const _getAllArtforms = () => axiosNoAuth.get('/artform/all');
 
-export const _getTrendingNft = () => axiosNoAuth.post('/nft/trending');
+export const _getTrendingNft = (params) => axiosNoAuth.get('/nft/trending', {params});
 
 // POST
 
@@ -35,3 +35,5 @@ export const _uploadFileAws = (url, file, type) => (
 // PATCH
 
 export const _updateArtist = (id, data) => axiosNoAuth.patch(`/artist/update?id=${id}`, data);
+
+export const _updateTrendingNftOrArtist = (params) => axiosNoAuth.patch(`/nft/trending`, null, {params});

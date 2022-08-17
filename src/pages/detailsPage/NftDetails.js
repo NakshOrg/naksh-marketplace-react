@@ -16,6 +16,7 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
+import configs from '../../configs';
 import { _getAllArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
@@ -28,13 +29,14 @@ export default function NftDetails(props) {
     const params = useParams(); 
     const history = useHistory();
     const location = useLocation();
-    
+    // console.log(window.location.href);
     const [loading, setLoading] = useState(true);
     const [nft, setNft] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
     const [moreNfts, setMoreNfts] = useState([]);
     const [isOverviewActive, setIsOverviewActive] = useState(true);
     const [show, setShow] = useState(false);
+    
 
     useEffect(() => {
         if(walletInfo) {
@@ -240,7 +242,7 @@ export default function NftDetails(props) {
                             <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiBookmark size={22} color="#130F26"/>
                             </span>
-                            <span style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
+                            <span onClick={() => helpers.openInNewTab(configs.googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiMoreVertical size={22} color="#130F26"/>
                             </span>
                         </div>

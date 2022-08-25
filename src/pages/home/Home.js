@@ -44,9 +44,6 @@ export default function Home() {
     }
 
     return (
-        // <div style={{marginTop:100}}>
-        //     <DesktopCarousel/>
-        // </div>
         <Container fluid style={{height:"100vh"}}>
             <Row>
                 <Col style={{display:"flex"}} lg={5} md={5} sm={12}>

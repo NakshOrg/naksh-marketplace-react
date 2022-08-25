@@ -15,23 +15,23 @@ export default class DesktopCarousel extends Component {
   slides = [
     {
       key: uuid(),
-      content: <img style={{borderRadius:6, objectFit:"contain"}} src={art1} alt="1" />
+      content: <img className="desktop-carousel" src={art1} alt="1" />
     },
     {
       key: uuid(),
-      content: <img style={{borderRadius:6, objectFit:"contain"}} src={art3} alt="2" />
+      content: <img className="desktop-carousel" src={art3} alt="2" />
     },
     {
       key: uuid(),
-      content: <img style={{borderRadius:6, objectFit:"contain"}} src={art5} alt="3" />
+      content: <img className="desktop-carousel" src={art5} alt="3" />
     },
     {
       key: uuid(),
-      content: <img style={{borderRadius:6, objectFit:"contain"}} src={art6} alt="3" />
+      content: <img className="desktop-carousel" src={art6} alt="3" />
     },
     {
       key: uuid(),
-      content: <img style={{borderRadius:6, objectFit:"contain"}} src={art2} alt="3" />
+      content: <img className="desktop-carousel" src={art2} alt="3" />
     }
   ]
 

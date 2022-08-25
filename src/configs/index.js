@@ -1,8 +1,8 @@
 import * as nearAPI from "near-api-js";
 
 const { keyStores } = nearAPI;
-
-const isDevelopment = window.location.host === "localhost:3000";
+const keys = process.env;
+const isDevelopment = window.location.hostname === "localhost";
 const isStaging = window.location.host === "marketdev.naksh.org";
 const isProduction = window.location.host === "naksh.org";
 
@@ -26,13 +26,11 @@ const mainnetConfig = {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    baseURL: (isDevelopment || isStaging) ? 'http://apidev.naksh.org/admin' : 'https://api.naksh.org/admin',
-    clientBaseURL: (isDevelopment || isStaging) ? 'http://apidev.naksh.org/client' : 'https://api.naksh.org/client',
-    nakshContractWallet: (isDevelopment || isStaging) ? 'nft1.abhishekvenunathan.testnet' : 'nft1.naksh.near' ,
-    nakshMarketWallet: (isDevelopment || isStaging) ? 'market1.abhishekvenunathan.testnet' : 'market1.naksh.near',
-    appUrl: isDevelopment ? "http://localhost:3000" :
-    isStaging ? "http://marketdev.naksh.org" :
-    "https://naksh.org",
+    baseURL: (isDevelopment || isStaging) ? keys.REACT_APP_BASEURL : keys.REACT_APP_BASEURL_PRODUCTION,
+    clientBaseURL: (isDevelopment || isStaging) ? keys.REACT_APP_CLIENT_BASEURL : keys.REACT_APP_CLIENT_BASEURL_PRODUCTION,
+    nakshContractWallet: (isDevelopment || isStaging) ? keys.REACT_APP_NAKSH_CONTRACT_WALLET : keys.REACT_APP_NAKSH_CONTRACT_WALLET_PRODUCTION,
+    nakshMarketWallet: (isDevelopment || isStaging) ? keys.REACT_APP_NAKSH_MARKET_WALLET : keys.REACT_APP_NAKSH_MARKET_WALLET_PRODUCTION,
+    appUrl: window.location.origin,
     walletConfig: (isDevelopment || isStaging) ? testnetConfig : mainnetConfig,
     isProduction,
     isStaging,

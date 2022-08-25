@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Slider from "react-slick";
@@ -50,12 +50,11 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
 
     const tabContents = [
         {tabName: "RECENTLY ADDED", x:100, }, // x is a hard coded value for animating bottom bar
-        {tabName: "TRENDING Nfts", x:240, },
+        {tabName: "TRENDING NFTS", x:240, },
         {tabName: "TOP-SELLING ARTISTS", x:400, }
     ];
     const history = useHistory();
     const [currentTab, setCurrentTab] = useState(tabContents[0]);
-
 
     function NftCard(props) {
 
@@ -99,7 +98,7 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
                                 />
                             </div>
                         }) :
-                        currentTab.tabName === 'TRENDING Nfts' ?
+                        currentTab.tabName === 'TRENDING NFTS' ?
                         trendingNfts.map(item => {
                             return <div key={uuid()}>
                                 <NftCard
@@ -115,6 +114,7 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
                         trendingArtists.map(artist => {
                             return <div key={uuid()}>
                                 <ArtistCard
+                                    styles={{marginTop:50, width:"95%"}}
                                     onClick={() => history.push(`/ourartists/${artist._id}`)}
                                     image={artist.image}
                                     name={artist.name}

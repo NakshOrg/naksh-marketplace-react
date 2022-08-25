@@ -36,7 +36,7 @@ export default function Browse() {
 
     const tabContents = [
         {tabName: "NFT", x:40, }, // x is a hard coded value for animating bottom bar
-        {tabName: "COLLECTIONS", x:140, },
+        // {tabName: "COLLECTIONS", x:140, },
     ];
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const history = useHistory();
@@ -77,9 +77,10 @@ export default function Browse() {
     }, [filterParams]);
 
     const getTrendingArtists = () => {
-        _getAllArtists({ sortBy:"trending",sort:1 })
+        _getAllArtists({ sortBy:"trending", sort:1 })
         .then(({ data: { artists } }) => {
-            setTrendingArtists(artists);
+            console.log(artists, 'art');
+            setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
         });
     }
 
@@ -96,7 +97,7 @@ export default function Browse() {
                     const r = res.find(r => r.token_id === n.token);
                     trendingArr.push(r);
                 });
-                setTrendingNfts(trendingArr);
+                setTrendingNfts([...trendingArr, ...trendingArr]);
             });
         })
 

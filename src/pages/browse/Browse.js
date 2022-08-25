@@ -79,7 +79,6 @@ export default function Browse() {
     const getTrendingArtists = () => {
         _getAllArtists({ sortBy:"trending", sort:1 })
         .then(({ data: { artists } }) => {
-            console.log(artists, 'art');
             setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
         });
     }
@@ -235,10 +234,10 @@ export default function Browse() {
         return allNfts.map(nft => {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
-                    onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
-                    image={nft?.metadata?.extra?.nftThumbnailUrl ?? nft.metadata.media}
-                    title={nft.metadata.title}
-                    nearFee={nft.price}
+                    onClick={() => history.push(`/nftdetails/${nft?.token_id}`)}
+                    image={nft?.metadata?.extra?.nftThumbnailUrl ?? nft?.metadata?.media}
+                    title={nft?.metadata?.title}
+                    nearFee={nft?.price}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
                 />

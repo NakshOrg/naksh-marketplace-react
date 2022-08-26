@@ -14,7 +14,7 @@ import { establishWalletConnection } from './redux/actions/actions';
 import './App.css';
 
 // google analytics initialization
-ReactGA.initialize('G-54RZ2BX11S');
+ReactGA.initialize('G-51GS0V4HX8');
 
 function App() {
 

@@ -102,7 +102,7 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
                         trendingNfts.map(item => {
                             return <div key={uuid()}>
                                 <NftCard
-                                    onClick={() => history.push(`/nftdetails/${item.token_id}`)}
+                                    onClick={() => history.push(`/nftdetails/${item?.token_id}`)}
                                     image={item?.metadata?.extra?.nftThumbnailUrl ?? item?.metadata?.media}
                                     title={item?.metadata?.title}
                                     nearFee={item?.price}

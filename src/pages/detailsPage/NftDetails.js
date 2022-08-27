@@ -16,7 +16,6 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import configs from '../../configs';
 import { _getAllArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
@@ -29,13 +28,13 @@ export default function NftDetails(props) {
     const params = useParams(); 
     const history = useHistory();
     const location = useLocation();
-    // console.log(window.location.href);
     const [loading, setLoading] = useState(true);
     const [nft, setNft] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
     const [moreNfts, setMoreNfts] = useState([]);
     const [isOverviewActive, setIsOverviewActive] = useState(true);
     const [show, setShow] = useState(false);
+    const googleForm = `https://docs.google.com/forms/d/e/1FAIpQLScaqPJC9CPhLWJfAYDbb3P5V98MMb9d3OrVqQOctS-Ynp-4Cw/viewform?usp=pp_url&entry.301861387=${window.location.href}`
     
 
     useEffect(() => {
@@ -84,23 +83,28 @@ export default function NftDetails(props) {
 
             const nft = nfts.find(item => item.token_id === params.id);
             const moreNfts = nfts.filter(item => item.token_id !== params.id);
-            
-            _getAllArtists({wallet: nft?.owner_id, sortBy: 'createdAt', sort: -1})
-            .then(res => {
-                updateTrendings(nft.token_id, res.data.artists[0]._id);
-                res.data.artists.length !== 0 && setOwnerData(res.data.artists[0]);
-                setNft(nft);
-                setMoreNfts(moreNfts.reverse());
-                const query = new URLSearchParams(location.search);
-                if(query.get("transactionHashes")) {
-                    toast.success('NFT successfully purchased!');
-                }
-                setLoading(false);
+            console.log(nft, 'nfr');
+            _getAllArtists({wallet: nft?.artist?.wallet, sortBy: 'createdAt', sort: -1})
+            .then(res1 => {
+                _getAllArtists({wallet: nft?.owner_id, sortBy: 'createdAt', sort: -1})
+                .then(res2 => {
+                    updateTrendings(nft.token_id, res1.data.artists[0]._id);
+                    setNft(nft);
+                    setMoreNfts(moreNfts.reverse());
+                    const query = new URLSearchParams(location.search);
+                    if(query.get("transactionHashes")) {
+                        toast.success('NFT successfully purchased!');
+                    }
+                    setLoading(false);
+                    console.log(res2);
+                    res2.data.artists.length !== 0 && setOwnerData(res2.data.artists[0]);
+                })
             })
             .catch(err => {
                 alert("something went wrong!");
                 setLoading(false);
             });
+
         })
         .catch(err => {
             // console.log(err);
@@ -154,7 +158,6 @@ export default function NftDetails(props) {
                     </div>
                 </div>
                 <div style={{marginLeft:30}}>
-                    {/* {console.log(ownerData, 'ownerData')} */}
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
                     <div onClick={() => history.push('/userprofile', {ownerAccountId:nft?.owner_id})} style={{...globalStyles.flexRow, cursor:"pointer"}}>
                         <img
@@ -206,9 +209,9 @@ export default function NftDetails(props) {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
                     onClick={() => history.push(`/nftdetails/${nft.token_id}`, {replace: true})}
-                    image={nft.metadata?.media}
-                    title={nft.metadata?.title}
-                    nearFee={nft.price}
+                    image={nft?.metadata?.media}
+                    title={nft?.metadata?.title}
+                    nearFee={nft?.price}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
                 />
@@ -230,7 +233,7 @@ export default function NftDetails(props) {
                     <div style={{textAlign:"center"}}>
                         <img
                             className={classes.nftImage}
-                            src={nft.metadata.media} 
+                            src={nft?.metadata?.media} 
                             alt='nft'
                         />
                     </div>
@@ -242,7 +245,7 @@ export default function NftDetails(props) {
                             <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiBookmark size={22} color="#130F26"/>
                             </span>
-                            <span onClick={() => helpers.openInNewTab(configs.googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
+                            <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiMoreVertical size={22} color="#130F26"/>
                             </span>
                         </div>

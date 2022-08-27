@@ -94,8 +94,9 @@ export default function Browse() {
                 const trendingArr = [];
                 nfts.map(n => {
                     const r = res.find(r => r.token_id === n.token);
-                    trendingArr.push(r);
+                    if (r) trendingArr.push(r);
                 });
+                console.log(trendingArr, 'trendingNfts');
                 setTrendingNfts([...trendingArr, ...trendingArr]);
             });
         })

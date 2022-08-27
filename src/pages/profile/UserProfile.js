@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { Component, Fragment, useEffect, useState } from 'react';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Col, Row, Container, Toast } from 'react-bootstrap';
 import { FiFacebook, FiGlobe } from 'react-icons/fi';
 import { BsInstagram } from 'react-icons/bs';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -15,6 +15,7 @@ import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Spinner from '../../components/uiComponents/Spinner';
 import uuid from 'react-uuid';
 import { staticValues } from '../../constants';
+import toast from 'react-hot-toast';
 
 
 export default function UserProfile(props) {
@@ -26,7 +27,7 @@ export default function UserProfile(props) {
     const history = useHistory();
     const location = useLocation();
     const accountId = location?.state?.ownerAccountId ? location?.state?.ownerAccountId : walletInfo.getAccountId();
-    
+    console.log(accountId);
     const [loading, setLoading] = useState(true);
     const [artist, setArtist] = useState("");
     const [ownedNfts, setOwnedNfts] = useState([]);
@@ -44,6 +45,7 @@ export default function UserProfile(props) {
         const functions = new NearHelperFunctions(walletInfo); 
         functions.getOwnedNfts(accountId)
         .then(res => {
+            console.log(res, 'owned nfts');
             setOwnedNfts(res);
             setLoading(false);
         })
@@ -56,10 +58,17 @@ export default function UserProfile(props) {
     }
  
     const getArtist = () => {
+        getOwnedNfts()
         _getAllArtists({wallet: accountId, sortBy: 'createdAt', sort: -1})
         .then(({ data }) => {
-            setArtist(data.artists[0]);
-            getOwnedNfts();        
+            console.log(data.artists[0], "dd");
+            if (data.artists[0]) {
+                setArtist(data.artists[0]);
+                getOwnedNfts();       
+            } else {
+                setLoading(false);
+                setNoUserFound(true);
+            }
         })
         .catch(err => {
             if (err.response.data.error == "wallet with value accountId fails to match the NEAR testnet pattern") {
@@ -133,7 +142,7 @@ export default function UserProfile(props) {
     if(loading) return <Spinner/>;
 
     if (noUserFound) return <div style={{textAlign:"center", fontSize:24, marginTop:160}}>
-        No user found!
+        User not found
     </div>
 
     return (

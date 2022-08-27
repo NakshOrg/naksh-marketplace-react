@@ -46,6 +46,5 @@ export default {
     existingUsers: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lu4ng",
     nftOwners: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luUoZ",
     nearWebsite: "Near.org",
-    nakshMedium: "https://medium.com/@naksh.org",
-    googleForm: `https://docs.google.com/forms/d/e/1FAIpQLScaqPJC9CPhLWJfAYDbb3P5V98MMb9d3OrVqQOctS-Ynp-4Cw/viewform?usp=pp_url&entry.301861387=${window.location.href}`
+    nakshMedium: "https://medium.com/@naksh.org"
 }

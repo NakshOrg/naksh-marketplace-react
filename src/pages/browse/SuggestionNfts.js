@@ -47,7 +47,7 @@ function PrevArrow({ onClick }) {
 }
 
 function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
-
+    
     const tabContents = [
         {tabName: "RECENTLY ADDED", x:100, }, // x is a hard coded value for animating bottom bar
         {tabName: "TRENDING NFTS", x:240, },

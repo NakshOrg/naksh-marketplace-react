@@ -109,6 +109,7 @@ export default function Browse() {
         
         functions.getAllNfts()
         .then(res => {
+            console.log(res, "all nft");
             const result = res.sort(function(a, b) {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });

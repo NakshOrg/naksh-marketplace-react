@@ -16,7 +16,7 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import { _getAllArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
+import { _getAllArtists, _getNftArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
 
@@ -83,22 +83,17 @@ export default function NftDetails(props) {
 
             const nft = nfts.find(item => item.token_id === params.id);
             const moreNfts = nfts.filter(item => item.token_id !== params.id);
-            console.log(nft, 'nfr');
-            _getAllArtists({wallet: nft?.artist?.wallet, sortBy: 'createdAt', sort: -1})
-            .then(res1 => {
-                _getAllArtists({wallet: nft?.owner_id, sortBy: 'createdAt', sort: -1})
-                .then(res2 => {
-                    updateTrendings(nft.token_id, res1.data.artists[0]._id);
-                    setNft(nft);
-                    setMoreNfts(moreNfts.reverse());
-                    const query = new URLSearchParams(location.search);
-                    if(query.get("transactionHashes")) {
-                        toast.success('NFT successfully purchased!');
-                    }
-                    setLoading(false);
-                    console.log(res2);
-                    res2.data.artists.length !== 0 && setOwnerData(res2.data.artists[0]);
-                })
+            _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
+            .then(({ data: { artist, owner }}) => {
+                updateTrendings(nft.token_id, artist._id);
+                setNft(nft);
+                setMoreNfts(moreNfts.reverse());
+                const query = new URLSearchParams(location.search);
+                if(query.get("transactionHashes")) {
+                    toast.success('NFT successfully purchased!');
+                }
+                setLoading(false);
+                owner && setOwnerData(owner);
             })
             .catch(err => {
                 alert("something went wrong!");

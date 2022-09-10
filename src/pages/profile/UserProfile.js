@@ -27,7 +27,7 @@ export default function UserProfile(props) {
     const history = useHistory();
     const location = useLocation();
     const accountId = location?.state?.ownerAccountId ? location?.state?.ownerAccountId : walletInfo.getAccountId();
-    console.log(accountId);
+
     const [loading, setLoading] = useState(true);
     const [artist, setArtist] = useState("");
     const [ownedNfts, setOwnedNfts] = useState([]);
@@ -40,12 +40,20 @@ export default function UserProfile(props) {
         }
     }, [walletInfo]);
 
+    useEffect(() => {
+        setLoading(true);
+        setArtist([]);
+        setOwnedNfts([]);
+        if(walletInfo) {
+            getArtist();
+        }
+    }, [accountId])
+
 
     const getOwnedNfts = () => {
         const functions = new NearHelperFunctions(walletInfo); 
         functions.getOwnedNfts(accountId)
         .then(res => {
-            console.log(res, 'owned nfts');
             setOwnedNfts(res);
             setLoading(false);
         })
@@ -58,10 +66,9 @@ export default function UserProfile(props) {
     }
  
     const getArtist = () => {
-        getOwnedNfts()
         _getAllArtists({wallet: accountId, sortBy: 'createdAt', sort: -1})
         .then(({ data }) => {
-            console.log(data.artists[0], "dd");
+            console.log(data);
             if (data.artists[0]) {
                 setArtist(data.artists[0]);
                 getOwnedNfts();       
@@ -141,9 +148,36 @@ export default function UserProfile(props) {
 
     if(loading) return <Spinner/>;
 
-    if (noUserFound) return <div style={{textAlign:"center", fontSize:24, marginTop:160}}>
-        User not found
-    </div>
+    if (noUserFound) {
+        return <div>
+            <div 
+                style={{background:"linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)"}} 
+                className={classes.profileCover} 
+            />
+            <Container fluid className={classes.container}>
+                <Row>
+                    <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>
+                        <div className={classes.profileContainer}>
+                            <img 
+                                style={{height:100, width:100, borderRadius:100, objectFit:"cover", marginTop:30}}
+                                src={profileSvg}
+                                alt='profile'
+                            />
+                            <div style={{opacity:0.7, fontSize:13, color:"#fff", letterSpacing:1, wordBreak: "break-word", padding: "0 30px", marginTop:10}}>
+                                {accountId}
+                            </div>
+                        </div>
+                    </Col>
+                    <Col lg={8} md={8}>
+                        <Row>
+                            <div style={{paddingTop:100, textAlign:"center"}}>User not found!</div>
+                        </Row>
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    }
+     
 
     return (
         <div>

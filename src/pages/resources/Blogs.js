@@ -27,7 +27,6 @@ export default class Blogs extends Component {
         _getLandingPageData()
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             this.setState({blogs: res.mediumData})
             this.setState({loading: false});
         })

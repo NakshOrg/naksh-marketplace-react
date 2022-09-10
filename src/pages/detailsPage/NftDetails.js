@@ -1,7 +1,7 @@
 import React, { Component, Fragment, useEffect, useState } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { motion } from 'framer-motion';
-import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
+import { FiBookmark, FiExternalLink, FiFlag } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import uuid from 'react-uuid';
@@ -237,11 +237,11 @@ export default function NftDetails(props) {
                     <div style={globalStyles.flexRowSpace}>
                         <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize", lineHeight:"40px", marginRight:10}}>{nft?.metadata?.title}</div>
                         <div style={{display:'flex'}}>
-                            <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
+                            {/* <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiBookmark size={22} color="#130F26"/>
-                            </span>
-                            <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
-                                <FiMoreVertical size={22} color="#130F26"/>
+                            </span> */}
+                            <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, cursor:"pointer"}}>
+                                <FiFlag size={22} color="#130F26"/>
                             </span>
                         </div>
                     </div>

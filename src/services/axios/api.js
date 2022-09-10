@@ -38,4 +38,4 @@ export const _uploadFileAws = (url, file, type) => (
 
 export const _updateArtist = (id, data) => axiosNoAuth.patch(`/artist/update?id=${id}`, data);
 
-export const _updateTrendingNftOrArtist = (params) => axiosNoAuth.patch(`/nft/trending`, null, {params});
+export const _updateTrendingNftOrArtist = (body, params) => axiosNoAuth.patch(`/nft/trending`, body, {params});

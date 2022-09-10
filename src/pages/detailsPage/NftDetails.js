@@ -44,13 +44,13 @@ export default function NftDetails(props) {
         }
     }, [walletInfo, location.pathname]);
 
-    const updateTrendings = async (token, artistId) => {
+    const updateTrendings = async (body, token, artistId) => {
         const params = {
             token: token,
             blockchain: 0,
             artist: artistId
         }
-        await _updateTrendingNftOrArtist(params) 
+        await _updateTrendingNftOrArtist(body, params) 
     }
 
     // _updateTrendingNftOrArtist
@@ -85,11 +85,12 @@ export default function NftDetails(props) {
             const moreNfts = nfts.filter(item => item.token_id !== params.id);
             _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
             .then(({ data: { artist, owner }}) => {
-                updateTrendings(nft.token_id, artist._id);
+                updateTrendings({view:1}, nft.token_id, artist._id);
                 setNft(nft);
                 setMoreNfts(moreNfts.reverse());
                 const query = new URLSearchParams(location.search);
                 if(query.get("transactionHashes")) {
+                    updateTrendings({sale:1}, nft.token_id, artist._id);
                     toast.success('NFT successfully purchased!');
                 }
                 setLoading(false);

@@ -41,8 +41,9 @@ export default function Browse() {
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const history = useHistory();
 
-    const [loading, setLoading] = useState(true);
-    const [allNfts, setAllNfts] = useState([]);
+    const [loading, setLoading] = useState(true); 
+    const [allNfts, setAllNfts] = useState([]); 
+    const [recently, setRecently] = useState([]); 
     const [totalNfts, setTotalNfts] = useState([]); 
     const [trendingNfts, setTrendingNfts] = useState([]);
     const [trendingArtists, setTrendingArtists] = useState([]);
@@ -135,6 +136,7 @@ export default function Browse() {
                 ...state,
                 priceRange: copiedPriceRanges
             }));
+            setRecently(firstSetOfData);
             setAllNfts(firstSetOfData);
             setTotalNfts(totalNfts);
             setLoading(false);
@@ -260,7 +262,7 @@ export default function Browse() {
                 </div>
             </div>
             <SuggestionNfts
-                recentlyAdded={allNfts}
+                recentlyAdded={recently}
                 trendingNfts={trendingNfts}
                 trendingArtists={trendingArtists}
             />

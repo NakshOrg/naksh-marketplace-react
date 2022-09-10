@@ -1,5 +1,6 @@
 import React from 'react';
 
+import blogPlaceholder from "../../assets/images/nakshblog.jpg";  
 import classes from '../../pages/resources/resources.module.css';
 
 export default function BlogCard({ onClick, coverImage, title, description }) {
@@ -26,13 +27,21 @@ export default function BlogCard({ onClick, coverImage, title, description }) {
 
     return (
         <div className={classes.blogContainer} onClick={onClick} style={containerStyle}>
+            {coverImage ? 
             <div>
                 <img 
                     style={{width:'100%', height:'200px', objectFit:'cover', borderRadius:5}} 
                     src={coverImage} 
                     alt='blog-cover'
                 />
-            </div>
+            </div> :          
+            <div>
+                <img 
+                    style={{width:'100%', height:'200px', objectFit:'cover', borderRadius:5}}
+                    src={blogPlaceholder} 
+                    alt='blog-cover'
+                />
+            </div>}
             <div style={{padding:'15px'}}>
                 <div className={classes.blogTitle} style={{fontFamily:'Athelas-Bold', fontSize:26, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                     {title}

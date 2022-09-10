@@ -1,5 +1,11 @@
 const sortFilter = [{name: "Newest first"}, {name: "Oldest first"}, {name: "Price - High to low"}, {name: "Price - Low to high"}];
 
+const gradients = [
+    "linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)",
+    "linear-gradient(90.14deg, #FFC149 0.11%, #FF3C8E 99.88%)",
+    "linear-gradient(90.14deg, #009F9F 0.11%, #8B00BC 99.88%)"
+];
+
 const states = [
         {
             "label" :"Andaman and Nicobar Islands",
@@ -153,5 +159,6 @@ const states = [
 
 export default {
     sortFilter,
-    states
+    states,
+    gradients
 }

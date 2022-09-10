@@ -13,13 +13,14 @@ function ArtistCard(props) {
         name,
         image,
         artform,
-        onClick
+        onClick,
+        styles = {}
     } = props;
 
     const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <div onClick={onClick} onMouseOver={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className={classes.cardContainer}>
+        <div style={{...styles}} onClick={onClick} onMouseOver={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className={classes.cardContainer}>
           <img 
             style={{border:"2px solid", borderColor: isHovered ? "#C56386" : "transparent"}} 
             className={classes.artistImage} 

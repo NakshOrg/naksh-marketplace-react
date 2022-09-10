@@ -172,7 +172,7 @@ function Header() {
                         {" "}<FiChevronDown size={15} color="#fff"/>
                     </Dropdown.Toggle>
                     <Dropdown.Menu style={{padding:15, fontSize:15}} id="dropdown-basic-content">
-                        <Dropdown.Item onClick={() => history.push("/userprofile")}>View Profile</Dropdown.Item>
+                        <Dropdown.Item onClick={() => history.push("/userprofile", {ownerAccountId:walletInfo?.getAccountId()})}>View Profile</Dropdown.Item>
                         <Dropdown.Item onClick={walletSignOut} style={{marginTop:15}}>Log Out</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -189,7 +189,7 @@ function Header() {
             <div style={{...globalStyles.flexRowSpace, width:"100%"}}>
                 <NavLink style={{color:"#fff", position:"relative"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
-                    <div className='beta'>Beta</div>
+                    {/* <div className='beta'>Beta</div> */}
                 </NavLink>
                 {(!showHeaderContents && !isSearchPage) &&  <div onClick={() => setShowHeaderContents(true)}>
                     <img src={hamburgerMenu} alt="hamburger-menu"/>
@@ -220,7 +220,7 @@ function Header() {
                         browse
                     </motion.div>
                 </div>
-                {isWalletSignedIn && <div onClick={() => navigateItem("/userprofile")}>
+                {isWalletSignedIn && <div onClick={() => history.push("/userprofile", {ownerAccountId:walletInfo?.getAccountId()})}>
                     <motion.div
                         initial="hidden"
                         animate="visible"

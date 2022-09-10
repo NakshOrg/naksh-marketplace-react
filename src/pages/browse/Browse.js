@@ -7,6 +7,7 @@ import crossBtn from "../../assets/svgs/header-cross.svg";
 import 'react-spring-bottom-sheet/dist/style.css';
 import { useHistory } from 'react-router-dom';
 import { FiX } from 'react-icons/fi';
+import ReactGA from 'react-ga4';
 
 import { PriceDropdown } from '../../components/uiComponents/Dropdown';
 import Footer from '../../components/uiComponents/Footer';
@@ -17,16 +18,35 @@ import Dropdown from '../../components/uiComponents/Dropdown';
 import { staticValues } from '../../constants';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import globalStyles from '../../globalStyles';
+import SuggestionNfts from './SuggestionNfts';
+import Tabs from '../../components/uiComponents/Tabs';
+import { _getAllArtists, _getTrendingNft } from '../../services/axios/api';
 
+// ReactGA.send({ hitType: "pageview", page: "browse" });
+// ReactGA.event({
+//     category: "your category",
+//     action: "your action",
+//     label: "your label", // optional
+//     value: 99, // optional, must be a number
+//     nonInteraction: true, // optional, true/false
+//     transport: "xhr", // optional, beacon/xhr/image
+// });
 
 export default function Browse() {
 
+    const tabContents = [
+        {tabName: "NFT", x:40, }, // x is a hard coded value for animating bottom bar
+        // {tabName: "COLLECTIONS", x:140, },
+    ];
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const history = useHistory();
 
-    const [loading, setLoading] = useState(true);
-    const [allNfts, setAllNfts] = useState([]);
-    const [totalNfts, setTotalNfts] = useState([]);
+    const [loading, setLoading] = useState(true); 
+    const [allNfts, setAllNfts] = useState([]); 
+    const [recently, setRecently] = useState([]); 
+    const [totalNfts, setTotalNfts] = useState([]); 
+    const [trendingNfts, setTrendingNfts] = useState([]);
+    const [trendingArtists, setTrendingArtists] = useState([]);
     const [filterParams, setFilterParams] = useState({
         sort: staticValues.sortFilter[0].name,
         priceRange: [
@@ -41,7 +61,12 @@ export default function Browse() {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        getTrendingArtists();
+    }, [])
+
+    useEffect(() => {
         if(walletInfo) {
+            getTrendingNfts();
             fetchNfts();
         }
     }, [walletInfo]);
@@ -52,12 +77,40 @@ export default function Browse() {
         }
     }, [filterParams]);
 
+    const getTrendingArtists = () => {
+        _getAllArtists({ sortBy:"trending", sort:1 })
+        .then(({ data: { artists } }) => {
+            setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
+        });
+    }
+
+    const getTrendingNfts = () => {
+
+        const functions = new NearHelperFunctions(walletInfo);
+
+        functions.getAllNfts()
+        .then (res => {
+            _getTrendingNft({ blockchain: 0 })
+            .then(({ data: { nfts }}) => {
+                const trendingArr = [];
+                nfts.map(n => {
+                    const r = res.find(r => r.token_id === n.token);
+                    if (r) trendingArr.push(r);
+                });
+                console.log(trendingArr, 'trendingNfts');
+                setTrendingNfts([...trendingArr, ...trendingArr]);
+            });
+        })
+
+    }
+
     const fetchNfts = () => {
 
-        const functions = new NearHelperFunctions(walletInfo); 
+        const functions = new NearHelperFunctions(walletInfo);
         
         functions.getAllNfts()
         .then(res => {
+            console.log(res, "all nft");
             const result = res.sort(function(a, b) {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });
@@ -83,12 +136,13 @@ export default function Browse() {
                 ...state,
                 priceRange: copiedPriceRanges
             }));
+            setRecently(firstSetOfData);
             setAllNfts(firstSetOfData);
             setTotalNfts(totalNfts);
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("something went wrong!");
             setLoading(false);
         });
@@ -184,10 +238,10 @@ export default function Browse() {
         return allNfts.map(nft => {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
-                    onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
-                    image={nft.metadata.media}
-                    title={nft.metadata.title}
-                    nearFee={nft.price}
+                    onClick={() => history.push(`/nftdetails/${nft?.token_id}`)}
+                    image={nft?.metadata?.extra?.nftThumbnailUrl ?? nft?.metadata?.media}
+                    title={nft?.metadata?.title}
+                    nearFee={nft?.price}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
                 />
@@ -201,9 +255,22 @@ export default function Browse() {
     return (
         <Container fluid className={classes.container}>
             <div className={classes.exploreGradientBlue}/>
-            <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
-                <div className={classes.sectionTitle}>Explore NFTs</div>
-                <div style={{...globalStyles.flexRow}}>
+            <div style={{...globalStyles.flexRowSpace}}>
+                <div className={classes.sectionTitle}>Discover extraordinary NFTs</div>
+                <div className={classes.sectionTitle2}>
+                    Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
+                </div>
+            </div>
+            <SuggestionNfts
+                recentlyAdded={recently}
+                trendingNfts={trendingNfts}
+                trendingArtists={trendingArtists}
+            />
+            <div style={{marginTop:80}}>
+                <Tabs 
+                    tabContents={tabContents} 
+                />
+                <div style={{...globalStyles.flexCenter, marginTop:30}}>
                     <div className={classes.desktopHeaderSection}>
                         <PriceDropdown 
                             title={"Price range"}
@@ -221,8 +288,8 @@ export default function Browse() {
                         />
                     </div>
                 </div>
+                <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginTop:25}}/>
             </div>
-            <div className={classes.desktopHeaderSection} style={{background:"rgba(255,255,255,0.27)", height:1, marginBottom:10, marginTop:13}}/>
             {filterParams.priceRange.some(item => item.checked) ?
              <div className={classes.desktopHeaderSection} style={{flexDirection:"row-reverse", ...globalStyles.flexRow, margin:"6px 0"}}>
                 {filterParams.priceRange.map((item, index) => {

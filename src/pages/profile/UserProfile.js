@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { Component, Fragment, useEffect, useState } from 'react';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Col, Row, Container, Toast } from 'react-bootstrap';
 import { FiFacebook, FiGlobe } from 'react-icons/fi';
 import { BsInstagram } from 'react-icons/bs';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -10,10 +10,12 @@ import NftCard from '../../components/explore/NftCard';
 import globalStyles from '../../globalStyles';
 import classes from './profile.module.css';
 import { connect, useSelector } from 'react-redux';
-import { _getAllArtists } from '../../services/axios/api';
+import { _getAllArtists, _getOneArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Spinner from '../../components/uiComponents/Spinner';
 import uuid from 'react-uuid';
+import { staticValues } from '../../constants';
+import toast from 'react-hot-toast';
 
 
 export default function UserProfile(props) {
@@ -24,12 +26,14 @@ export default function UserProfile(props) {
     const params = useParams(); 
     const history = useHistory();
     const location = useLocation();
-    
+    const accountId = location?.state?.ownerAccountId ? location?.state?.ownerAccountId : walletInfo.getAccountId();
+    console.log(accountId);
     const [loading, setLoading] = useState(true);
     const [artist, setArtist] = useState("");
     const [ownedNfts, setOwnedNfts] = useState([]);
+    const [noUserFound, setNoUserFound] = useState(false);
     const [activeTab, setActiveTab] = useState("owned");
-
+    
     useEffect(() => {
         if(walletInfo) {
             getArtist();
@@ -38,16 +42,15 @@ export default function UserProfile(props) {
 
 
     const getOwnedNfts = () => {
-
         const functions = new NearHelperFunctions(walletInfo); 
-
-        functions.getOwnedNfts()
+        functions.getOwnedNfts(accountId)
         .then(res => {
+            console.log(res, 'owned nfts');
             setOwnedNfts(res);
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("something went wrong!");
             setLoading(false);
         });
@@ -55,12 +58,22 @@ export default function UserProfile(props) {
     }
  
     const getArtist = () => {
-        _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
-        .then(({ data: { artists } }) => {
-            setArtist(artists[0]);
-            getOwnedNfts();        
+        getOwnedNfts()
+        _getAllArtists({wallet: accountId, sortBy: 'createdAt', sort: -1})
+        .then(({ data }) => {
+            console.log(data.artists[0], "dd");
+            if (data.artists[0]) {
+                setArtist(data.artists[0]);
+                getOwnedNfts();       
+            } else {
+                setLoading(false);
+                setNoUserFound(true);
+            }
         })
         .catch(err => {
+            if (err.response.data.error == "wallet with value accountId fails to match the NEAR testnet pattern") {
+                setNoUserFound(true);
+            }
             setLoading(false);
         });
     }
@@ -75,7 +88,7 @@ export default function UserProfile(props) {
             />
             <div style={{fontFamily:"Athelas-bold", fontSize:24, marginTop:10}}>{artist?.name}</div>
             <div style={{opacity:0.7, fontSize:13, color:"#fff", letterSpacing:1, marginTop:4, wordBreak: "break-word", padding: "0 30px"}}>
-                {walletInfo?.getAccountId()}
+                {artist?.wallet}
             </div>
             <div style={{opacity:0.9, fontSize:15, color:"#fff", letterSpacing:1, marginTop:17}}>
                 {artist?.description}
@@ -91,9 +104,11 @@ export default function UserProfile(props) {
                     <FiGlobe color='#000' size={16}/>
                 </div>
             </div> */}
+            {/* location?.state?.ownerAccountId */}
+            {walletInfo?.getAccountId() === location?.state?.ownerAccountId &&
             <div onClick={() => history.push('/editprofile')} className={classes.editBtn}>
                 EDIT PROFILE
-            </div>
+            </div>}
         </div>
     }
 
@@ -126,9 +141,22 @@ export default function UserProfile(props) {
 
     if(loading) return <Spinner/>;
 
+    if (noUserFound) return <div style={{textAlign:"center", fontSize:24, marginTop:160}}>
+        User not found
+    </div>
+
     return (
         <div>
-            <div className={classes.gradientCover1} />
+            {artist.coverStatus === 0 ? 
+            <div 
+                style={{background:artist.coverGradient}} 
+                className={classes.profileCover} 
+            /> :
+            <img 
+                className={classes.profileCover}
+                src={artist.coverImage} 
+                alt='cover'
+            />}
             <Container fluid className={classes.container}>
                 <Row>
                     <Col style={{display:'flex', justifyContent:'center'}} lg={4} md={4} sm={12}>

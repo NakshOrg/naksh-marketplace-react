@@ -538,8 +538,9 @@
 }
 
 .desktop-carousel {
-  z-index: -10;
-  height: 100vh !important;
+  border-radius:6px;
+  object-fit:contain;
+  height: 100%;
 }
 
 .awssld__container {
@@ -580,13 +581,24 @@
   font-family: 'Athelas-Bold';
 }
 
+
 /* MEDIA QUERIES */
 
 @media only screen and (max-width: 1136px) {
   .connect-near {
     margin-left:30px;
   }
+  .desktop-carousel {
+    height: 90%;
+  }
 }
+
+@media only screen and (max-width: 1100px) {
+  .desktop-carousel {
+    height: 80%;
+  }
+}
+
 
 @media only screen and (max-width: 980px) {
   .connect-near {
@@ -609,6 +621,9 @@
   }
   .search-icon-desktop {
     top: 7px !important;
+  }
+  .desktop-carousel {
+    height: 75%;
   }
 }
 
@@ -648,6 +663,9 @@
   }
   .footer {
     display: none;
+  }
+  .desktop-carousel {
+    height: 65%;
   }
 }
 

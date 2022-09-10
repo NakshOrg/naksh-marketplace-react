@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import nearLogo from '../../assets/svgs/near-logo.svg';
 import classes from './explore.module.css';

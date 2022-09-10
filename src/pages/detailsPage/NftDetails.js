@@ -5,6 +5,7 @@ import { FiBookmark, FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import uuid from 'react-uuid';
+import toast from 'react-hot-toast';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
@@ -15,7 +16,7 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import { _getAllArtists } from '../../services/axios/api';
+import { _getAllArtists, _getNftArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
 
@@ -27,28 +28,32 @@ export default function NftDetails(props) {
     const params = useParams(); 
     const history = useHistory();
     const location = useLocation();
-    
     const [loading, setLoading] = useState(true);
     const [nft, setNft] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
     const [moreNfts, setMoreNfts] = useState([]);
     const [isOverviewActive, setIsOverviewActive] = useState(true);
     const [show, setShow] = useState(false);
+    const googleForm = `https://docs.google.com/forms/d/e/1FAIpQLScaqPJC9CPhLWJfAYDbb3P5V98MMb9d3OrVqQOctS-Ynp-4Cw/viewform?usp=pp_url&entry.301861387=${window.location.href}`
+    
 
     useEffect(() => {
         if(walletInfo) {
             setLoading(true);
             fetchNft();
         }
-    }, [walletInfo]);
+    }, [walletInfo, location.pathname]);
 
-    useEffect(() => {
-        if(walletInfo) {
-            setLoading(true);
-            fetchNft();
+    const updateTrendings = async (token, artistId) => {
+        const params = {
+            token: token,
+            blockchain: 0,
+            artist: artistId
         }
-    }, [location.pathname]);
+        await _updateTrendingNftOrArtist(params) 
+    }
 
+    // _updateTrendingNftOrArtist
     // const handleOnSubmit = async () => {
     //     const response = await fetch(nft.metadata.media);
     //     // here image is url/location of image
@@ -78,21 +83,26 @@ export default function NftDetails(props) {
 
             const nft = nfts.find(item => item.token_id === params.id);
             const moreNfts = nfts.filter(item => item.token_id !== params.id);
-            
-            _getAllArtists({wallet: nft?.owner_id, sortBy: 'createdAt', sort: -1})
-            .then(res => {
-                res.data.artists.length !== 0 && setOwnerData(res.data.artists[0]);
+            _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
+            .then(({ data: { artist, owner }}) => {
+                updateTrendings(nft.token_id, artist._id);
                 setNft(nft);
                 setMoreNfts(moreNfts.reverse());
+                const query = new URLSearchParams(location.search);
+                if(query.get("transactionHashes")) {
+                    toast.success('NFT successfully purchased!');
+                }
                 setLoading(false);
+                owner && setOwnerData(owner);
             })
             .catch(err => {
                 alert("something went wrong!");
                 setLoading(false);
             });
+
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("something went wrong!");
             setLoading(false);
         });
@@ -144,7 +154,7 @@ export default function NftDetails(props) {
                 </div>
                 <div style={{marginLeft:30}}>
                     <div style={{fontSize:14, opacity:0.66, marginBottom:6}}>Owner(s)</div>
-                    <div style={globalStyles.flexRow}>
+                    <div onClick={() => history.push('/userprofile', {ownerAccountId:nft?.owner_id})} style={{...globalStyles.flexRow, cursor:"pointer"}}>
                         <img
                             style={{height:30, width:30, borderRadius:30, objectFit:'cover'}}
                             src={ownerData?.image ?? profileSvg }
@@ -194,9 +204,9 @@ export default function NftDetails(props) {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
                     onClick={() => history.push(`/nftdetails/${nft.token_id}`, {replace: true})}
-                    image={nft.metadata?.media}
-                    title={nft.metadata?.title}
-                    nearFee={nft.price}
+                    image={nft?.metadata?.media}
+                    title={nft?.metadata?.title}
+                    nearFee={nft?.price}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
                 />
@@ -218,7 +228,7 @@ export default function NftDetails(props) {
                     <div style={{textAlign:"center"}}>
                         <img
                             className={classes.nftImage}
-                            src={nft.metadata.media} 
+                            src={nft?.metadata?.media} 
                             alt='nft'
                         />
                     </div>
@@ -230,7 +240,7 @@ export default function NftDetails(props) {
                             <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiBookmark size={22} color="#130F26"/>
                             </span>
-                            <span style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
+                            <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
                                 <FiMoreVertical size={22} color="#130F26"/>
                             </span>
                         </div>

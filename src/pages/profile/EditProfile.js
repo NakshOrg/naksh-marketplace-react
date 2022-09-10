@@ -9,7 +9,7 @@ import cameraIcon from '../../assets/svgs/camera.svg'
 import { GradientBtn, OutlineBtn } from '../../components/uiComponents/Buttons';
 import MaterialInput from '../../components/uiComponents/MaterialInput';
 import Spinner from '../../components/uiComponents/Spinner';
-import { helpers } from '../../constants';
+import { helpers, staticValues } from '../../constants';
 import globalStyles from '../../globalStyles';
 import * as actionTypes from '../../redux/actions/actionTypes';
 import { _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws } from '../../services/axios/api';
@@ -27,12 +27,16 @@ export default function EditProfile(props) {
     const location = useLocation();
     
     const [loading, setLoading] = useState(true);
+    const [showOptions, setShowOptions] = useState(false);
     const [value, setValue] = useState("owned");
-    const [selectedGradient, setSelectedGradient] = useState(1);
+    const [selectedGradient, setSelectedGradient] = useState(staticValues.gradients[0]);
     const [showModal, setShowModal] = useState(false);
     const [artistId, setArtistId] = useState("");
     const [image, setImage] = useState(null);
-    const [imageRaw, setImageRaw] = useState(null);
+    const [imageRaw, setImageRaw] = useState(null); 
+    const [coverImage, setCoverImage] = useState(null);
+    const [coverImageRaw, setCoverImageRaw] = useState(null);
+    const [coverStatus, setCoverStatus] = useState(0); // 0 gradient 1 image
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [wallet, setWallet] = useState("");
@@ -42,6 +46,7 @@ export default function EditProfile(props) {
     const [instagram, setInstagram] = useState("");
     const [twitter, setTwitter] = useState("");
     const [profileAlreadyCreated, setProfileAlreadyCreated] = useState("false");
+
 
     useEffect(() => {
         if(walletInfo) {
@@ -54,7 +59,7 @@ export default function EditProfile(props) {
         .then(({ data: { artists } }) => {
             
             if(artists.length !== 0) {
-                console.log(artists[0]);
+                // console.log(artists[0]);
                 setProfileAlreadyCreated(true);
                 setArtistId(artists[0]._id);
                 setName(artists[0].name);
@@ -62,6 +67,11 @@ export default function EditProfile(props) {
                 setWallet(artists[0].wallet);
                 setDescription(artists[0].description);
                 setImage(artists[0].image);
+                if(artists[0].coverStatus === 1) {
+                    setCoverImage(artists[0].coverImage);
+                } else {
+                    setSelectedGradient(artists[0].coverGradient);
+                }
                 artists[0].facebook &&  setFacebook(artists[0].facebook);
                 artists[0].website &&  setWebsite(artists[0].website);
                 artists[0].instagram && setInstagram(artists[0].instagram);
@@ -75,14 +85,63 @@ export default function EditProfile(props) {
         });
     }
 
+    const handleGradient = (index) => {
+        setSelectedGradient(staticValues.gradients[index]);
+        setCoverStatus(0);
+    }
+
     const handleImage = async (e) => {
         const res = await helpers.readImage(e);
         setImage(res[0]);
         setImageRaw(e.target.files[0]);
     }
 
+    const handleCoverImage = async (e) => {
+        const res = await helpers.readImage(e);
+        setCoverImage(res[0]);
+        setCoverImageRaw(e.target.files[0]);
+        setCoverStatus(1);
+    }
+
     const buildImgTag = () => {
         return <img className={classes.imgStyle} src={image} alt='icon'/> 
+    } 
+
+    const buildCoverImgTag = () => {
+        return <div style={{position:"relative"}} onMouseLeave={() => setShowOptions(false)} onMouseOver={() => setShowOptions(true)} className={classes.uploadCover}>
+            <img 
+                style={{
+                    width: '100%',
+                    height: '180px',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    opacity: showOptions ? 0.5 : 1
+                }}
+                src={coverImage} 
+                alt='icon'
+            /> 
+            {showOptions && <div style={{position:"absolute"}}>
+                <div style={globalStyles.flexRow}>
+                    <label htmlFor="replaceCover" style={{position:'relative', cursor:'pointer'}}>
+                        <input onChange={(e) => handleCoverImage(e)} id="replaceCover" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
+                        <OutlineBtn
+                            style={{fontWeight:"bold", fontSize:14}}
+                            text="Replace"
+                        />
+                    </label>
+                    <div 
+                        onClick={() => {
+                            setCoverImage(null);
+                            setImageRaw(null);
+                            setCoverStatus(0);
+                        }} 
+                        style={{fontWeight:"bold", marginLeft:35, fontSize:14, cursor:"pointer"}}
+                    >
+                        Remove
+                    </div>
+                </div>
+            </div>}
+        </div>
     } 
 
     const saveProfile = async () => {
@@ -91,9 +150,14 @@ export default function EditProfile(props) {
 
         let data = {
             name: name,
-            wallet: walletInfo.getAccountId() 
+            wallet: walletInfo.getAccountId(),
+            coverStatus
         }
 
+        if(coverStatus === 0) {
+            data['coverGradient'] = selectedGradient;
+        }
+        
         const stateObj = {email:email, website:website, facebook:facebook, instagram:instagram, twitter:twitter, description:description};
         const stateEntries =  Object.entries(stateObj);
 
@@ -112,6 +176,15 @@ export default function EditProfile(props) {
             }
         }
 
+        if(coverImageRaw !== null) {
+            const urlRes = await _getPresignedUrl({"module": "artist", "totalFiles": 1});
+            const uploadRes = await _uploadFileAws(urlRes.data.urls[0].url, coverImageRaw, coverImageRaw.type);
+            
+            if(uploadRes.status === 200) {
+                data["coverImage"] = urlRes.data.urls[0].Key
+            }
+        }
+
         if(profileAlreadyCreated) {
             updateArtist(data);
         } else {
@@ -127,7 +200,7 @@ export default function EditProfile(props) {
         _postArtist(data)
         .then(res => {
             setLoading(false);
-            history.push('/userprofile');
+            history.goBack();
             // this.props.alert.success('Artist added successfully!', {timeout:2000});
         })
         .catch(err => {
@@ -141,11 +214,11 @@ export default function EditProfile(props) {
         .then(({ data: { artist }}) => {
             dispatch({type: actionTypes.USER_DATA, payload:artist});
             setLoading(false);
-            history.push('/userprofile');
+            history.goBack();
             // this.props.alert.success('Artist updated successfully!', {timeout:2000});
         })
         .catch(err => {
-            console.log(err.response.data, 'err');
+            // console.log(err.response.data, 'err');
             // this.props.alert.error(err.response.data.error, {timeout:5000});
             setLoading(false);
         })
@@ -184,7 +257,7 @@ export default function EditProfile(props) {
                 }
                 <div>
                     <div className={classes.supportedFormats}>
-                    Upload your profile picture here. Your picture will be public.
+                        Upload your profile picture here. Your picture will be public.
                     </div>
                     <label htmlFor="addImg" style={{position:'relative', cursor:'pointer'}}>
                         <input onChange={(e) => handleImage(e)} id="addImg" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
@@ -194,31 +267,42 @@ export default function EditProfile(props) {
                     </label>
                 </div>
             </div>
-            {/* <div className={classes.label}>
+            <div className={classes.label}>
                 COVER PICTURE
             </div>
-            <div className={classes.uploadCover}>
-                <div style={{fontSize:14, opacity:0.66, letterSpacing:0.5, fontWeight:100, width:"40%", marginBottom:15}}>
-                    Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
+            {coverImage ?
+                buildCoverImgTag() :
+                <div className={classes.uploadCover}>
+                    <div style={{fontSize:14, opacity:0.66, letterSpacing:0.5, fontWeight:100, width:"40%", marginBottom:15}}>
+                        Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
+                    </div>
+                    <label htmlFor="addCoverImg" style={{position:'relative', cursor:'pointer'}}>
+                        <input onChange={(e) => handleCoverImage(e)} id="addCoverImg" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
+                        <OutlineBtn
+                            text="UPLOAD FILE"
+                        />
+                    </label>
                 </div>
-                <OutlineBtn
-                    text="UPLOAD FILE"
-                />
-            </div> */}
-            {/* <div className={classes.gradientCover}>
-                <div style={{fontWeight:500, fontSize:16, marginRight:10}}>
-                    Or use our default gradients:
+            }
+            <div style={{position:"relative"}}>
+                <div style={{background:selectedGradient}} className={classes.gradientCover}>
+                    <div style={{fontWeight:500, fontSize:16, marginRight:10}}>
+                        Or use our default gradients:
+                    </div>
+                    <div onClick={() => handleGradient(0)} style={{border: selectedGradient == staticValues.gradients[0] ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer1}>
+                        <div className={classes.color1}/>
+                    </div>
+                    <div onClick={() => handleGradient(1)} style={{border: selectedGradient == staticValues.gradients[1] ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer2}>
+                        <div className={classes.color2}/>
+                    </div>
+                    <div onClick={() => handleGradient(2)} style={{border: selectedGradient == staticValues.gradients[2] ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer3}>
+                        <div className={classes.color3}/>
+                    </div>
                 </div>
-                <div onClick={() => this.setState({ selectedGradient:1 })} style={{border: selectedGradient == 1 ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer1}>
-                    <div className={classes.color1}/>
-                </div>
-                <div onClick={() => this.setState({ selectedGradient:2 })} style={{border: selectedGradient == 2 ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer2}>
-                    <div className={classes.color2}/>
-                </div>
-                <div onClick={() => this.setState({ selectedGradient:3 })} style={{border: selectedGradient == 3 ? '2px solid' : '2px solid transparent'}} className={classes.colorContainer3}>
-                    <div className={classes.color3}/>
-                </div>
-            </div> */}
+                {coverImage &&
+                <div style={{background:"#000", opacity:0.4, zIndex:3, position:"absolute", margin:0, top:0, left:0, cursor:"no-drop"}} className={classes.gradientCover}>
+                </div>}
+            </div>
             <div style={{marginBottom:5}} className={classes.label}>
                 ABOUT YOU
             </div>

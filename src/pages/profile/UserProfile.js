@@ -381,10 +381,8 @@ export default function UserProfile(props) {
                                     }
                                 </> 
                             }
-                            {console.log(activeTab, "afs")}
                             {activeTab == 'collections' && 
-                                <div>
-                                    {console.log(userCollections)}
+                                <Row>
                                     {userCollections.map((collection) => (
                                         <Col
                                             key={uuid()}
@@ -404,7 +402,7 @@ export default function UserProfile(props) {
                                             />
                                         </Col>
                                     ))}
-                                </div>
+                                </Row>
                             }
                             {activeTab === 'owned' && 
                                 <Row>

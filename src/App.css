@@ -1,5 +1,7 @@
 /* default css presets  */
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @font-face {
     font-family: 'Athelas-Bold';
     src: local('Athelas-Bold'), url(./assets/fonts/Athelas-Bold.ttf) format('opentype');

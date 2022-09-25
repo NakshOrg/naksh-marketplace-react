@@ -14,14 +14,29 @@ import HelpCenter from '../pages/resources/HelpCenter';
 import AboutNaksh from '../pages/about/AboutNaksh';
 import OurArtists from '../pages/about/OurArtists';
 import NearProtocol from '../pages/about/NearProtocol';
+import PolygonNftDetails from '../pages/detailsPage/polygon/NftDetails';
+import CollectionDetails from '../pages/detailsPage/polygon/CollectionDetails';
+import CreateNft from "../pages/nft/CreateNft"
+import CreateCollection from "../pages/nft/CreateCollection"
 
 export default function Navigation() {
-
     return (
         <Switch>
             <Route path="/" component={Home} exact/>
             <Route path="/browse" component={Browse}/>
             <Route path="/nftdetails/:id" component={NftDetails} exact/>
+            <Route
+				path="/polygon/nftdetails/:address/:id"
+				component={PolygonNftDetails}
+				exact
+			/>
+			<Route
+				path="/collection/:address"
+				component={CollectionDetails}
+				exact
+			/>
+			<Route path="/create/nft" component={CreateNft} />
+			<Route path="/create/collection" component={CreateCollection} />
             <Route path="/searchresults/:keyword" component={SearchResults}/>
             <Route path="/userprofile" component={UserProfile}/>
             <Route path="/editprofile" component={EditProfile}/>

@@ -22,6 +22,11 @@ import SuggestionNfts from './SuggestionNfts';
 import Tabs from '../../components/uiComponents/Tabs';
 import { _getAllArtists, _getTrendingNft } from '../../services/axios/api';
 
+import { useNFTs } from "../../hooks";
+import { useAppContext } from "../../context/wallet";
+import { ethers } from "ethers";
+import { useTrendingNFTs } from '../../hooks/useTrendingNFTs';
+
 // ReactGA.send({ hitType: "pageview", page: "browse" });
 // ReactGA.event({
 //     category: "your category",
@@ -41,7 +46,14 @@ export default function Browse() {
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const history = useHistory();
 
-    const [loading, setLoading] = useState(true); 
+    const { getNFTsOnSale } = useNFTs();
+    const { getTrendingNFTs } = useTrendingNFTs()
+	const { nakshContract, evmWalletData } = useAppContext();
+	const [totalEVMNfts, setTotalEVMNfts] = useState(true);
+	const [allEVMNfts, setAllEVMNfts] = useState([]);
+    const [evmTrendingNfts, setEVMTrendingNfts] = useState([]);
+
+    const [loading, setLoading] = useState(false); 
     const [allNfts, setAllNfts] = useState([]); 
     const [recently, setRecently] = useState([]); 
     const [totalNfts, setTotalNfts] = useState([]); 
@@ -72,17 +84,40 @@ export default function Browse() {
     }, [walletInfo]);
 
     useEffect(() => {
-        if(totalNfts.length !== 0) {
+		if(evmWalletData) {
+            getEVMTrendingNfts()
+			fetchEVMNft()
+		}
+	}, [evmWalletData]);
+
+    useEffect(() => {
+        if(totalNfts.length !== 0 || totalEVMNfts.length > 0) {
             applyFilters();
         }
     }, [filterParams]);
 
     const getTrendingArtists = () => {
-        _getAllArtists({ sortBy:"trending", sort:1 })
-        .then(({ data: { artists } }) => {
-            setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
-        });
+        // _getAllArtists({ sortBy:"trending", sort:1 })
+        // .then(({ data: { artists } }) => {
+        //     setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
+        // });
     }
+
+    const fetchEVMNft = async () => {
+		try {
+			console.log("Dsa")
+			setLoading(true);
+			const nfts = await getNFTsOnSale();
+			console.log(nfts, "nfts")
+			setAllEVMNfts(nfts.slice(0, filterParams.limit));
+			setTotalEVMNfts(nfts);
+			setLoading(false);
+		} catch (e) {
+			console.log(e);
+			alert("something went wrong!");
+			setLoading(false);
+		}
+	};
 
     const getTrendingNfts = () => {
 
@@ -101,6 +136,16 @@ export default function Browse() {
             });
         })
 
+    }
+
+    const getEVMTrendingNfts = async () => {
+        try {
+            const trendingNfts = await getTrendingNFTs()
+            console.log(trendingNfts, "das")
+            setEVMTrendingNfts(trendingNfts)
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     const fetchNfts = () => {
@@ -170,8 +215,9 @@ export default function Browse() {
     }
 
     const applyFilters = (isMobile) => {
-
         let firstSetOfData, copiedFilterArr = [...totalNfts];
+        let firstSetOfEVMData, copiedFilterEVMArr = [...totalEVMNfts]
+        console.log("wq", firstSetOfEVMData)
 
         const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
 
@@ -187,14 +233,17 @@ export default function Browse() {
             copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return b.price - a.price;
             });
+            copiedFilterEVMArr = copiedFilterEVMArr.sort((a, b) => Number(ethers.utils.formatEther(b.salePrice)) - Number(ethers.utils.formatEther(a.salePrice)))
         } else {
             copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return a.price - b.price;
             });
+            copiedFilterEVMArr = copiedFilterEVMArr.sort((a, b) => Number(ethers.utils.formatEther(a.salePrice)) - Number(ethers.utils.formatEther(b.salePrice)))
         }
 
         if(selectedPriceRanges.length !== 0) {
             const resultArr = [];
+            const resultEVMArr = [];
             selectedPriceRanges.map(selRange => {
                 copiedFilterArr.filter(item => {
                     const price = Number(item.price);
@@ -202,13 +251,24 @@ export default function Browse() {
                         resultArr.push(item);
                     }
                 });
+
+                copiedFilterEVMArr.filter(item => {
+                    const price = Number(ethers.utils.formatEther(item.salePrice))
+                    if (price >= selRange.min && price <= selRange.max) {
+                        resultEVMArr.push(item);
+                    }
+                })
             });
             copiedFilterArr = resultArr;
+            copiedFilterEVMArr = resultEVMArr;
+            console.log(copiedFilterEVMArr)
         }
 
         firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
+        firstSetOfEVMData = copiedFilterEVMArr.slice(0, filterParams.limit)
 
         setAllNfts(firstSetOfData);
+        setAllEVMNfts(firstSetOfEVMData)
     }
 
     const resetFilters = () => {
@@ -233,7 +293,7 @@ export default function Browse() {
     }
 
     const renderNfts = () => {
-        return allNfts.map(nft => {
+        return allNfts.length > 0 && allNfts.map(nft => {
             return <Col key={uuid()} style={{marginBottom:25}} lg={3} md={4} sm={6} xs={12}>
                 <NftCard
                     onClick={() => history.push(`/nftdetails/${nft?.token_id}`)}
@@ -245,8 +305,33 @@ export default function Browse() {
                 />
             </Col>
         });
-
     }
+
+    const renderEVMNfts = () => {
+        console.log("122a")
+		return allEVMNfts.length > 0 && allEVMNfts.map((nft) => {
+			const url = `/polygon/nftdetails/${nft.nft.nftAddress}/${nft.nft.tokenId.toString()}`;
+			return (
+				<Col
+					key={uuid()}
+					style={{ marginBottom: 25 }}
+					lg={3}
+					md={4}
+					sm={6}
+					xs={12}
+				>
+					<NftCard
+						onClick={() => history.push(url)}
+						image={nft.nft.tokenUri.startsWith('ipfs') ? `https://${nft.nft.tokenUri.substring(7)}.ipfs.nftstorage.link` : nft.nft.tokenUri}
+						title={nft.nft.title}
+						nearFee={ethers.utils.formatEther(nft.salePrice)}
+						artistName={nft?.nft.artistName}
+						artistImage={nft?.nft.tokenUri}
+					/>
+				</Col>
+			);
+		});
+	};
 
     if(loading) return <Spinner/>;
 
@@ -263,6 +348,7 @@ export default function Browse() {
                 recentlyAdded={recently}
                 trendingNfts={trendingNfts}
                 trendingArtists={trendingArtists}
+                evmTrendingNfts={evmTrendingNfts}
             />
             <div style={{marginTop:80}}>
                 <Tabs 
@@ -306,9 +392,15 @@ export default function Browse() {
             <div style={{margin:"56px 0"}}></div>}
             <div className={classes.nftContainer}>
                 <Row>
-                    {allNfts.length === 0 ?
+                    {allNfts.length === 0 && allEVMNfts.length === 0 ?
                     <div style={{margin:"125px 0", fontSize:32, display:"flex", justifyContent:"center"}}>No results found!</div> :
-                    renderNfts()}
+                    (
+						<>
+							{renderNfts()}
+							{renderEVMNfts()}
+						</>
+					)
+                    }
                 </Row>   
                 <div style={{marginBottom:50}}/>
                 <div className={classes.exploreGradientPink}/>

@@ -22,6 +22,9 @@ import { Dropdown } from 'react-bootstrap';
 import { _getAllArtists } from '../../services/axios/api';
 import globalStyles from '../../globalStyles';
 import { helpers } from '../../constants';
+import ConnectWallet from './ConnectWallet';
+import { useAppContext } from '../../context/wallet';
+import { useDisconnect } from 'wagmi';
 
 function Header() {
     
@@ -37,6 +40,10 @@ function Header() {
 
     const [keyword, setkeyword] = useState("");
     const [showHeaderContents, setShowHeaderContents] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const { isEVMWalletSignedIn, setIsEVMWalletSignedIn, setEVMWalletData } = useAppContext()
+    const { disconnect } = useDisconnect()
 
     const isSearchPage = location.pathname === "/searchresults/nfts" || location.pathname === "/searchresults/artists";
 
@@ -99,8 +106,16 @@ function Header() {
     };
 
     function walletSignOut() {
-        walletInfo.signOut();
-        dispatch({type: actionTypes.IS_WALLET_SIGNED_IN, payload: false});
+        if(isWalletSignedIn) {
+            walletInfo.signOut();
+            dispatch({type: actionTypes.IS_WALLET_SIGNED_IN, payload: false});
+        }
+
+        if(isEVMWalletSignedIn) {
+            disconnect()
+            setIsEVMWalletSignedIn(false)
+            setEVMWalletData(undefined)
+        }
         history.replace("/");
     }
 
@@ -136,7 +151,7 @@ function Header() {
                         </NavLink>
                     </Dropdown>
                     <Dropdown>
-                        <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                        <Dropdown.Toggle className="header-item" style={{display: 'flex', letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                             ABOUT<FiChevronDown size={15} color="#fff"/>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
@@ -146,7 +161,7 @@ function Header() {
                         </Dropdown.Menu>
                     </Dropdown>
                     <Dropdown>
-                        <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                        <Dropdown.Toggle className="header-item" style={{ display: 'flex', letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                             RESOURCES<FiChevronDown size={15} color="#fff"/>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={{...menuStyle, width:230}} id="dropdown-basic-content">
@@ -165,9 +180,9 @@ function Header() {
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
-                {isWalletSignedIn ?
+                {(isWalletSignedIn || isEVMWalletSignedIn) ?
                 <Dropdown style={{position:"absolute", right:"7%"}}>
-                    <Dropdown.Toggle className='profile-icon' style={{backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                    <Dropdown.Toggle className='profile-icon' style={{display: 'flex', justifyContent: "center", alignItems: 'center', backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
                         <img style={{height:40, width:40, borderRadius:40, objectFit:"cover"}} src={userData?.image ?? profileIcon} alt="profileIcon"/>
                         {" "}<FiChevronDown size={15} color="#fff"/>
                     </Dropdown.Toggle>
@@ -177,12 +192,13 @@ function Header() {
                     </Dropdown.Menu>
                 </Dropdown>
                 :
-                <div 
-                    onClick={walletSignIn}
-                    className="connect-near"
-                >
-                    <img src={near} alt="near"/>
-                </div>}
+                    <div
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Connect Wallet
+                    </div>
+                }
             </div>          
         </div>
         <div className="header-mobile">
@@ -220,7 +236,7 @@ function Header() {
                         browse
                     </motion.div>
                 </div>
-                {isWalletSignedIn && <div onClick={() => history.push("/userprofile", {ownerAccountId:walletInfo?.getAccountId()})}>
+                {(isWalletSignedIn || isEVMWalletSignedIn) && <div onClick={() => history.push("/userprofile", {ownerAccountId:walletInfo?.getAccountId()})}>
                     <motion.div
                         initial="hidden"
                         animate="visible"
@@ -293,6 +309,12 @@ function Header() {
                 </div>
             </motion.div>}
         </div>
+        {isModalOpen && (
+            <ConnectWallet
+                isOpen={isModalOpen}
+                setIsOpen={setIsModalOpen}
+            />
+        )}
         </>
     )
 }

@@ -10,6 +10,9 @@ import Tabs from '../../components/uiComponents/Tabs';
 import classes from './browse.module.css';
 import nearLogo from '../../assets/svgs/near-logo.svg';
 import globalStyles from '../../globalStyles';
+import { ethers } from 'ethers';
+import { Col } from 'react-bootstrap';
+import { default as NFT } from '../../components/explore/NftCard';
 
 
 const arrowStyle = {
@@ -46,7 +49,7 @@ function PrevArrow({ onClick }) {
     </div>
 }
 
-function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
+function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrendingNfts }) {
     
     const tabContents = [
         {tabName: "RECENTLY ADDED", x:100, }, // x is a hard coded value for animating bottom bar
@@ -56,8 +59,12 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
     const history = useHistory();
     const [currentTab, setCurrentTab] = useState(tabContents[0]);
 
-    function NftCard(props) {
+    useEffect(() => {
+        console.log(evmTrendingNfts, "evm")
+    }, [evmTrendingNfts])
 
+    function NftCard(props) {
+        console.log(props)
         const { image, title, nearFee, price, artistName, artistImage, onClick } = props;
 
         return <div style={{zIndex:2, height:300}} onClick={onClick} className={classes.cardContainer}>
@@ -83,7 +90,7 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
         
         return (
             <div style={{marginTop:20}}>
-                <Slider {...settings}>
+                <Slider className='flex' {...settings}>
                     { 
                         currentTab.tabName === 'RECENTLY ADDED' ?
                         recentlyAdded.map(item => {
@@ -98,19 +105,34 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists }) {
                                 />
                             </div>
                         }) :
-                        currentTab.tabName === 'TRENDING NFTS' ?
-                        trendingNfts.map(item => {
-                            return <div key={uuid()}>
-                                <NftCard
-                                    onClick={() => history.push(`/nftdetails/${item?.token_id}`)}
-                                    image={item?.metadata?.extra?.nftThumbnailUrl ?? item?.metadata?.media}
-                                    title={item?.metadata?.title}
-                                    nearFee={item?.price}
-                                    artistName={item?.artist?.name} 
-                                    artistImage={item?.artist?.image}
-                                />
-                            </div>
-                        }) :
+                        currentTab.tabName === 'TRENDING NFTS' ? 
+                        <>
+                            {evmTrendingNfts && evmTrendingNfts.map((nft, idx) => (
+                                    <div key={uuid()}>
+                                        <NftCard
+                                            onClick={() => history.push(`/polygon/nftdetails/${nft.nftAddress}/${nft.tokenId.toString()}`)}
+                                            image={nft.tokenUri.startsWith('ipfs') ? `https://${nft.tokenUri.substring(7)}.ipfs.nftstorage.link` : nft.tokenUri}
+                                            title={nft.title}
+                                            nearFee={ethers.utils.formatEther(nft.salePrice)}
+                                            artistName={nft?.artistName}
+                                            artistImage={nft?.tokenUri}
+                                        />
+                                    </div>
+                            ))}  
+                            {trendingNfts.length > 0 && trendingNfts.map(item => {
+                                return <div key={uuid()}>
+                                    <NftCard
+                                        onClick={() => history.push(`/nftdetails/${item?.token_id}`)}
+                                        image={item?.metadata?.extra?.nftThumbnailUrl ?? item?.metadata?.media}
+                                        title={item?.metadata?.title}
+                                        nearFee={item?.price}
+                                        artistName={item?.artist?.name} 
+                                        artistImage={item?.artist?.image}
+                                    />
+                                </div>
+                            })}
+                        </>
+                         :
                         trendingArtists.map(artist => {
                             return <div key={uuid()}>
                                 <ArtistCard

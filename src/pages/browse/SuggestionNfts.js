@@ -49,7 +49,7 @@ function PrevArrow({ onClick }) {
     </div>
 }
 
-function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrendingNfts }) {
+function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrendingNfts, nearWallet }) {
     
     const tabContents = [
         {tabName: "RECENTLY ADDED", x:100, }, // x is a hard coded value for animating bottom bar
@@ -60,7 +60,7 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
     const [currentTab, setCurrentTab] = useState(tabContents[0]);
 
     useEffect(() => {
-        console.log(evmTrendingNfts, "evm")
+        console.log(trendingNfts, "evm")
     }, [evmTrendingNfts])
 
     function NftCard(props) {
@@ -106,20 +106,8 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
                             </div>
                         }) :
                         currentTab.tabName === 'TRENDING NFTS' ? 
-                        <>
-                            {evmTrendingNfts && evmTrendingNfts.map((nft, idx) => (
-                                    <div key={uuid()}>
-                                        <NftCard
-                                            onClick={() => history.push(`/polygon/nftdetails/${nft.nftAddress}/${nft.tokenId.toString()}`)}
-                                            image={nft.tokenUri.startsWith('ipfs') ? `https://${nft.tokenUri.substring(7)}.ipfs.nftstorage.link` : nft.tokenUri}
-                                            title={nft.title}
-                                            nearFee={ethers.utils.formatEther(nft.salePrice)}
-                                            artistName={nft?.artistName}
-                                            artistImage={nft?.tokenUri}
-                                        />
-                                    </div>
-                            ))}  
-                            {trendingNfts.length > 0 && trendingNfts.map(item => {
+                        ( nearWallet ?
+                            trendingNfts.length > 0 && trendingNfts.map(item => {
                                 return <div key={uuid()}>
                                     <NftCard
                                         onClick={() => history.push(`/nftdetails/${item?.token_id}`)}
@@ -130,9 +118,20 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
                                         artistImage={item?.artist?.image}
                                     />
                                 </div>
-                            })}
-                        </>
-                         :
+                            }) :
+                            evmTrendingNfts && evmTrendingNfts.map((nft, idx) => (
+                                <div key={uuid()}>
+                                    <NftCard
+                                        onClick={() => history.push(`/polygon/nftdetails/${nft.nftAddress}/${nft.tokenId.toString()}`)}
+                                        image={nft.tokenUri.startsWith('ipfs') ? `https://${nft.tokenUri.substring(7)}.ipfs.nftstorage.link` : nft.tokenUri}
+                                        title={nft.title}
+                                        nearFee={ethers.utils.formatEther(nft.salePrice)}
+                                        artistName={nft?.artistName}
+                                        artistImage={nft?.tokenUri}
+                                    />
+                                </div>
+                            ))
+                        ) :
                         trendingArtists.map(artist => {
                             return <div key={uuid()}>
                                 <ArtistCard

@@ -45,7 +45,7 @@ export default function Browse() {
     ];
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const history = useHistory();
-
+    console.log(walletInfo, "wallet info");
     const { getNFTsOnSale } = useNFTs();
     const { getTrendingNFTs } = useTrendingNFTs()
 	const { nakshContract, evmWalletData } = useAppContext();
@@ -142,9 +142,9 @@ export default function Browse() {
         try {
             const trendingNfts = await getTrendingNFTs()
             console.log(trendingNfts, "das")
-            setEVMTrendingNfts(trendingNfts)
+            setEVMTrendingNfts([...trendingNfts, ...trendingNfts])
         } catch (e) {
-            console.error(e)
+            console.error(e, "error in getEVMTrendingNfts")
         }
     }
 
@@ -185,7 +185,6 @@ export default function Browse() {
             setLoading(false);
         })
         .catch(err => {
-            // console.log(err);
             alert("something went wrong!");
             setLoading(false);
         });
@@ -345,6 +344,7 @@ export default function Browse() {
                 </div>
             </div>
             <SuggestionNfts
+                nearWallet={walletInfo}
                 recentlyAdded={recently}
                 trendingNfts={trendingNfts}
                 trendingArtists={trendingArtists}

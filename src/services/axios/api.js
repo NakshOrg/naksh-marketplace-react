@@ -19,6 +19,9 @@ export const _getTrendingNft = (params) => axiosNoAuth.get('/nft/trending', {par
 
 export const _getNftArtists = (params) => axiosNoAuth.get('/artist/nft', {params});
 
+export const _getBlockedNfts = (params) => axiosNoAuth.get('/nft/block', {params});
+
+
 // POST
 
 export const _postArtist = (data) => axiosNoAuth.post('/artist/add', data);

@@ -20,7 +20,7 @@ import NearHelperFunctions from '../../services/nearHelperFunctions';
 import globalStyles from '../../globalStyles';
 import SuggestionNfts from './SuggestionNfts';
 import Tabs from '../../components/uiComponents/Tabs';
-import { _getAllArtists, _getTrendingNft } from '../../services/axios/api';
+import { _getAllArtists, _getBlockedNfts, _getTrendingNft } from '../../services/axios/api';
 
 // ReactGA.send({ hitType: "pageview", page: "browse" });
 // ReactGA.event({
@@ -77,6 +77,20 @@ export default function Browse() {
         }
     }, [filterParams]);
 
+    const checkForBlockedNfts = async (allNfts) => {
+        const { data: { nfts } } = await _getBlockedNfts();
+        if (nfts.length) {
+            const resultArr = [];
+            allNfts.map(allNft => {
+                if (nfts.find(nft => allNft.token_id !== nft.token_id)) {
+                    resultArr.push(allNft);
+                }
+            });
+            return resultArr;
+        }
+        return allNfts;
+    }
+
     const getTrendingArtists = () => {
         _getAllArtists({ sortBy:"trending", sort:1 })
         .then(({ data: { artists } }) => {
@@ -89,15 +103,17 @@ export default function Browse() {
         const functions = new NearHelperFunctions(walletInfo);
 
         functions.getAllNfts()
-        .then (res => {
+        .then (allNfts => {
             _getTrendingNft({ blockchain: 0 })
-            .then(({ data: { nfts }}) => {
+            .then(async ({ data: { nfts }}) => {
                 const trendingArr = [];
                 nfts.map(n => {
-                    const r = res.find(r => r.token_id === n.token);
+                    const r = allNfts.find(r => r.token_id === n.token);
                     if (r) trendingArr.push(r);
                 });
-                setTrendingNfts([...trendingArr, ...trendingArr]);
+                // filtering blocked nfts
+                const result = await checkForBlockedNfts(trendingArr);
+                setTrendingNfts([...result, ...result]);
             });
         })
 
@@ -108,8 +124,12 @@ export default function Browse() {
         const functions = new NearHelperFunctions(walletInfo);
         
         functions.getAllNfts()
-        .then(res => {
-            const result = res.sort(function(a, b) {
+        .then(async res => {
+
+            // filtering blocked nfts
+            const nfts = await checkForBlockedNfts(res);
+
+            const result = nfts.sort(function(a, b) {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });
             const totalNfts = result;

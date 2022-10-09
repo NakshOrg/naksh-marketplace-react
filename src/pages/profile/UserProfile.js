@@ -31,8 +31,9 @@ export default function UserProfile(props) {
     const [loading, setLoading] = useState(true);
     const [artist, setArtist] = useState("");
     const [ownedNfts, setOwnedNfts] = useState([]);
+    const [mintedNfts, setMintedNfts] = useState([]);
     const [noUserFound, setNoUserFound] = useState(false);
-    const [activeTab, setActiveTab] = useState("owned");
+    const [activeTab, setActiveTab] = useState("minted");
     
     useEffect(() => {
         if(walletInfo) {
@@ -44,11 +45,35 @@ export default function UserProfile(props) {
         setLoading(true);
         setArtist([]);
         setOwnedNfts([]);
+        setMintedNfts([]);
         if(walletInfo) {
             getArtist();
         }
-    }, [accountId])
+    }, [accountId]);
 
+    const EmptyState = () => {
+        return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
+            <div style={{fontSize:16, opacity:0.7}}>Buy NFTs to create a collection here!</div>
+            <div onClick={() => history.push("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+                <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+            </div>
+        </div>
+    }
+
+    const getMintedNfts = () => {
+        const functions = new NearHelperFunctions(walletInfo); 
+        functions.getMintedNft()
+        .then(res => {
+            setMintedNfts(res);
+            setLoading(false);
+        })
+        .catch(err => {
+            // console.log(err);
+            alert("something went wrong!");
+            setLoading(false);
+        });
+
+    }
 
     const getOwnedNfts = () => {
         const functions = new NearHelperFunctions(walletInfo); 
@@ -71,6 +96,7 @@ export default function UserProfile(props) {
             console.log(data);
             if (data.artists[0]) {
                 setArtist(data.artists[0]);
+                getMintedNfts();
                 getOwnedNfts();       
             } else {
                 setLoading(false);
@@ -121,29 +147,52 @@ export default function UserProfile(props) {
 
     const renderNfts = () => {
 
-        return ownedNfts.map(nft => {
-            return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
-                <NftCard
-                    onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
-                    image={nft.metadata.media}
-                    title={nft.metadata.title}
-                    nearFee={nft.price}
-                    price={"$121,000,000"}
-                    artistName={nft?.artist?.name} 
-                    artistImage={nft?.artist?.image}
-                />
-            </Col>
-        });
+        if (ownedNfts.length) {
+            return ownedNfts.map(nft => {
+                return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
+                    <NftCard
+                        onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
+                        image={nft.metadata.media}
+                        title={nft.metadata.title}
+                        nearFee={nft.price}
+                        price={"$121,000,000"}
+                        artistName={nft?.artist?.name} 
+                        artistImage={nft?.artist?.image}
+                    />
+                </Col>
+            });
+        }
+        
+        return <EmptyState/>
 
     }
 
-    const emptyState = () => {
+    const renderMintedNfts = () => {
+
+        if (mintedNfts.length) {
+            return mintedNfts.map(nft => {
+                return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
+                    <NftCard
+                        onClick={() => history.push(`/unlisted/${nft.token_id}`)}
+                        image={nft.metadata.media}
+                        title={nft.metadata.title}
+                        nearFee={nft.price}
+                        price={"$121,000,000"}
+                        artistName={nft?.artist?.name} 
+                        artistImage={nft?.artist?.image}
+                        unlisted={true}
+                    />
+                </Col>
+            });
+        }
+
         return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
-            <div style={{fontSize:16, opacity:0.7}}>Buy NFTs to create a collection here!</div>
-            <div onClick={() => history.push("/browse")} className="glow-on-hover" type="button" style={{zIndex:100}}>
-                <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+            <div style={{fontSize:16, opacity:0.7}}>Create NFT and mint it now to get forever royalties!</div>
+            <div onClick={() => history.push("/createnft")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+                <div className={classes.glowBtnText} style={{paddingLeft:47}}>MINTED NFTS</div>
             </div>
         </div>
+
     }
 
     if(loading) return <Spinner/>;
@@ -199,30 +248,31 @@ export default function UserProfile(props) {
                     <Col lg={8} md={8}>
                         <div style={{margin:"30px auto", width:"100%"}}>
                             <div style={{...globalStyles.flexRow, justifyContent:"center"}}>
-                                <div>
-                                    <div style={{fontWeight: "bold", fontSize:12, letterSpacing:1.5}}>
-                                        NFTS OWNED
-                                    </div>
-                                    {/* <div style={{height:3, background:"#fff", width:8, borderRadius:100, margin:"2.5px auto"}}/> */}
+                                <div onClick={() => setActiveTab("minted")} style={{fontWeight: activeTab == "minted" ? "bold" : "400", opacity: activeTab == "minted" ? 1 : 0.7, fontSize:12, letterSpacing:1.5, cursor:"pointer"}}>
+                                    MINTED
                                 </div>
-                                {/* <div onClick={() => this.setState({activeTab:"saved"})} style={{fontWeight: activeTab == "saved" ? "bold" : "400", opacity: activeTab == "saved" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
-                                    SAVED
+                                <div onClick={() => setActiveTab("owned")} style={{fontWeight: activeTab == "owned" ? "bold" : "400", opacity: activeTab == "owned" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
+                                    NFTS OWNED
                                 </div>
-                                <div onClick={() => this.setState({activeTab:"sold"})} style={{fontWeight: activeTab == "sold" ? "bold" : "400", opacity: activeTab == "sold" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
+                                {/* <div onClick={() => this.setState({activeTab:"sold"})} style={{fontWeight: activeTab == "sold" ? "bold" : "400", opacity: activeTab == "sold" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
                                     SOLD
                                 </div> */}
                             </div>
                             {/* bottom indicator */}
-                            {/* <motion.div 
+                            <motion.div 
                                 animate={{ 
-                                    x: 430
+                                    x: activeTab === "minted" ? 400 : 500
                                 }}
                                 transition={{ duration: 0.5 }}
                                 style={{height:3, background:"#fff", width:8, borderRadius:100, marginTop:2}}
-                            />  */}
+                            /> 
                         </div>
                         <Row>
-                            {ownedNfts.length !== 0 ? renderNfts() : emptyState()}
+                            {
+                                activeTab === "minted" ?
+                                renderMintedNfts() :
+                                renderNfts()
+                            }
                         </Row>
                     </Col>
                 </Row>

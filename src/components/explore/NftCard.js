@@ -5,7 +5,7 @@ import nearLogo from '../../assets/svgs/near-logo.svg';
 import classes from './explore.module.css';
 import globalStyles from '../../globalStyles';
 
-function NftCard(props) {
+export default function NftCard(props) {
 
     const {
         image,
@@ -14,7 +14,8 @@ function NftCard(props) {
         price,
         artistName,
         artistImage,
-        onClick
+        onClick,
+        unlisted
     } = props;
 
     return (
@@ -33,20 +34,22 @@ function NftCard(props) {
             <div className={classes.cardTag}>
                 <div style={globalStyles.flexRowSpace}>
                     <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{title}</div>
-                    <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis", width: "50px"}}>
+                    {!unlisted && <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis", width: "50px"}}>
                         {nearFee} <img src={nearLogo} alt="nearlogo"/>
-                    </div>
+                    </div>}
                 </div>
-                <div style={{...globalStyles.flexRowSpace, marginTop:5}}>
+                {!unlisted && <div style={{...globalStyles.flexRowSpace, marginTop:5}}>
                     <div style={globalStyles.flexRowSpace}>
                         <img style={{height:20, width:20, borderRadius:20, objectFit:"cover"}} src={artistImage} alt='artist'/>
                         <div style={{fontSize:11, opacity:0.67, marginLeft:5, textTransform:"capitalize", color:"#fff"}}>{artistName}</div>
                     </div>
                     {/* <div style={{fontSize:11, opacity:0.67}}>{price}</div> */}
-                </div>
+                </div>}
             </div>
         </div>
     )
 }
 
-export default NftCard;
+NftCard.defaultProps = {
+    unlisted: false
+};

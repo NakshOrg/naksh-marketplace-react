@@ -82,7 +82,7 @@ export default function Browse() {
         if (nfts.length) {
             const resultArr = [];
             allNfts.map(allNft => {
-                if (nfts.find(nft => allNft.token_id !== nft.token_id)) {
+                if (!nfts.find(nft => allNft.token_id === nft.token)) {
                     resultArr.push(allNft);
                 }
             });

@@ -28,6 +28,8 @@ export const _postArtist = (data) => axiosNoAuth.post('/artist/add', data);
 
 export const _postFeedback = (data) => axios.post(`${configs.clientBaseURL}/landing/feedback`, data);
 
+export const _uploadNft = (data) => axiosNoAuth.post('/nft/upload', data);
+
 
 // PUT
 

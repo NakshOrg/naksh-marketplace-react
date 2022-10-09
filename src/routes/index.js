@@ -14,6 +14,8 @@ import HelpCenter from '../pages/resources/HelpCenter';
 import AboutNaksh from '../pages/about/AboutNaksh';
 import OurArtists from '../pages/about/OurArtists';
 import NearProtocol from '../pages/about/NearProtocol';
+import CreateNft from '../pages/createnft/CreateNft';
+import UnlistedDetailPage from '../pages/detailsPage/UnlistedDetailPage';
 
 export default function Navigation() {
 
@@ -31,6 +33,8 @@ export default function Navigation() {
             <Route path="/ourartists/:id" component={ArtistDetails}/>
             <Route path="/ourartists" component={OurArtists}/>
             <Route path="/nearprotocol" component={NearProtocol}/>
+            <Route path="/createnft" component={CreateNft}/>
+            <Route path="/unlisted/:id" component={UnlistedDetailPage}/>
             <Route path="/404" component={NotFound}/>
             <Redirect from='*' to='/404' exact/>
         </Switch>

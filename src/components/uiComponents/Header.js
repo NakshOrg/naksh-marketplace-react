@@ -3,6 +3,7 @@ import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi"
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from "framer-motion"
+import toast from 'react-hot-toast';
 
 import logo from "../../assets/svgs/logo.svg";  
 import hamburgerMenu from "../../assets/svgs/hamburger-menu.svg";
@@ -115,7 +116,7 @@ function Header() {
             <div style={{display:'flex', alignItems:'center', width:'50%'}}>
                 <NavLink style={{color:"#fff", position:"relative"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
-                    <div className='beta'>beta 2.1</div>
+                    {/* <div className='beta'>beta 2.1</div> */}
                 </NavLink>
                 <Search
                     keyword={keyword}
@@ -134,6 +135,15 @@ function Header() {
                                 BROWSE
                             </Dropdown.Toggle>
                         </NavLink>
+                    </Dropdown>
+                    <Dropdown>
+                        {/* <NavLink style={{color:"#fff"}} to="/createnft"> */}
+                            <div onClick={() => !isWalletSignedIn ? toast.error("Connect wallet to create nfts") : navigateItem("/createnft")}>
+                                <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
+                                    MINT NFT
+                                </Dropdown.Toggle>
+                            </div>
+                        {/* </NavLink> */}
                     </Dropdown>
                     <Dropdown>
                         <Dropdown.Toggle className="header-item" style={{letterSpacing:1.5, backgroundColor:"transparent", outline:"none", border:"none"}} id="dropdown-autoclose-true">
@@ -189,7 +199,7 @@ function Header() {
             <div style={{...globalStyles.flexRowSpace, width:"100%"}}>
                 <NavLink style={{color:"#fff", position:"relative"}} to="/">
                     <img className="logo" src={logo} alt="logo"/>
-                    <div className='beta'>beta 2.1</div>
+                    {/* <div className='beta'>beta 2.1</div> */}
                 </NavLink>
                 {(!showHeaderContents && !isSearchPage) &&  <div onClick={() => setShowHeaderContents(true)}>
                     <img src={hamburgerMenu} alt="hamburger-menu"/>
@@ -218,6 +228,15 @@ function Header() {
                         variants={item}
                     >
                         browse
+                    </motion.div>
+                </div>
+                <div onClick={() => !isWalletSignedIn ? toast.error("Connect wallet to create nfts") : navigateItem("/createnft")}>
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={item}
+                    >
+                        mint nft
                     </motion.div>
                 </div>
                 {isWalletSignedIn && <div onClick={() => history.push("/userprofile", {ownerAccountId:walletInfo?.getAccountId()})}>

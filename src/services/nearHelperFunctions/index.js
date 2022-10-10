@@ -30,21 +30,21 @@ export default function NearHelperFunctions(wallet, paramsId) {
       }
     );
 
-    const { data: { artists } } = await _getAllArtists({sortBy: 'createdAt', sort: -1});
+    const { data: { artists } } = await _getAllArtists({ sortBy: 'createdAt', sort: -1 });
 
-    const contractNftIds = contractNfts.map(c => c.token_id);
+    const contractNftIds = contractNfts.map(item => item.token_id);
     const unlistedNfts = allNfts.filter(nft => !contractNftIds.includes(nft.token_id)); 
 
     const mintedNfts = unlistedNfts.filter(nft => {
-      if (nft.owner_id == wallet.getAccountId()) {
-        const artist = artists.find(a => a._id === nft?.metadata?.extra?.artistId);
-        if(artist) {
-          nft['artist'] = artist;
-        }
+
+      if (nft.owner_id === wallet.getAccountId()) {
+        const artist = artists.find(artist => artist._id === nft?.metadata?.extra?.artistId);
+        if (artist) nft['artist'] = artist;
         nft.metadata['extra'] = JSON.parse(nft.metadata.extra);
         return nft;
       }
-    } );
+
+    });
     
     return mintedNfts;
 

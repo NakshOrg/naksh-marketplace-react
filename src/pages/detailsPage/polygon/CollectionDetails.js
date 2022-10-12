@@ -151,20 +151,26 @@ const CollectionDetails = () => {
                                     </div>
                                 </div>
                             </div>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                {nfts.length <= 0 && evmWalletData.address.toLowerCase() === collection.admin.toLowerCase() &&
+                                    <div onClick={() => history.push(`/create/nft/`)} className="w-1/2 flex justify-center items-center">
+                                        <GradientBtn
+                                            content={
+                                                'Mint a NFT'
+                                            }
+                                            style={{ width: "187px", color: "#fff" }}
+                                        />
+                                    </div>
+                                }
+                            </div>
                             {isItems && <div className={classes.nftContainer}>
                                 <Row>
-                                    <>
-                                        {nfts.length <= 0 && evmWalletData.address.toLowerCase() === collection.admin.toLowerCase() &&
-                                            <div onClick={() => history.push(`/create/nft/`)} className="w-1/2 flex justify-center items-center">
-                                                <GradientBtn
-                                                    content={
-                                                        'Mint a NFT'
-                                                    }
-                                                    style={{ width: "187px", color: "#fff" }}
-                                                />
-                                            </div>
-                                        }
-                                        {nfts.length > 0 && nfts.map(nft => (
+                                    {nfts.length > 0 && nfts.map(nft => (
+                                        <>
                                             <Col
                                                 style={{ marginBottom: 25 }}
                                                 lg={3}
@@ -185,8 +191,8 @@ const CollectionDetails = () => {
                                                     artistImage={nft.artistImg}
                                                 />
                                             </Col>
-                                        ))}
-                                    </>
+                                        </>
+                                    ))}
                                 </Row>
                                 <div style={{ marginBottom: 50 }} />
                                 <div className={classes.exploreGradientPink} />

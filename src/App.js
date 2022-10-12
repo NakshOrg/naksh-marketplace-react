@@ -16,7 +16,6 @@ import { useEVMWallet } from './hooks';
 import { AppContext } from './context/wallet';
 import ConnectWalletContext from "./context/connectWallet"
 import nakshAbi from "./interface/nakshAbi.json";
-import nftAbi from "./interface/nftAbi.json";
 import factoryAbi from "./interface/factoryAbi.json";
 import { ethers, BigNumber } from "ethers";
 

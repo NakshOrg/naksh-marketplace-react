@@ -9,6 +9,7 @@ import { HiPlusCircle } from "react-icons/hi";
 import { ethers } from "ethers";
 import factoryAbi from "../../interface/factoryAbi.json"
 import { useHistory } from "react-router-dom";
+import { HiTrash } from "react-icons/hi";
 
 export function GradientCircle(props) {
 	console.log(`w-[${props.size}] h-[${props.size}] rounded-full bg-gradient-to-r from-[${props.fromColor}] to-[${props.toColor}]`, "props")
@@ -115,16 +116,22 @@ export default function CreateCollection(props) {
 
 	}
 
-	const changeRoyalties = (index, wallet='', percentange='') => {
+	const changeRoyalties = (index, values) => {
         setRoyalties(v => {
             let a = [...v]
 
             if(index < a.length) {
-                a[index].wallet = wallet ? wallet : a[index].wallet
-                a[index].percentage = percentange ? percentange : a[index].percentage
+				if(values.wallet) {
+					a[index].wallet = values.wallet
+				}
+
+				if(values.percentage) {
+					a[index].percentage = values.percentange
+				}
+
             } else {
                 for(let i = a.length; i <= index; i++) {
-                    if(i === index) a.push({ wallet: wallet, percentage: percentange })
+                    if(i === index) a.push({ wallet: values.wallet, percentage: values.percentange })
                     else a.push({ wallet: '', percentage: '' })
                 }
             }
@@ -135,8 +142,30 @@ export default function CreateCollection(props) {
 
 	const incrementRoyalty = () => {
 		if (royalty >= 6) return;
+
+		let shallowV = [...royalties]
+		shallowV.push({ wallet: '', percentage: '' })
+
+		setRoyalties(shallowV)
 		setRoyalty(() => royalty + 1);
 	};
+
+	const removeRoyalty = (value, idx) => {
+		let shallowV = [...royalties]
+
+		let anotherCopy = []
+
+		for(let i = 0; i < shallowV.length; i++) {
+			if(i === idx) {
+				console.log(shallowV[i], i, shallowV.length)		
+			} else {
+				anotherCopy.push(shallowV[i])
+			}
+		}
+		console.log(anotherCopy, anotherCopy.length)
+		setRoyalties(anotherCopy)
+		setRoyalty(royalty - 1)
+	}
 
 	useEffect(() => {
         console.log(royalties)
@@ -269,15 +298,18 @@ export default function CreateCollection(props) {
 							<div key={idx} className="w-full h-full space-x-3 flex justify-around items-center">
 								<div className="w-2/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
 									<input
-                                        onChange={(e) => changeRoyalties(idx, e.target.value)}
+										value={royalties[idx].wallet}
+                                        onChange={(e) => changeRoyalties(idx, {wallet: e.target.value})}
 										type="text"
 										className="w-full p-0 text-white bg-brand-gray"
 										placeholder="Wallet Address*"
 									/>
+									{royalties[idx] && royalties[idx].wallet && royalties[idx].wallet.length > 0 && <HiTrash onClick={() => removeRoyalty(royalties[idx], idx)} className="text-red-600 text-xl cursor-pointer" />}
 								</div>
 								<div className="w-1/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
 									<input
-                                        onChange={(e) => changeRoyalties(idx, '', e.target.value)}
+										value={royalties[idx].percentage}
+                                        onChange={(e) => changeRoyalties(idx, {percentage: e.target.value})}
 										type="text"
 										className="w-full p-0 text-white bg-brand-gray"
 										placeholder="Percentage*"

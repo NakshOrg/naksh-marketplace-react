@@ -11,6 +11,7 @@ import { useAppContext } from "../../context/wallet";
 import useCollection from "../../hooks/useCollection";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
+import { helpers } from '../../constants';
 
 export default function CreateNft(props) {
 	const { evmWalletData, evmProvider } = useAppContext()
@@ -241,6 +242,7 @@ export default function CreateNft(props) {
 							{userCollections.length > 0 && userCollections.map(collection => (
 								<option value={collection.nftAddress}>{collection.name.substring(0, 32)}...</option>
 							))}
+							<option onClick={() => helpers.openInNewTab("http://localhost:3000/create/collection")} className="">+ Create New</option>
 						</select>
 					</div>
 				</div>

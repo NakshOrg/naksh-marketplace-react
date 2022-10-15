@@ -9,7 +9,7 @@ import SwipingCarousel from '../../components/uiComponents/SwipingCarousel';
 import DesktopCarousel from '../../components/uiComponents/DesktopCarousel';
 import classes from './home.module.css';
 import Footer from '../../components/uiComponents/Footer';
-
+import { OutlineBtn } from '../../components/uiComponents/Buttons';
 
 export default function Home() {
 
@@ -52,8 +52,13 @@ export default function Home() {
                             <h1 className={classes.artSectionContent}>
                                 An NFT marketplace fuelled by art communities from all over India
                             </h1>
-                            <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" style={{zIndex:100}}>
-                                <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+                            <div className='w-full h-full flex justify-start items-end space-x-5'>
+                                <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" style={{zIndex:100}}>
+                                    <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
+                                </div>
+                                <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="create-nft" style={{zIndex:100, textAlign:'center'}}>
+                                    <div style={{paddingHorizontal: '15px', textAlign: 'center', marginLeft:1}}>CREATE NFT</div>
+                                </div>
                             </div>
                         </div>
                         <div className={classes.artworkGradientOverlay}/>

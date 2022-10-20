@@ -1,7 +1,7 @@
 import React, { Component, Fragment, useEffect, useState } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import { motion } from "framer-motion";
-import { FiBookmark, FiExternalLink, FiMoreVertical } from "react-icons/fi";
+import { FiBookmark, FiExternalLink, FiMoreVertical, FiX } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import uuid from "react-uuid";
@@ -24,11 +24,36 @@ import BuyNFTModal from "../../../components/uiComponents/buyNFTModal";
 import { BigNumber } from "ethers/lib/ethers";
 import SaleNFTModal from "../../../components/uiComponents/saleNFTModal";
 import { useTrendingNFTs } from "../../../hooks/useTrendingNFTs";
+import { useFiat } from "../../../hooks/useFiat";
+import axios from "axios";
 
 export default function PolygonNftDetails(props) {
 	const { getNFT, getNFTsOnSale, buyNFT, endAuction } = useNFTs();
 	const { nakshContract, evmWalletData } = useAppContext();
 	const { updateTrendingNFT } = useTrendingNFTs()
+
+	const { setFiat, setAmount, fiat } = useFiat()
+	
+	const convertAmountToMatic = async (price) => {
+		try {
+			console.log(price)
+			const fromURL = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`;
+
+			const res = await axios({
+				url: fromURL
+			})
+
+			const data = res.data
+
+			if(data && data['matic-network'] && data['matic-network'].usd) {
+				return data['matic-network'].usd * price
+			}
+			throw new Error("Can't find price at the moment")
+		} catch (e) {
+			alert(e.message)
+		}
+	}
+
 
 	const params = useParams();
 	const history = useHistory();
@@ -172,6 +197,20 @@ export default function PolygonNftDetails(props) {
 			await buyNFT(nft);
 		}
 	};
+
+	const buyMatic = async () => {
+		console.log("Das")
+		if(saleData && saleData.salePrice) {
+			const amount = await convertAmountToMatic(Number(ethers.utils.formatEther(saleData.salePrice)))
+			console.log(amount)
+			setAmount(amount)
+			setFiat(true)
+		} else {
+			console.log(true)
+			setFiat(true)
+		}
+	}
+	useEffect(() => console.log(fiat, 3), [fiat])
 
 	const overview = () => {
 		return (
@@ -709,6 +748,23 @@ export default function PolygonNftDetails(props) {
 							content={<div>Want to list this NFT?</div>}
 						/>
 					}
+					<div>
+						<GradientBtn
+							style={{
+								marginTop: 30,
+								cursor: purchasable ? "pointer" : "no-drop",
+								opacity: purchasable ? 1 : 0.6,
+							}}
+							onClick={() =>
+								buyMatic()
+							}
+							content={
+								<div>
+									Buy Matic
+								</div>
+							}
+						/>
+					</div>
 				</Col>
 			</Row>}
 			<div className={(isModalOpen || isSaleModalOpen ? "filter blur-2xl " : "" ) + classes.bottomContent}>
@@ -732,6 +788,19 @@ export default function PolygonNftDetails(props) {
 					nft={nft}
 				/>
 			)}
+			<div id="widget" className={(fiat ? "" : "hidden ") + "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"}>
+				{fiat && 
+					<div
+						onClick={() => setFiat(false)}
+						style={{
+							cursor: "pointer",
+							zIndex: '10000'
+						}}
+					>
+						<FiX className="text-2xl text-white" />
+					</div>
+				}
+			</div>
 		</div>
 	);
 }

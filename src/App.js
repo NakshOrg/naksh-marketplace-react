@@ -18,7 +18,8 @@ import ConnectWalletContext from "./context/connectWallet"
 import nakshAbi from "./interface/nakshAbi.json";
 import factoryAbi from "./interface/factoryAbi.json";
 import { ethers, BigNumber } from "ethers";
-
+import { useScript } from './hooks/useScript';
+import { Helmet } from 'react-helmet'
 
 // google analytics initialization
 ReactGA.initialize('G-51GS0V4HX8');
@@ -101,10 +102,24 @@ export default function AppWrapper() {
 		NAKSH_FACTORY_ADDRESS
 	};
 
+  // useEffect(() => {
+  //   console.log(window)
+  //   if(window && window.onMetaWidget) {
+  //     let createWidget = new window.onMetaWidget({
+  //       elementId: "widget", // Mandatory (It should be an id of an element not a class)
+  //       apiKey: "0e20a0de-7850-41c0-8fff-b80dbb3e17e4", // Mandatory
+  //     })
+  //     createWidget.init()
+  //   }
+  // }, [window])
+
   return (
     <ConnectWalletContext>
       <AppContext.Provider value={stateValue}>
         <Provider store={store}>
+          <Helmet>
+            <script src="https://platform.onmeta.in/onmeta-sdk.js" type='text/javascript'></script>
+          </Helmet>
           <App/>
           <Toaster
             containerStyle={{

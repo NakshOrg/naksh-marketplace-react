@@ -7,16 +7,14 @@ import { ethers } from "ethers";
 
 const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
 	const { buyNFT, buyNFTonSale } = useNFTs();
-	console.log(nft.nftAddress, nft.tokenId)
 	
 	const buyNFTWrapper = async () => {
 		if(saleData.saleType === "0" || saleData.saleType === 0) {
-			// directly buy nft
 			await buyNFTonSale(nft, nft.nftAddress, nft.tokenId, price)
 		} else {
 			await buyNFT({address: nft.nftAddress, ...nft}, value, price.toString())
 		}
-		window.location.reload(false);
+		// window.location.reload(false);
 	}
 	const [value, setValue] = useState(saleData.auction && saleData.auction.highestBid ? saleData.auction.highestBid : price);
 

@@ -760,7 +760,7 @@ export default function PolygonNftDetails(props) {
 							}
 							content={
 								<div>
-									Buy Matic
+									Purchase with fiat
 								</div>
 							}
 						/>

@@ -12,6 +12,7 @@ import useCollection from "../../hooks/useCollection";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import { helpers } from '../../constants';
+import { FiX } from "react-icons/fi";
 
 export default function CreateNft(props) {
 	const { evmWalletData, evmProvider } = useAppContext()
@@ -29,6 +30,7 @@ export default function CreateNft(props) {
 	const [days, setDays] = useState('')
     const [image, setImage] = useState()
     const [preview, setPreview] = useState('')
+	const [tags, setTags] = useState([])
 
 	const [value, setValue] = useState('');
 	const [selectedValue, setSelectedValue] = useState(1);
@@ -136,7 +138,28 @@ export default function CreateNft(props) {
 
     const uploadFile = (e) => {
         ref.current.click()
-    } 
+    }
+
+	const addTag = (tag) => {
+		setTags(val => {
+			let shallow = [...val]
+
+			shallow.push(tag)
+
+			return shallow
+		})
+	}
+
+	const removeTag = (idx) => {
+		setTags(val => {
+			let shallow = [...val]
+
+			shallow.splice(idx, 1)
+			console.log(shallow)
+
+			return shallow
+		})
+	}
 
     useEffect(() => {
         if(image) {
@@ -162,6 +185,8 @@ export default function CreateNft(props) {
 			getUserCollections(evmWalletData.address).then(res => setUserCollections(res)).catch(e => console.error(e))
 		}
 	}, [evmProvider])
+
+	useEffect(() => console.log(tags), [tags])
 
 	return (
 		<div onClick={() => listModal ? setListModal(false) : {}} className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10">
@@ -231,19 +256,25 @@ export default function CreateNft(props) {
 						></textarea>
 						<p>0/300</p>
 					</div>
-					<div className="w-full space-x-4 flex justify-around items-center">
-						<select
-                            value={artform}
-                            onChange={(e) => setArtform(e.target.value)}
-							className="w-full p-3 text-white bg-brand-gray"
-							name="artform"
-							id="artform"
-							placeholder="Artwork"
-						>
-							<option value="Worli">Worli</option>
-							<option value="Worli">Worli</option>
-							<option value="Worli">Worli</option>
-						</select>
+					<div className="w-full space-x-4 flex justify-around items-start">
+						<div className="w-full flex flex-col justify-center items-center space-y-4">
+							<input
+								onKeyDown={(e) => {
+									if(e.key === 'Enter') addTag(e.target.value)
+								}}
+								className="w-full p-3 bg-brand-gray"
+								type="string"
+								placeholder="Artform"
+							/>
+							<div className="w-full flex space-x-3 bg-brand-gray rounded-xl py-3 px-2">
+								{tags && tags.map((tag, idx) => (
+									<div className="flex justify-center items-center space-x-1 p-2 bg-[#20263B] text-white rounded-xl">
+										<p className="text-xl">{tag}</p>
+										<FiX onClick={() => removeTag(idx)} className="text-xl cursor-pointer"/>
+									</div>
+								))}
+							</div>
+						</div>
 						<select
                             value={collection}
                             onChange={(e) => setCollection(e.target.value)}

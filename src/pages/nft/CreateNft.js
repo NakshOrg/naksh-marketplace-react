@@ -14,6 +14,8 @@ import { useHistory } from "react-router-dom";
 import { helpers } from '../../constants';
 import { FiX } from "react-icons/fi";
 
+const NAKSH_NFT_ADDRESS = "0xde7Aac380E7f9659777aFefc713FAaf030c10f6F"
+
 export default function CreateNft(props) {
 	const { evmWalletData, evmProvider } = useAppContext()
     const { mintNft, uploadMedia, listNFT } = useNFTs()
@@ -24,7 +26,7 @@ export default function CreateNft(props) {
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
-    const [collection, setCollection] = useState('')
+    const [collection, setCollection] = useState(NAKSH_NFT_ADDRESS)
     const [artform, setArtform] = useState('')
     const [price, setPrice] = useState('')
 	const [days, setDays] = useState('')
@@ -283,6 +285,7 @@ export default function CreateNft(props) {
 							id="collection"
 							placeholder="Collection"
 						>
+							<option value={NAKSH_NFT_ADDRESS}>Naksh...</option>
 							{userCollections.length > 0 && userCollections.map(collection => (
 								<option value={collection.nftAddress}>{collection.name.substring(0, 32)}...</option>
 							))}

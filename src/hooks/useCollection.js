@@ -87,7 +87,8 @@ const useCollection = () => {
                 console.log(artistDetails, collectionDetails, "params")
 
                 const contract = new ethers.Contract(NAKSH_FACTORY_ADDRESS, factoryAbi, evmWalletData.signer)
-                const tx = await contract.deployNftCollection(artistDetails, collectionDetails, admin, creatorFees, creators, {
+                console.log(NAKSH_FACTORY_ADDRESS, artistDetails, collectionDetails, admin, creatorFees, creators)
+                const tx = await contract.deployNftCollection(artistDetails, collectionDetails, admin, creatorFees[0] === "" ? [] : creatorFees, creators[0] === "" ? [] : creators, {
                     gasPrice: evmProvider.getGasPrice(),
                     gasLimit: 10000000,
                 })

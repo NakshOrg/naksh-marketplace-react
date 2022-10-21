@@ -394,7 +394,7 @@ export default function PolygonNftDetails(props) {
 									</h1>
 								</div>
 								<div className="w-1/2 flex flex-col justify-center items-end">
-									{bid.bidder.toLowerCase() == saleData.auction.highestBidder.toLowerCase() &&
+									{(saleData && saleData.auction && saleData.auction.highestBidder) && bid.bidder.toLowerCase() == saleData.auction.highestBidder.toLowerCase() &&
 										<div>
 											<GradientBtn
 												style={{
@@ -414,7 +414,7 @@ export default function PolygonNftDetails(props) {
 											/>
 										</div>
 									}
-									{bid.bidder.toLowerCase() !== saleData.auction.highestBidder.toLowerCase() &&
+									{(saleData && saleData.auction && saleData.auction.highestBidder) && bid.bidder.toLowerCase() !== saleData.auction.highestBidder.toLowerCase() &&
 										<div>
 											<GradientBtn
 												style={{
@@ -653,7 +653,7 @@ export default function PolygonNftDetails(props) {
 							/>
 						</div>
 					}
-					{!purchasable.owner && purchasable.auctionEnded && saleData && saleData.auction && saleData.auction.highestBidder.toLowerCase() === evmWalletData.address.toLowerCase() && 
+					{!purchasable.owner && purchasable.auctionEnded && saleData && saleData.auction && saleData.auction.highestBidder && saleData.auction.highestBidder.toLowerCase() === evmWalletData.address.toLowerCase() && 
 						<div>
 							<GradientBtn
 								style={{

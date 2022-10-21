@@ -26,6 +26,7 @@ export default function CreateNft(props) {
     const [collection, setCollection] = useState('')
     const [artform, setArtform] = useState('')
     const [price, setPrice] = useState('')
+	const [days, setDays] = useState('')
     const [image, setImage] = useState()
     const [preview, setPreview] = useState('')
 
@@ -116,7 +117,19 @@ export default function CreateNft(props) {
 
 		console.log({ nftAddress: collection, tokenId: ethers.utils.stripZeros(token.tokenId).toString() })
 
-		await listNFT({ nftAddress: collection, tokenId: ethers.utils.stripZeros(token.tokenId).toString() }, selectedValue, { price: ethers.utils.parseEther(price).toString() })
+		if(selectedValue === 0) await listNFT({ nftAddress: collection, tokenId: ethers.utils.stripZeros(token.tokenId).toString() }, selectedValue, { price: ethers.utils.parseEther(price).toString() })
+		else {
+			const currDate = new Date();
+			const currUnix = currDate.getTime() / 1000;
+
+			currDate.setDate(currDate.getDate() + (days ? Number(days) : 1));
+			console.log(currDate)
+			const nextUnix = currDate.getTime() / 1000;
+
+			console.log(nextUnix - currUnix)
+
+			await listNFT({ nftAddress: collection, tokenId: ethers.utils.stripZeros(token.tokenId).toString() }, selectedValue, { auctionTime: nextUnix - currUnix, price: ethers.utils.parseEther(price).toString() })
+		}
 
 		history.push(`/polygon/nftdetails/${collection}/${ethers.utils.stripZeros(token.tokenId).toString()}`)
 	}
@@ -350,23 +363,35 @@ export default function CreateNft(props) {
 								className="w-full p-0 text-white bg-brand-gray"
 								placeholder="Price for one item"
 							/>
-							<p className="text-md p-0">ONE</p>
+							<p className="text-md p-0">MATIC</p>
 						</div>
+						{selectedValue === 1 && 
+							<div className="w-full p-4 flex justify-center items-center bg-brand-gray">
+								<input
+									value={days}
+									onChange={(e) => setDays(e.target.value)}
+									type="text"
+									className="w-full p-0 text-white bg-brand-gray"
+									placeholder="How many days you want to auction?"
+								/>
+								<p className="text-md p-0">DAYS</p>
+							</div>
+						}
 						<div className="w-full h-full flex justify-between items-center">
 							<div className="w-1/2 flex flex-col justify-center items-start space-y-2">
 								<h2>
 									Royalties:{" "}
-									<span className="font-bold">20%</span>
+									<span className="font-bold">{royaltyPerc * 100}%</span>
 								</h2>
 								<h2>
 									Platform Fee:{" "}
-									<span className="font-bold">{royaltyPerc * 100}%</span>
+									<span className="font-bold">{royaltyPerc * 100}5%</span>
 								</h2>
 							</div>
 							<div className="w-1/2 flex flex-col justify-start items-end space-y-2">
 								<h2>
 									You Will Receive:{" "}
-									<span className="font-bold">{Number(price) - (Number(price) * 0.20) - (Number(price) * royaltyPerc)} ONE</span>
+									<span className="font-bold">{Number(price) - (Number(price) * 0.20) - (Number(price) * royaltyPerc)} MATIC</span>
 								</h2>
 							</div>
 						</div>

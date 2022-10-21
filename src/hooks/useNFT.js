@@ -278,7 +278,7 @@ export const useNFTs = () => {
 		const data = await res.json()
 
 		if(!data || !data.value || !data.value.cid) {
-			throw "can't upload"
+			return ""
 		}
 
 		return data.value.cid

@@ -76,15 +76,18 @@ export default function CreateCollection(props) {
 
 	const createCollectionWrapper = async () => {
 		const toastId = toast.loading('Creating Collection')
+		
 		const logoUri = await uploadMedia(logo)
+		
 		try {
 			let hash = ''
 			const wallets = royalties.map(royalty => royalty.wallet)
 			const percentages = royalties.map(royalty => royalty.percentage)
 			if(!isGradient) {
+				console.log(royalties)
+				// return
+
 				const coverUri = await uploadMedia(cover)
-
-
 				const tx = await createCollection(name, symbol, { instagram, facebook, twitter, website }, `https://${coverUri}.ipfs.nftstorage.link/`, isGradient, description, `https://${logoUri}.ipfs.nftstorage.link/`, evmWalletData.address, percentages, wallets)
 				hash = tx.hash
 				await tx.wait()
@@ -121,12 +124,13 @@ export default function CreateCollection(props) {
             let a = [...v]
 
             if(index < a.length) {
+
 				if(values.wallet) {
 					a[index].wallet = values.wallet
 				}
 
 				if(values.percentage) {
-					a[index].percentage = values.percentange
+					a[index].percentage = values.percentage
 				}
 
             } else {

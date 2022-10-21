@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { FiX } from "react-icons/fi";
-import polygon from "../../assets/images/connect-polygon.png"
-import near from "../../assets/svgs/connect-near.svg";
+import polygon from "../../assets/images/polygon.png"
+import near from "../../assets/images/near.png"
+// import near from "../../assets/svgs/connect-near.svg";
 import configs from "../../configs";
 import { ethers } from "ethers";
 import { connectHarmonyWallet } from "../../redux/actions/actions";
@@ -12,10 +13,10 @@ import { useAppContext } from "../../context/wallet";
 import { ConnectButton, useConnectModal } from '@rainbow-me/rainbowkit';
 import { useEffect } from "react";
 
-const WalletCard = ({ src, style, onClick }) => {
+const WalletCard = ({ src, classNames, onClick }) => {
 	return (
 		<div>
-			<img src={src} onClick={onClick} className="walletCardImg" />
+			<img src={src} onClick={onClick} className={classNames} />
 		</div>
 	);
 };
@@ -80,18 +81,18 @@ const ConnectWallet = ({ isOpen, setIsOpen }) => {
 				Connect to one of our wallets to create a Naksh account and save
 				this NFT!
 			</p>
-			<div className="walletCardFlex">
+			<div className="walletCardFlex space-y-5 md:space-y-0">
                 <WalletCard
                     src={near}
                     onClick={() => connectNear()}
                     key={"Near"}
-                    className="walletCardFlexCard"
+                    classNames="p-0 m-0"
                 />
                 <WalletCard
-                    src={near}
+                    src={polygon}
                     onClick={() => openConnectModal()}
                     key={"Polygon"}
-                    className="walletCardFlexCard"
+                    classNames="p-0 m-0"
                 />
 			</div>
 			<div

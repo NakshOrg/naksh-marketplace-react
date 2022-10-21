@@ -186,8 +186,8 @@ function Header() {
                             CREATE<FiChevronDown size={15} color="#fff"/>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={{...menuStyle, width:230}} id="dropdown-basic-content">
-                            <Dropdown.Item onClick={() => history.push("/blogs")}>Create NFT</Dropdown.Item>
-                            <Dropdown.Item onClick={() => history.push("/helpcenter")} style={{marginTop:15}}>Create Collection</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/create/nft")}>Create NFT</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/create/collection")} style={{marginTop:15}}>Create Collection</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
@@ -203,12 +203,13 @@ function Header() {
                     </Dropdown.Menu>
                 </Dropdown>
                 :
-                    <div
-                        style={{ cursor: "pointer" }}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        Connect Wallet
-                    </div>
+                        <div
+                            className="px-3 py-2 border border-white rounded-xl"
+                            style={{ cursor: "pointer", position:"absolute", right:"7%" }}
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            Connect Wallet
+                        </div>
                 }
             </div>          
         </div>

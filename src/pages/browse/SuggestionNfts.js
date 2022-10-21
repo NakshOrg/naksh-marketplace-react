@@ -49,12 +49,12 @@ function PrevArrow({ onClick }) {
     </div>
 }
 
-function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrendingNfts, nearWallet }) {
-    
+function SuggestionNfts({ topCollections, recentlyEVMAdded, recentlyAdded, trendingNfts, trendingArtists, evmTrendingNfts, nearWallet }) {
+    console.log(recentlyEVMAdded, "DSAdsa")
     const tabContents = [
         {tabName: "RECENTLY ADDED", x:100, }, // x is a hard coded value for animating bottom bar
         {tabName: "TRENDING NFTS", x:240, },
-        {tabName: "TOP-SELLING ARTISTS", x:400, }
+        {tabName: nearWallet ? "TOP-SELLING ARTISTS" : "TOP COLLECTIONS", x:400, }
     ];
     const history = useHistory();
     const [currentTab, setCurrentTab] = useState(tabContents[0]);
@@ -64,7 +64,6 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
     }, [evmTrendingNfts])
 
     function NftCard(props) {
-        console.log(props)
         const { image, title, nearFee, price, artistName, artistImage, onClick } = props;
 
         return <div style={{zIndex:2, height:300}} onClick={onClick} className={classes.cardContainer}>
@@ -86,6 +85,19 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
         </div>
     }
 
+    function CollectionCard(props) {
+        const { image, title, onClick } = props;
+
+        return <div style={{zIndex:2, height:300}} onClick={onClick} className={classes.cardContainer}>
+        <img src={image} alt="nft"/>
+        <div className={classes.cardTag}>
+            <div style={globalStyles.flexRowSpace}>
+                <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{title}</div>
+            </div>
+        </div>
+    </div>
+    }
+
     function Contents() {
         
         return (
@@ -93,18 +105,33 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
                 <Slider className='flex' {...settings}>
                     { 
                         currentTab.tabName === 'RECENTLY ADDED' ?
-                        recentlyAdded.map(item => {
-                            return <div key={uuid()}>
-                                <NftCard
-                                    onClick={() => history.push(`/nftdetails/${item?.token_id}`)}
-                                    image={item?.metadata?.extra?.nftThumbnailUrl ?? item?.metadata?.media}
-                                    title={item?.metadata?.title}
-                                    nearFee={item?.price}
-                                    artistName={item?.artist?.name} 
-                                    artistImage={item?.artist?.image}
-                                />
-                            </div>
-                        }) :
+                        (nearWallet ? 
+                            recentlyAdded.map(item => {
+                                return <div key={uuid()}>
+                                    <NftCard
+                                        onClick={() => history.push(`/nftdetails/${item?.token_id}`)}
+                                        image={item?.metadata?.extra?.nftThumbnailUrl ?? item?.metadata?.media}
+                                        title={item?.metadata?.title}
+                                        nearFee={item?.price}
+                                        artistName={item?.artist?.name} 
+                                        artistImage={item?.artist?.image}
+                                    />
+                                </div>
+                            })
+                            :
+                            recentlyEVMAdded && recentlyEVMAdded.length > 0 && recentlyEVMAdded.map((nft, idx) => (
+                                <div key={uuid()}>
+                                    <NftCard
+                                        onClick={() => history.push(`/polygon/nftdetails/${nft.nft.nftAddress}/${nft.nft.tokenId.toString()}`)}
+                                        image={nft.nft.tokenUri.startsWith('ipfs') ? `https://${nft.nft.tokenUri.substring(7)}.ipfs.nftstorage.link` : nft.tokenUri}
+                                        title={nft.nft.title}
+                                        nearFee={ethers.utils.formatEther(nft.salePrice)}
+                                        artistName={nft?.nft.artistName}
+                                        artistImage={nft?.nft.tokenUri}
+                                    />
+                                </div>
+                            ))
+                        ) :
                         currentTab.tabName === 'TRENDING NFTS' ? 
                         ( nearWallet ?
                             trendingNfts.length > 0 && trendingNfts.map(item => {
@@ -132,7 +159,7 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
                                 </div>
                             ))
                         ) :
-                        trendingArtists.map(artist => {
+                        nearWallet ? trendingArtists.map(artist => {
                             return <div key={uuid()}>
                                 <ArtistCard
                                     styles={{marginTop:50, width:"95%"}}
@@ -141,6 +168,15 @@ function SuggestionNfts({ recentlyAdded, trendingNfts, trendingArtists, evmTrend
                                     name={artist.name}
                                     artform={artist?.artform?.name ?? "-----"}
                                     place={artist.state ?? "-----"}
+                                />
+                            </div>
+                        }) :
+                        topCollections && topCollections.map(collection => {
+                            return <div key={uuid()}>
+                                <CollectionCard
+                                    onClick={() => history.push(`/collection/${collection.address}`)}
+                                    image={collection.cover[0]}
+                                    title={collection.name}
                                 />
                             </div>
                         })

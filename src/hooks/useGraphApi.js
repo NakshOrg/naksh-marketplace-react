@@ -62,6 +62,18 @@ query GetUserCollection($creator: String!) {
 }
 `
 
+export const GET_COLLECTIONS = `
+query GetUserCollection($skip: Int!) {
+  collections(first: 5, skip: $skip) {
+    id
+    name
+    symbol
+    nftAddress
+    creator
+  }
+}
+`
+
 export const GET_NFT_ON_SALE = `
 query getNftonSale {
   saleDatas {

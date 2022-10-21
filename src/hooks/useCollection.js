@@ -4,7 +4,7 @@ import factoryAbi from "../interface/factoryAbi.json"
 import nftAbi from "../interface/nftAbi.json"
 import { useAppContext } from "../context/wallet"
 import toast from "react-hot-toast"
-import { GET_COLLECTION_NFTS, GET_SINGLE_NFT, GET_USER_COLLECTION } from "./useGraphApi"
+import { GET_COLLECTIONS, GET_COLLECTION_NFTS, GET_SINGLE_NFT, GET_USER_COLLECTION } from "./useGraphApi"
 
 const useCollection = () => {
 
@@ -22,6 +22,40 @@ const useCollection = () => {
                 reject(e)
             }
         })
+    }
+
+    const getCollections = (skip = 0) => {
+        return new Promise(async (resolve, reject) => {
+			try {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+					method: "POST",
+					body: JSON.stringify({
+						query: GET_COLLECTIONS,
+						variables: {
+							skip
+						}
+					})
+				})
+				const collections = (await res.json()).data.collections
+                
+                let c = []
+
+                for(let i = 0; i < collections.length; i++) {
+                    const assets = await getCollection(collections[i].nftAddress)
+
+                    c.push({
+                        logo: assets.logo,
+                        coverUri: !assets.cover.isGradient ? assets.cover.coverUri : "",
+                        ...collections[i]
+                    })
+                }
+
+				resolve(c)
+			} catch (e) {
+				console.log(e, "error")
+				reject(e)
+			}
+		})
     }
 
     const createCollection = (name, symbol, socialMedia, coverUri, isGradient, about, logo, admin, creatorFees, creators) => {
@@ -179,6 +213,7 @@ const useCollection = () => {
 
     return {
         getCollection,
+        getCollections,
         createCollection,
         getCollectionNFTs,
         getUserCollections,

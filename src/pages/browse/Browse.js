@@ -26,6 +26,7 @@ import { useNFTs } from "../../hooks";
 import { useAppContext } from "../../context/wallet";
 import { ethers } from "ethers";
 import { useTrendingNFTs } from '../../hooks/useTrendingNFTs';
+import useCollection from '../../hooks/useCollection';
 
 // ReactGA.send({ hitType: "pageview", page: "browse" });
 // ReactGA.event({
@@ -48,10 +49,14 @@ export default function Browse() {
     console.log(walletInfo, "wallet info");
     const { getNFTsOnSale } = useNFTs();
     const { getTrendingNFTs } = useTrendingNFTs()
-	const { nakshContract, evmWalletData } = useAppContext();
-	const [totalEVMNfts, setTotalEVMNfts] = useState(true);
+	const { isEVMWalletSignedIn, evmWalletData } = useAppContext();
+    const { getCollection } = useCollection()
+
+	const [totalEVMNfts, setTotalEVMNfts] = useState([]);
 	const [allEVMNfts, setAllEVMNfts] = useState([]);
     const [evmTrendingNfts, setEVMTrendingNfts] = useState([]);
+
+    const isWalletSignedIn = useSelector(state => state.nearReducer.isWalletSignedIn);
 
     const [loading, setLoading] = useState(false); 
     const [allNfts, setAllNfts] = useState([]); 
@@ -59,15 +64,27 @@ export default function Browse() {
     const [totalNfts, setTotalNfts] = useState([]); 
     const [trendingNfts, setTrendingNfts] = useState([]);
     const [trendingArtists, setTrendingArtists] = useState([]);
+    const [topCollections, setTopCollections] = useState([])
+
+    const evmFilter = [
+        {label:"Under 10 MATIC", value:"Under 10 MATIC", noOfNfts:0, checked:false, min:0, max:9},
+        {label:"10 - 49 MATIC", value:"10 - 49 MATIC", noOfNfts:0, checked:false, min:10, max:49},
+        {label:"50 - 100 MATIC", value:"50 - 100 MATIC", noOfNfts:0, checked:false, min:50, max:99},
+        {label:"100 - 200 MATIC", value:"100 - 200 MATIC", noOfNfts:0, checked:false, min:100, max:199},
+        {label:"200 - 300 MATIC", value:"200 - 300 MATIC", noOfNfts:0, checked:false, min:200, max:300}
+    ]
+
+    const nearFilter = [
+        {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
+        {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
+        {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
+        {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:199},
+        {label:"200 - 300 NEAR", value:"200 - 300 NEAR", noOfNfts:0, checked:false, min:200, max:300}
+    ]
+
     const [filterParams, setFilterParams] = useState({
         sort: staticValues.sortFilter[0].name,
-        priceRange: [
-            {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
-            {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
-            {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
-            {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:199},
-            {label:"200 - 300 NEAR", value:"200 - 300 NEAR", noOfNfts:0, checked:false, min:200, max:300}
-        ],
+        priceRange: isEVMWalletSignedIn ? evmFilter  : (isWalletSignedIn ? nearFilter : evmFilter ),
         limit: 8
     });
     const [open, setOpen] = useState(false);
@@ -89,6 +106,12 @@ export default function Browse() {
 			fetchEVMNft()
 		}
 	}, [evmWalletData]);
+
+    useEffect(() => {
+        if(evmTrendingNfts && evmTrendingNfts.length > 0) {
+            getTopCollections()
+        }
+    }, [evmTrendingNfts])
 
     useEffect(() => {
         if(totalNfts.length !== 0 || totalEVMNfts.length > 0) {
@@ -141,10 +164,39 @@ export default function Browse() {
     const getEVMTrendingNfts = async () => {
         try {
             const trendingNfts = await getTrendingNFTs()
-            console.log(trendingNfts, "das")
             setEVMTrendingNfts([...trendingNfts, ...trendingNfts])
         } catch (e) {
             console.error(e, "error in getEVMTrendingNfts")
+        }
+    }
+
+    const getTopCollections = async () => {
+        if(evmTrendingNfts) {
+            let alreadyMapped = {}
+            let collections = []
+
+            for(let i = 0; i < evmTrendingNfts.length; i++) {
+                const nft = evmTrendingNfts[i]
+                
+                if(alreadyMapped[nft.nftAddress]) continue
+                alreadyMapped[nft.nftAddress] = true
+                
+                const c = await getCollection(nft.nftAddress)
+                
+                collections.push({
+                    ...c,
+                    address: nft.nftAddress
+                })
+            }
+            
+            if(collections.length < 5) {
+                const moreLength = [...collections, ...collections, ...collections, ...collections]
+
+                setTopCollections(moreLength)
+            } else {
+                setTopCollections(collections)
+            }
+
         }
     }
 
@@ -216,18 +268,19 @@ export default function Browse() {
     const applyFilters = (isMobile) => {
         let firstSetOfData, copiedFilterArr = [...totalNfts];
         let firstSetOfEVMData, copiedFilterEVMArr = [...totalEVMNfts]
-        console.log("wq", firstSetOfEVMData)
-
+        console.log(copiedFilterEVMArr, totalEVMNfts, "Das")
         const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
 
         if (filterParams.sort === "Newest first") {
             copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
             });
+            copiedFilterEVMArr = [...totalEVMNfts]
         } else if (filterParams.sort === "Oldest first") {
             copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
             });
+            copiedFilterEVMArr = totalEVMNfts.slice().reverse()
         } else if (filterParams.sort === "Price - High to low") {
             copiedFilterArr = copiedFilterArr.sort(function(a, b) {
                 return b.price - a.price;
@@ -260,7 +313,6 @@ export default function Browse() {
             });
             copiedFilterArr = resultArr;
             copiedFilterEVMArr = resultEVMArr;
-            console.log(copiedFilterEVMArr)
         }
 
         firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
@@ -274,7 +326,7 @@ export default function Browse() {
         setFilterParams(state => ({
             ...state,
             sort: staticValues.sortFilter[0].name,
-            priceRange: [
+            priceRange:  [
                 {label:"Under 10 NEAR", value:"Under 10 NEAR", noOfNfts:0, checked:false, min:0, max:9},
                 {label:"10 - 49 NEAR", value:"10 - 49 NEAR", noOfNfts:0, checked:false, min:10, max:49},
                 {label:"50 - 100 NEAR", value:"50 - 100 NEAR", noOfNfts:0, checked:false, min:50, max:99},
@@ -332,18 +384,22 @@ export default function Browse() {
 		});
 	};
 
+    useEffect(() => console.log(topCollections, "Dadwedwqe"), [topCollections])
+
     if(loading) return <Spinner/>;
 
     return (
         <Container fluid className={classes.container}>
             <div className={classes.exploreGradientBlue}/>
-            <div style={{...globalStyles.flexRowSpace}}>
+            <div className="w-full flex justify-center items-center">
                 <div className={classes.sectionTitle}>Discover extraordinary NFTs</div>
-                <div className={classes.sectionTitle2}>
+                {/* <div className={classes.sectionTitle2}>
                     Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
-                </div>
+                </div> */}
             </div>
             <SuggestionNfts
+                topCollections={topCollections}
+                recentlyEVMAdded={totalEVMNfts}
                 nearWallet={walletInfo}
                 recentlyAdded={recently}
                 trendingNfts={trendingNfts}

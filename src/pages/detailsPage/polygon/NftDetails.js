@@ -83,6 +83,7 @@ export default function PolygonNftDetails(props) {
 
 	useEffect(() => {
 		if(saleData && saleData.auction && saleData.auction.bids && saleData.auction.bids.length > 0) {
+			console.log(saleData, "321231321")
 			const bids = saleData.auction.bids.sort((bid1, bid2) => bid2.timestamp - bid1.timestamp)
 			setBids(bids)
 		}
@@ -176,8 +177,9 @@ export default function PolygonNftDetails(props) {
 				(item) => (item.nft.tokenId.toString() !== params.id || item.nft.nftAddress.toLowerCase() !== params.address.toLowerCase())
 			);
 
-			const foundNft = nfts.find(item => item.nft.tokenId.toString() === params.id)
+			const foundNft = nfts.find(item => (item.nft.tokenId.toString() === params.id && item.nft.nftAddress.toLowerCase() === params.address.toLowerCase()))
 			setPrice(foundNft ? Number(foundNft.salePrice) : 0)
+			console.log(foundNft, "dsadsads")
 			setSaleData(foundNft)
 
 			setNft(nft);

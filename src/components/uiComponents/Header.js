@@ -25,6 +25,7 @@ import { helpers } from '../../constants';
 import ConnectWallet from './ConnectWallet';
 import { useAppContext } from '../../context/wallet';
 import { useDisconnect } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 function Header() {
     
@@ -44,6 +45,7 @@ function Header() {
 
     const { isEVMWalletSignedIn, setIsEVMWalletSignedIn, setEVMWalletData } = useAppContext()
     const { disconnect } = useDisconnect()
+    const { openConnectModal } = useConnectModal()
 
     const isSearchPage = location.pathname === "/searchresults/nfts" || location.pathname === "/searchresults/artists";
 
@@ -306,16 +308,36 @@ function Header() {
                     <div onClick={() => helpers.openInNewTab(configs.linkedin)}><img style={{height:15}} src={linkedIn} alt='linkedIn'/></div>
                     <div onClick={() => helpers.openInNewTab(configs.telegram)}><img style={{height:15}} src={telegram} alt='telegram'/></div>
                 </div>
-                <div style={{textAlign:'center', marginTop:30}}>
-                    <div 
-                        onClick={isWalletSignedIn ? walletSignOut : walletSignIn}
-                        className="connect-near"
-                        style={{margin:0, padding:"10px 0"}}
-                    >
-                        {isWalletSignedIn ? "Logout" : <img src={near} alt="near"/>}
+                {(!isEVMWalletSignedIn && !isWalletSignedIn) ? 
+                    <div style={{textAlign:'center', marginTop:30}}>
+                        <div 
+                            onClick={walletSignIn}
+                            className="connect-near"
+                            style={{margin:0, padding:"10px 0"}}
+                        >
+                            {isWalletSignedIn ? "Logout" : <img src={near} alt="near"/>}
+                        </div>
+                        <div 
+                            onClick={() => openConnectModal()}
+                            className="connect-near"
+                            style={{margin:0, marginTop: 10, padding:"10px 0"}}
+                        >
+                            {isEVMWalletSignedIn ? "Logout" : "Connect To Polygon"}
+                        </div>
+                        <img onClick={() => setShowHeaderContents(false)} style={{marginTop:25, height:40}} src={headerCross} alt={"headerCross"}/>
                     </div>
-                    <img onClick={() => setShowHeaderContents(false)} style={{marginTop:25, height:40}} src={headerCross} alt={"headerCross"}/>
-                </div>
+                :
+                    <div style={{textAlign:'center', marginTop:30}}>
+                        <div 
+                            onClick={walletSignOut}
+                            className="connect-near"
+                            style={{margin:0, padding:"10px 0"}}
+                        >
+                            Logout
+                        </div>
+                        <img onClick={() => setShowHeaderContents(false)} style={{marginTop:25, height:40}} src={headerCross} alt={"headerCross"}/>
+                    </div>
+                }
             </motion.div>}
         </div>
         {isModalOpen && (

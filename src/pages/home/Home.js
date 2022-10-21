@@ -56,8 +56,8 @@ export default function Home() {
                                 <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="glow-on-hover" style={{zIndex:100}}>
                                     <div className={classes.glowBtnText} style={{marginLeft:1}}>EXPLORE MARKETPLACE</div>
                                 </div>
-                                <div id={classes.btnContainer} onClick={() => history.push("/browse")} className="create-nft" style={{zIndex:100, textAlign:'center'}}>
-                                    <div style={{paddingHorizontal: '15px', textAlign: 'center', marginLeft:1}}>CREATE NFT</div>
+                                <div id={classes.btnContainer} onClick={() => history.push("/create/nft")} className="create-nft" style={{zIndex:100, textAlign:'center'}}>
+                                    <div style={{paddingHorizontal: '15px', textAlign: 'center', marginLeft:1}} className="px-1 md:p-2">CREATE NFT</div>
                                 </div>
                             </div>
                         </div>

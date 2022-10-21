@@ -196,11 +196,11 @@ export default function CreateCollection(props) {
 	}, [logo])
 
 	return (
-		<div className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 md:px-[8%] sm:px-0 mb-20">
+		<div className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10">
 			<div className="w-full flex justify-around items-center">
 				<div className="w-1/2 flex justify-start items-center space-x-4">
 					<span className="text-xl font-bold">&larr;</span>
-					<h1 className="text-3xl font-bold">Create Collection</h1>
+					<h1 className="text-xl md:text-3xl font-bold">Create Collection</h1>
 				</div>
 				<div className="w-1/2 flex justify-end items-center space-x-4">
 					<GradientBtn
@@ -212,12 +212,12 @@ export default function CreateCollection(props) {
 			</div>
             <div className="w-full h-full flex flex-col justify-center items-start space-y-4">
 				<h1>Upload Picture</h1>
-				<div className="w-full h-full flex justify-start items-center space-x-5">
+				<div className="w-full h-full flex flex-col md:flex-row justify-center md:justify-start items-center space-y-5 md:space-y-0 md:space-x-5">
 					<div className="w-[150px] h-[150px] rounded-full bg-brand-gray flex justify-center items-center">
 						{!logoPreview && <HiOutlineCamera className="text-5xl" />}
 						{logoPreview && <img src={logoPreview} className="w-full h-full rounded-full" />}
 					</div>
-					<div className="flex flex-col justify-center items-start space-y-4">
+					<div className="flex flex-col justify-center items-center md:items-start space-y-4">
 						<h1 className="text-xl">
 							Upload a profile picture here. <br />
 							Your picture will be public.

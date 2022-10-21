@@ -151,7 +151,7 @@ export default function CreateNft(props) {
 	}, [evmProvider])
 
 	return (
-		<div onClick={() => listModal ? setListModal(false) : {}} className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 md:px-[8%] sm:px-0 mb-20">
+		<div onClick={() => listModal ? setListModal(false) : {}} className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10">
 			<div className={(listModal ? "filter blur-2xl " : "") + " w-full flex justify-around items-center"}>
 				<div className="w-1/2 flex justify-start items-center space-x-4">
 					<span className="text-xl font-bold">&larr;</span>

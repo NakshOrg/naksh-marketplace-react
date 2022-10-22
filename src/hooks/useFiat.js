@@ -35,6 +35,15 @@ export const useFiat = () => {
 
     useEffect(() => {
         if(fiat) {
+            const fiatAmount = Number(amount) < 100 ? "100" : amount
+
+            console.log(widget, "DSA")
+            if(widget && widget.fiatAmount && widget.fiatAmount === fiatAmount) {
+                widget.init()
+
+                return
+            }
+
             let createWidget = new window.onMetaWidget({
                 elementId: "widget", // Mandatory (It should be an id of an element not a class)
                 apiKey: process.env.REACT_APP_API_KEY, // Mandatory
@@ -43,8 +52,9 @@ export const useFiat = () => {
                 chainId: 137, // Optional (it should be passed along with the tokenAddress to show a particular token to the user)
                 tokenAddress: token, // Optional
             })
+            console.log(createWidget)
 
-            setWidget(widget)
+            setWidget(createWidget)
             
             createWidget.init()
         } else {

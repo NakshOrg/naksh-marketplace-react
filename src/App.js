@@ -20,6 +20,7 @@ import factoryAbi from "./interface/factoryAbi.json";
 import { ethers, BigNumber } from "ethers";
 import { useScript } from './hooks/useScript';
 import { Helmet } from 'react-helmet'
+import { useSigner } from 'wagmi';
 
 // google analytics initialization
 ReactGA.initialize('G-51GS0V4HX8');
@@ -61,6 +62,10 @@ export default function AppWrapper() {
   const [isEVMWalletSignedIn, setIsEVMWalletSignedIn] = useState(false)
 	const NAKSH_ADDRESS = "0xa498DC2D425d74C6c63C9A5b9075b6d0ef2C279b";
 	const NAKSH_FACTORY_ADDRESS = "0x613237e16EFCadAd62439A4ecA910bC36F4Da49a";
+
+  useEffect(() => {
+    console.log(evmProvider,"Dsadsadas")
+  }, [evmProvider])
 
   useEffect(() => {
 		const provider = new ethers.providers.JsonRpcProvider(

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 import nearLogo from '../../assets/svgs/near-logo.svg';
+import polygonLogo from "../../assets/svgs/polygon-logo.svg"
 import classes from './explore.module.css';
 import globalStyles from '../../globalStyles';
 
@@ -14,7 +15,8 @@ function NftCard(props) {
         price,
         artistName,
         artistImage,
-        onClick
+        onClick,
+        near
     } = props;
 
     return (
@@ -33,8 +35,8 @@ function NftCard(props) {
             <div className={classes.cardTag}>
                 <div style={globalStyles.flexRowSpace}>
                     <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{title}</div>
-                    <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis", width: "50px"}}>
-                        {nearFee} <img src={nearLogo} alt="nearlogo"/>
+                    <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis"}} className="flex justify-center items-center space-x-1">
+                        <span>{nearFee}</span> {near ? <img src={nearLogo} alt="nearlogo"/> : <img src={polygonLogo} className="w-5 h-5" alt="nearlogo"/>}
                     </div>
                 </div>
                 <div style={{...globalStyles.flexRowSpace, marginTop:5}}>

@@ -9,6 +9,7 @@ import ArtistCard from '../../components/explore/ArtistCard';
 import Tabs from '../../components/uiComponents/Tabs';
 import classes from './browse.module.css';
 import nearLogo from '../../assets/svgs/near-logo.svg';
+import polygonLogo from "../../assets/svgs/polygon-logo.svg"
 import globalStyles from '../../globalStyles';
 import { ethers } from 'ethers';
 import { Col } from 'react-bootstrap';
@@ -64,15 +65,15 @@ function SuggestionNfts({ topCollections, recentlyEVMAdded, recentlyAdded, trend
     }, [evmTrendingNfts])
 
     function NftCard(props) {
-        const { image, title, nearFee, price, artistName, artistImage, onClick } = props;
+        const { image, title, nearFee, price, artistName, artistImage, onClick, near } = props;
 
         return <div style={{zIndex:2, height:300}} onClick={onClick} className={classes.cardContainer}>
             <img src={image} alt="nft"/>
             <div className={classes.cardTag}>
                 <div style={globalStyles.flexRowSpace}>
                     <div style={{fontFamily:"Athelas-Bold", fontSize:14, textTransform:"capitalize", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{title}</div>
-                    <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis", width: "50px"}}>
-                        {nearFee} <img src={nearLogo} alt="nearlogo"/>
+                    <div style={{fontSize:12, fontWeight:"bold", overflow: "hidden", textOverflow: "ellipsis"}} className="flex justify-center items-center space-x-1">
+                        <span>{nearFee}</span> {near ? <img src={nearLogo} alt="nearlogo"/> : <img src={polygonLogo} className="w-5 h-5" alt="nearlogo"/>}
                     </div>
                 </div>
                 <div style={{...globalStyles.flexRowSpace, marginTop:5}}>
@@ -115,6 +116,7 @@ function SuggestionNfts({ topCollections, recentlyEVMAdded, recentlyAdded, trend
                                         nearFee={item?.price}
                                         artistName={item?.artist?.name} 
                                         artistImage={item?.artist?.image}
+                                        near={true}
                                     />
                                 </div>
                             })
@@ -128,6 +130,7 @@ function SuggestionNfts({ topCollections, recentlyEVMAdded, recentlyAdded, trend
                                         nearFee={ethers.utils.formatEther(nft.salePrice)}
                                         artistName={nft?.nft.artistName}
                                         artistImage={nft?.nft.tokenUri}
+                                        near={false}
                                     />
                                 </div>
                             ))

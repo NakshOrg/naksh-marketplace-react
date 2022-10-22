@@ -210,6 +210,7 @@ export default function NftDetails(props) {
                     nearFee={nft?.price}
                     artistName={nft?.artist?.name} 
                     artistImage={nft?.artist?.image}
+                    near={true}
                 />
             </Col>
         });

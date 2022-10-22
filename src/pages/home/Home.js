@@ -10,8 +10,12 @@ import DesktopCarousel from '../../components/uiComponents/DesktopCarousel';
 import classes from './home.module.css';
 import Footer from '../../components/uiComponents/Footer';
 import { OutlineBtn } from '../../components/uiComponents/Buttons';
+import { useSigner } from 'wagmi';
+import { useAppContext } from '../../context/wallet';
 
 export default function Home() {
+
+    const { setEVMProvider, setEVMWalletData } = useAppContext()
 
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
     const dispatch = useDispatch();
@@ -42,6 +46,21 @@ export default function Home() {
             // console.log(err);
         });
     }
+
+    const { data: signer, isError, isLoading } = useSigner()
+
+    useEffect(() => {
+        (async () => {
+         if(signer) {
+           setEVMWalletData({
+             address: await signer.getAddress(),
+             signer: signer
+           })
+     
+           setEVMProvider(signer.provider)
+         }
+       })()
+      }, [signer])
 
     return (
         <Container fluid style={{height:"100vh"}}>

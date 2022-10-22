@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 import { helpers } from '../../constants';
 import { FiX } from "react-icons/fi";
 
-const NAKSH_NFT_ADDRESS = "0xde7Aac380E7f9659777aFefc713FAaf030c10f6F"
+const NAKSH_NFT_ADDRESS = "0x6327A7f5285BA2B58736b759b684786A17C05A30"
 
 export default function CreateNft(props) {
 	const { evmWalletData, evmProvider } = useAppContext()

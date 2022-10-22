@@ -24,7 +24,7 @@ export const useNFTs = () => {
 	const getManyNFTs = async (ids) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: NFT_DATA_QUERY,
@@ -48,7 +48,7 @@ export const useNFTs = () => {
 		return new Promise(async (resolve, reject) => {
 			console.log(address, tokenId, "tokenId")
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: GET_SINGLE_NFT,
@@ -72,7 +72,7 @@ export const useNFTs = () => {
 	const getNFTsOnSale = async () => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: GET_NFT_ON_SALE
@@ -354,7 +354,7 @@ export const useNFTs = () => {
 	const getMintedNFTs = async (address) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: MY_NFTS,
@@ -377,7 +377,7 @@ export const useNFTs = () => {
 	const getSoldNFTs = async (address) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: COLLECTION_SOLD_NFTS,
@@ -399,7 +399,7 @@ export const useNFTs = () => {
 	const getSoldNFT = async (address, tokenId) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: A_SOLD_NFT,

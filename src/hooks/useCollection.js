@@ -27,7 +27,7 @@ const useCollection = () => {
     const getCollections = (skip = 0) => {
         return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: GET_COLLECTIONS,
@@ -144,7 +144,7 @@ const useCollection = () => {
     const getCollectionNFTs = (address) => {
         return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: GET_COLLECTION_NFTS,
@@ -167,7 +167,7 @@ const useCollection = () => {
     const getUserCollections = (address) => {
         return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh-marketplace", {
+				const res = await fetch("https://api.thegraph.com/subgraphs/name/sk1122/naksh", {
 					method: "POST",
 					body: JSON.stringify({
 						query: GET_USER_COLLECTION,

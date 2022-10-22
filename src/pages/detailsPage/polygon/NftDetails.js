@@ -637,7 +637,27 @@ export default function PolygonNftDetails(props) {
 							&nbsp;&nbsp; This nft is now yours!
 						</div>
 					}
+					{console.log(purchasable, "Dsadasdasdsadsadasdsa")}
 					{purchasable.owner && !purchasable.auctionEnded && saleData && saleData.auction && 
+						<div>
+							<GradientBtn
+								style={{
+									marginTop: 30,
+									cursor: purchasable ? "pointer" : "no-drop",
+									opacity: purchasable ? 1 : 0.6,
+								}}
+								onClick={() =>
+									endAuction(params.address, params.id)
+								}
+								content={
+									<div>
+										End Auction
+									</div>
+								}
+							/>
+						</div>
+					}
+					{purchasable.owner && purchasable.auctionEnded && saleData && saleData.auction && 
 						<div>
 							<GradientBtn
 								style={{
@@ -665,9 +685,7 @@ export default function PolygonNftDetails(props) {
 									opacity: purchasable ? 1 : 0.6,
 								}}
 								onClick={() =>
-									purchasable && nft?.salePrice
-										? setIsModalOpen(true)
-										: null
+									endAuction()
 								}
 								content={
 									<div>

@@ -60,7 +60,7 @@ export default function AppWrapper() {
 	const [nakshContract, setNakshContract] = useState();
 	const [factoryContract, setFactoryContract] = useState();
   const [isEVMWalletSignedIn, setIsEVMWalletSignedIn] = useState(false)
-	const NAKSH_ADDRESS = "0x1f98533932EadB30eeabdD566f6BD933e0d14CfB";
+	const NAKSH_ADDRESS = "0xA1CF1146b690Cb7889742013e9CAd93b519255Cb";
 	const NAKSH_FACTORY_ADDRESS = "0x613237e16EFCadAd62439A4ecA910bC36F4Da49a";
 
   useEffect(() => {

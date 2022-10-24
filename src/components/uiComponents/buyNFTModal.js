@@ -14,7 +14,7 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
 		} else {
 			await buyNFT({address: nft.nftAddress, ...nft}, value, price.toString())
 		}
-		// window.location.reload(false);
+		window.location.reload(false);
 	}
 	const [value, setValue] = useState(saleData.auction && saleData.auction.highestBid ? saleData.auction.highestBid : price);
 

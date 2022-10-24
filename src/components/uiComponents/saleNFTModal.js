@@ -12,7 +12,6 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
 	const [auctionTime, setAuctionTime] = useState(1);
 
 	const listNft = async () => {
-		console.log("nft", nft);
 		if (selectedValue === 0) {
 			// set nft on sale (fixed price)
 			await listNFT(nft, selectedValue, {

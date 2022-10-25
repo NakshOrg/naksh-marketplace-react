@@ -74,7 +74,7 @@ export default function EditProfile(props) {
     })
       .then(({ data: { artists } }) => {
         if (artists.length !== 0) {
-          // console.log(artists[0]);
+          // // console.log(artists[0]);
           setProfileAlreadyCreated(true);
           setArtistId(artists[0]._id);
           setName(artists[0].name);
@@ -273,7 +273,7 @@ export default function EditProfile(props) {
         // this.props.alert.success('Artist updated successfully!', {timeout:2000});
       })
       .catch((err) => {
-        // console.log(err.response.data, 'err');
+        // // console.log(err.response.data, 'err');
         // this.props.alert.error(err.response.data.error, {timeout:5000});
         setLoading(false);
       });

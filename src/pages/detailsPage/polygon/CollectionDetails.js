@@ -108,7 +108,6 @@ const CollectionDetails = () => {
       {/* <div className="w-full h-96" style={!collection.cover.isGradient ? { backgroundImage:`url("${collection.cover.uri}")`} : { background: collection.cover.uri }}></div> */}
       {collection && (
         <>
-          {console.log(collection, "collection")}
           {collection.cover.isGradient && (
             <div
               className="w-full h-96"

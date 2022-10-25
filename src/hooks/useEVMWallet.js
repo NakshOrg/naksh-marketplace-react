@@ -45,7 +45,7 @@ export const useEVMWallet = () => {
             createdBy: 1,
           });
 
-          console.log(res);
+          // console.log(res);
         } catch (e) {}
       }
     })();
@@ -70,13 +70,13 @@ export const useEVMWallet = () => {
             });
             setEVMProvider(provider);
           } else {
-            console.log("Do not have access");
+            // console.log("Do not have access");
           }
         } else {
-          console.log("Install Metamask");
+          // console.log("Install Metamask");
         }
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     }
 
@@ -99,9 +99,9 @@ export const useEVMWallet = () => {
     // try {
     // 	setEVMWallet(web3modal);
 
-    // 	console.log(web3modal);
+    // 	// console.log(web3modal);
     // } catch (e) {
-    // 	console.log(e, "Error from harmony");
+    // 	// console.log(e, "Error from harmony");
     // }
   };
 

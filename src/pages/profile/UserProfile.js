@@ -10,7 +10,11 @@ import NftCard from "../../components/explore/NftCard";
 import globalStyles from "../../globalStyles";
 import classes from "./profile.module.css";
 import { connect, useSelector } from "react-redux";
-import { _getAllArtists, _getOneArtist } from "../../services/axios/api";
+import {
+  _getAllArtists,
+  _getNftArtists,
+  _getOneArtist,
+} from "../../services/axios/api";
 import NearHelperFunctions from "../../services/nearHelperFunctions";
 import Spinner from "../../components/uiComponents/Spinner";
 import uuid from "react-uuid";
@@ -19,6 +23,8 @@ import { useNFTs } from "../../hooks";
 import { useAppContext } from "../../context/wallet";
 import { GradientBtn, OutlineBtn } from "../../components/uiComponents/Buttons";
 import useCollection from "../../hooks/useCollection";
+import { useSavedNFTs } from "../../hooks/useSavedNFTs";
+import { ethers } from "ethers";
 
 const mainText = {
   minted: "Create NFT and mint it now to get forever royalties",
@@ -49,7 +55,7 @@ export default function UserProfile(props) {
     ? location?.state?.ownerAccountId
     : walletInfo && walletInfo.getAccountId();
 
-  const { getNFTsOnSale } = useNFTs();
+  const { getManyNFTs } = useNFTs();
   const { contract, evmWalletData, evmWallet, evmProvider } = useAppContext();
   const [totalEVMNfts, setTotalEVMNfts] = useState(true);
   const [allEVMNfts, setAllEVMNfts] = useState([]);
@@ -61,6 +67,7 @@ export default function UserProfile(props) {
   const [noUserFound, setNoUserFound] = useState(false);
   const [activeTab, setActiveTab] = useState("minted");
   const [userCollections, setUserCollections] = useState([]);
+  const [savedNFTs, setSavedNFTs] = useState([]);
 
   useEffect(() => {
     if (walletInfo) {
@@ -69,6 +76,24 @@ export default function UserProfile(props) {
       getArtist(true);
     }
   }, [walletInfo, evmWalletData]);
+
+  useEffect(() => {
+    if (evmWalletData) {
+      _getNftArtists({
+        artist: ethers.utils.getAddress(evmWalletData.address),
+        owner: ethers.utils.getAddress(evmWalletData.address),
+      }).then(({ data: { artist, owner } }) => {
+        const savedNft = artist?.savedNft;
+        console.log(savedNft, "Dsa");
+        const queryData = savedNft.map((nft) => `${nft.address}-${nft.token}`);
+        console.log(queryData, "dasdsdsa");
+        getManyNFTs(queryData).then((res) => {
+          console.log(res, "daswerwr");
+          setSavedNFTs(res);
+        });
+      });
+    }
+  }, [evmWalletData]);
 
   useEffect(() => {
     fetchEVMNft();
@@ -94,7 +119,7 @@ export default function UserProfile(props) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("something went wrong!");
         setLoading(false);
       });
@@ -120,8 +145,6 @@ export default function UserProfile(props) {
         setLoading(false);
       });
   };
-
-  useEffect(() => console.log(artist), [artist]);
 
   const profileInfo = () => {
     return (
@@ -268,7 +291,7 @@ export default function UserProfile(props) {
       // setTotalEVMNfts(nfts.length);
       setLoading(false);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       // alert("something went wrong!");
       setLoading(false);
     }
@@ -309,7 +332,7 @@ export default function UserProfile(props) {
           number = nft.saleprice.toString();
           id = nft.tokenId.toString();
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         }
         const url = `/polygon/nftdetails/${id}`;
         return (
@@ -666,9 +689,9 @@ export default function UserProfile(props) {
               )}
               {activeTab === "saved" && (
                 <>
-                  {savedNfts.length > 0 ? (
+                  {savedNFTs.length > 0 ? (
                     <Row>
-                      {savedNfts.map((nft) => (
+                      {savedNFTs.map((nft) => (
                         <Col
                           key={uuid()}
                           style={{ marginBottom: 25 }}
@@ -692,7 +715,7 @@ export default function UserProfile(props) {
                             }
                             title={nft.title}
                             nearFee={0}
-                            artistName={nft.artistName}
+                            artistName={nft.artistName.substring(0, 8) + "..."}
                             artistImage={nft.artistImg}
                           />
                         </Col>

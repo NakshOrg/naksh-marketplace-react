@@ -65,7 +65,7 @@ export default function CreateCollection(props) {
       const wallets = royalties.map((royalty) => royalty.wallet);
       const percentages = royalties.map((royalty) => royalty.percentage);
       if (!isGradient) {
-        console.log(royalties);
+        // console.log(royalties);
         // return
 
         const coverUri = await uploadMedia(cover);
@@ -126,7 +126,7 @@ export default function CreateCollection(props) {
         }
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -176,18 +176,18 @@ export default function CreateCollection(props) {
 
     for (let i = 0; i < shallowV.length; i++) {
       if (i === idx) {
-        console.log(shallowV[i], i, shallowV.length);
+        // console.log(shallowV[i], i, shallowV.length);
       } else {
         anotherCopy.push(shallowV[i]);
       }
     }
-    console.log(anotherCopy, anotherCopy.length);
+    // console.log(anotherCopy, anotherCopy.length);
     setRoyalties(anotherCopy);
     setRoyalty(royalty - 1);
   };
 
   useEffect(() => {
-    console.log(royalties);
+    // console.log(royalties);
 
     let perc = 0;
 
@@ -201,7 +201,7 @@ export default function CreateCollection(props) {
   useEffect(() => {
     if (cover) {
       const url = URL.createObjectURL(cover);
-      console.log(url);
+      // console.log(url);
       setCoverPreview(url);
     }
   }, [cover]);

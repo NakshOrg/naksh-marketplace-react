@@ -21,7 +21,6 @@ import CreateCollection from "../pages/nft/CreateCollection"
 
 export default function Navigation() {
     return (
-        <BrowserRouter>
             <Switch>
                 <Route path="/" component={Home} exact/>
                 <Route path="/browse" component={Browse}/>
@@ -50,7 +49,6 @@ export default function Navigation() {
                 <Route path="/404" component={NotFound}/>
                 <Redirect from='*' to='/404' exact/>
             </Switch>
-        </BrowserRouter>
     )
 }
 

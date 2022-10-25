@@ -56,6 +56,18 @@ export default function CreateCollection(props) {
   };
 
   const createCollectionWrapper = async () => {
+    let errorList = [];
+
+    if (!name) errorList.push("Name");
+    if (!symbol) errorList.push("Symbol");
+    if (!selectedGradient && !cover) errorList.push("Gradient or Cover Image");
+    if (!twitter) errorList.push("Twitter");
+
+    if (errorList.length > 0) {
+      toast.error(`${errorList.join(", ")} cannot be null`);
+      return;
+    }
+
     const toastId = toast.loading("Creating Collection");
 
     const logoUri = await uploadMedia(logo);
@@ -185,6 +197,12 @@ export default function CreateCollection(props) {
     setRoyalties(anotherCopy);
     setRoyalty(royalty - 1);
   };
+
+  useEffect(() => {
+    if (evmWalletData) {
+      changeRoyalties(0, { wallet: evmWalletData.address, percentage: "5" });
+    }
+  }, [evmWalletData]);
 
   useEffect(() => {
     // console.log(royalties);
@@ -368,7 +386,7 @@ export default function CreateCollection(props) {
             placeholder="Tell us something about the collection!"
             rows={8}
           ></textarea>
-          <p>0/300</p>
+          <p>{description.length}/300</p>
         </div>
       </div>
       <div
@@ -442,7 +460,7 @@ export default function CreateCollection(props) {
             onChange={(e) => setInstagram(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Instagram*"
+            placeholder="Instagram"
           />
           <input
             value={twitter}
@@ -459,14 +477,14 @@ export default function CreateCollection(props) {
             onChange={(e) => setFacebook(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Facebook*"
+            placeholder="Facebook"
           />
           <input
             value={website}
             onChange={(e) => setWebsite(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Website*"
+            placeholder="Website"
           />
         </div>
       </div>

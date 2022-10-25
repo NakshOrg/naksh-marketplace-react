@@ -69,48 +69,43 @@ const ConnectWallet = ({ isOpen, setIsOpen }) => {
   }, [evmWalletData]);
 
   return (
-    <div className="absolute walletCard">
-      <h1
-        className="font-bold text-5xl"
-        style={{
-          fontFamily: "Athelas-Bold",
-        }}
-      >
-        Connect Wallet
-      </h1>
-      <p
-        className="text-xl"
-        style={{
-          fontFamily: "Athelas-Regular",
-        }}
-      >
-        Connect to one of our wallets to create a Naksh account and save this
-        NFT!
-      </p>
-      <div className="walletCardFlex space-y-5 md:space-y-0">
-        <WalletCard
-          src={near}
-          onClick={() => connectNear()}
-          key={"Near"}
-          classNames="p-0 m-0"
-        />
-        <WalletCard
-          src={polygon}
-          onClick={() => openConnectModal()}
-          key={"Polygon"}
-          classNames="p-0 m-0"
-        />
-      </div>
+    <div className="absolute walletCard p-10">
       <div
         onClick={() => setIsOpen(false)}
+        className="flex justify-end w-full md:absolute"
         style={{
-          position: "absolute",
           right: "55px",
           top: "45px",
           cursor: "pointer",
         }}
       >
         <FiX className="text-4xl" />
+      </div>
+      <h1
+        className="font-bold text-6xl m-4 mb-3"
+        style={{
+          fontFamily: "Athelas-Bold",
+        }}
+      >
+        Connect Wallet
+      </h1>
+      <p className="text-2xl w-2/3 text-center mb-5 font-inter">
+        Connect to one of our wallets to create a Naksh account and save this
+        NFT!
+      </p>
+      <div className="walletCardFlex mb-5 md:mb-0 space-y-5 md:space-y-0">
+        <WalletCard
+          src={near}
+          onClick={() => connectNear()}
+          key={"Near"}
+          classNames="p-0 m-0 cursor-pointer"
+        />
+        <WalletCard
+          src={polygon}
+          onClick={() => openConnectModal()}
+          key={"Polygon"}
+          classNames="p-0 m-0 cursor-pointer"
+        />
       </div>
     </div>
   );

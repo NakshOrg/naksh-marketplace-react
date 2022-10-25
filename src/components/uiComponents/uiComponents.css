@@ -771,8 +771,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  height: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -823,4 +821,11 @@
     padding: 5px;
     background: #fff;
   }
+}
+
+.gradient {
+  background: linear-gradient(to right top, rgba(30, 58, 138, 0.3), rgba(190, 24, 93, 0.3), rgba(30, 58, 138, 0.3));
+  border-image: linear-gradient(to right top, rgb(30, 58, 138), rgb(30, 58, 138), rgb(190, 24, 93)) 30;
+  border-width: 4px;
+  border-style: solid;
 }

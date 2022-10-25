@@ -11,6 +11,7 @@ import { BsFillBookmarkFill } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import uuid from "react-uuid";
+import polygon from "../../../assets/svgs/white-polygon-logo.svg"
 import { ethers } from "ethers";
 
 import NftCard from "../../../components/explore/NftCard";
@@ -33,6 +34,7 @@ import { useTrendingNFTs } from "../../../hooks/useTrendingNFTs";
 import { useFiat } from "../../../hooks/useFiat";
 import axios from "axios";
 import { useSavedNFTs } from "../../../hooks/useSavedNFTs";
+import useCollection from "../../../hooks/useCollection";
 
 export default function PolygonNftDetails(props) {
   const { getNFT, getNFTsOnSale, buyNFT, endAuction } = useNFTs();
@@ -64,6 +66,7 @@ export default function PolygonNftDetails(props) {
 
   const params = useParams();
   const history = useHistory();
+  const { getCollection } = useCollection()
 
   useEffect(() => updateTrendingNFT(params.address, params.id), []);
 
@@ -80,6 +83,7 @@ export default function PolygonNftDetails(props) {
   const [artist, setArtist] = useState();
   const [savedNft, setSavedNft] = useState(false);
   const [user, setUser] = useState();
+  const [collection, setCollection] = useState()
 
   const [auctionData, setAuctionData] = useState({});
   const [bids, setBids] = useState([]);
@@ -236,13 +240,15 @@ export default function PolygonNftDetails(props) {
           item.nft.nftAddress.toLowerCase() === params.address.toLowerCase()
       );
       setPrice(foundNft ? Number(foundNft.salePrice) : 0);
-      //   console.log(foundNft, "dsadsads");
       setSaleData(foundNft);
+
+      getCollection(nft.nftAddress)
+        .then(collection => {
+          setCollection(collection)
+        })
 
       setNft(nft);
       setMoreNfts(moreNfts);
-      // setAllNfts(nfts);
-      // setTotalNfts(nfts.length);
       setLoading(false);
     } catch (e) {
       //   console.log(e);
@@ -312,18 +318,34 @@ export default function PolygonNftDetails(props) {
             marginTop: 7,
           }}
         />
-        <div style={{ marginTop: 13 }}>
-          <div style={{ fontSize: 14, opacity: 0.66 }}>Quantity</div>
-          <div
-            style={{
-              fontFamily: 200,
-              fontSize: 16,
-              opacity: 0.95,
-              marginTop: 5,
-              letterSpacing: "0.5px",
-            }}
-          >
-            1 available
+        <div style={{ marginTop: 14, ...globalStyles.flexRow }}>
+          <div>
+            <div style={{ fontSize: 14, opacity: 0.66 }}>Quantity</div>
+            <div
+              style={{
+                fontFamily: 200,
+                fontSize: 16,
+                opacity: 0.95,
+                marginTop: 5,
+                letterSpacing: "0.5px",
+              }}
+            >
+              1 available
+            </div>
+          </div>
+          <div style={{ marginLeft: 30 }}>
+            <div style={{ fontSize: 14, opacity: 0.66 }}>Collection</div>
+            <div
+              style={{
+                fontFamily: 200,
+                fontSize: 16,
+                opacity: 0.95,
+                marginTop: 5,
+                letterSpacing: "0.5px",
+              }}
+            >
+              {collection?.name}
+            </div>
           </div>
         </div>
         {/* <div style={{marginTop:18, fontWeight:400}}>
@@ -584,14 +606,29 @@ export default function PolygonNftDetails(props) {
             <div style={globalStyles.flexRowSpace}>
               <div
                 style={{
-                  fontFamily: "Athelas-Bold",
-                  fontSize: 36,
-                  textTransform: "capitalize",
-                  lineHeight: "40px",
                   marginRight: 10,
                 }}
+                className="space-y-2"
               >
-                {nft?.title}
+                <h1
+                  style={{
+                    fontFamily: "Athelas-Bold",
+                    fontSize: 36,
+                    textTransform: "capitalize",
+                    lineHeight: "40px",
+                  }}
+                >
+                  {nft?.title}
+                </h1>
+                {saleData && saleData.salePrice && 
+                  <div className="font-inter flex items-center">
+                    <span className="text-gray-400">Price:</span>{" "}
+                    <span className="ml-2 font-bold">
+                      {ethers.utils.formatEther(saleData?.salePrice)}
+                    </span>
+                    <img src={polygon} className="ml-2 w-5 h-5" />
+                  </div>
+                }
               </div>
               <div style={{ display: "flex" }}>
                 <span
@@ -723,7 +760,7 @@ export default function PolygonNftDetails(props) {
                       opacity: purchasable ? 1 : 0.6,
                     }}
                     onClick={() => endAuction(params.address, params.id)}
-                    content={<div>End Auction</div>}
+                    content={<div>END AUCTION</div>}
                   />
                 </div>
               )}
@@ -739,7 +776,7 @@ export default function PolygonNftDetails(props) {
                       opacity: purchasable ? 1 : 0.6,
                     }}
                     onClick={() => endAuction(params.address, params.id)}
-                    content={<div>End Auction</div>}
+                    content={<div>END AUCTION</div>}
                   />
                 </div>
               )}
@@ -758,7 +795,7 @@ export default function PolygonNftDetails(props) {
                       opacity: purchasable ? 1 : 0.6,
                     }}
                     onClick={() => endAuction()}
-                    content={<div>Claim NFT</div>}
+                    content={<div>CLAIM NFT</div>}
                   />
                 </div>
               )}
@@ -817,12 +854,11 @@ export default function PolygonNftDetails(props) {
                       cursor: purchasable ? "pointer" : "no-drop",
                       opacity: purchasable ? 1 : 0.6,
                     }}
-                    content={<div>Highest Bidder</div>}
+                    content={<div>HIGHEST BIDDER</div>}
                   />
                 </div>
               )}
-            {((saleData && !saleData.isOnSale) ||
-              (!purchasable.owner && purchasable.auctionEnded)) && (
+            {saleData && !saleData.isOnSale && (
               <div>
                 <GradientBtn
                   style={{
@@ -830,7 +866,19 @@ export default function PolygonNftDetails(props) {
                     cursor: purchasable ? "pointer" : "no-drop",
                     opacity: purchasable ? 1 : 0.6,
                   }}
-                  content={<div>Unavailable</div>}
+                  content={<div>UNAVAILABLE</div>}
+                />
+              </div>
+            )}
+            {!purchasable.owner && purchasable.auctionEnded && (
+              <div>
+                <GradientBtn
+                  style={{
+                    marginTop: 30,
+                    cursor: purchasable ? "pointer" : "no-drop",
+                    opacity: purchasable ? 1 : 0.6,
+                  }}
+                  content={<div>AUCTION ENDED</div>}
                 />
               </div>
             )}
@@ -842,7 +890,7 @@ export default function PolygonNftDetails(props) {
                 evmWalletData.addrses.toLowerCase() && (
                 <div className={classes.ownedBtn}>
                   <img style={{ height: 30 }} src={party} alt="party" />
-                  &nbsp;&nbsp; Auction Ended!
+                  &nbsp;&nbsp; AUCTION ENDED!
                 </div>
               )}
             {purchasable.owner && purchasable.auctionEnded && price <= 0 && (
@@ -853,7 +901,7 @@ export default function PolygonNftDetails(props) {
                   opacity: purchasable ? 1 : 0.6,
                 }}
                 onClick={() => setIsSaleModalOpen(true)}
-                content={<div>Want to list this NFT?</div>}
+                content={<div>WANT TO LIST THIS NFT?</div>}
               />
             )}
             <div>
@@ -864,7 +912,7 @@ export default function PolygonNftDetails(props) {
                   opacity: purchasable ? 1 : 0.6,
                 }}
                 onClick={() => buyMatic()}
-                content={<div>Purchase with fiat</div>}
+                content={<div>PURCHASE WITH FIAT</div>}
               />
             </div>
           </Col>

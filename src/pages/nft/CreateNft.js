@@ -19,7 +19,7 @@ const NAKSH_NFT_ADDRESS = "0x6327A7f5285BA2B58736b759b684786A17C05A30";
 export default function CreateNft(props) {
   const { evmWalletData, evmProvider } = useAppContext();
   const { mintNft, uploadMedia, listNFT } = useNFTs();
-  const { getUserCollections } = useCollection();
+  const { getUserCollections, getRoyalties } = useCollection();
 
   const [royalty, setRoyalty] = useState(1);
   const [quantity, setQuantity] = useState(1);
@@ -50,10 +50,21 @@ export default function CreateNft(props) {
   const history = useHistory();
 
   useEffect(() => {
-    // console.log(userCollections)
     if (!collection && userCollections.length > 0)
       setCollection(userCollections[0].nftAddress);
   }, [userCollections]);
+
+  useEffect(() => {
+    if (collection) {
+      console.log(collection);
+      if (ethers.utils.isAddress(collection)) {
+        getRoyalties(collection).then((res) => {
+          console.log(Number(res._creatorRoyalty) / 100);
+          setRoyaltyPerc(Number(res._creatorRoyalty) / 100);
+        });
+      }
+    }
+  }, [collection]);
 
   const changeRoyalties = (index, wallet = "", percentange = "") => {
     setRoyalties((v) => {
@@ -93,6 +104,18 @@ export default function CreateNft(props) {
   };
 
   const mint = async () => {
+    let errorList = [];
+
+    if (!name) errorList.push("Name");
+    if (!description) errorList.push("Description");
+    if (!collection) errorList.push("Collection");
+    if (!image) errorList.push("Image");
+
+    if (errorList.length > 0) {
+      toast.error(`${errorList.join(", ")} cannot be null`);
+      return;
+    }
+
     const toastId = toast.loading("Uploading NFT");
     try {
       if (image) {
@@ -306,7 +329,7 @@ export default function CreateNft(props) {
               placeholder="Description*"
               rows={8}
             ></textarea>
-            <p>0/300</p>
+            <p>{description.length}/300</p>
           </div>
           <div className="w-full space-x-4 flex justify-around items-start">
             <div className="w-full flex flex-col justify-center items-center space-y-4">
@@ -318,9 +341,9 @@ export default function CreateNft(props) {
                 type="string"
                 placeholder="Artform"
               />
-              <div className="w-full flex space-x-3 bg-brand-gray rounded-xl py-3 px-2">
-                {tags &&
-                  tags.map((tag, idx) => (
+              {tags && tags.length > 0 && (
+                <div className="w-full flex space-x-3 bg-brand-gray rounded-xl py-3 px-2">
+                  {tags.map((tag, idx) => (
                     <div className="flex justify-center items-center space-x-1 p-2 bg-[#20263B] text-white rounded-xl">
                       <p className="text-xl">{tag}</p>
                       <FiX
@@ -329,7 +352,8 @@ export default function CreateNft(props) {
                       />
                     </div>
                   ))}
-              </div>
+                </div>
+              )}
             </div>
             <select
               value={collection}
@@ -339,11 +363,11 @@ export default function CreateNft(props) {
               id="collection"
               placeholder="Collection"
             >
-              <option value={NAKSH_NFT_ADDRESS}>Naksh...</option>
+              <option value={NAKSH_NFT_ADDRESS}>Generic</option>
               {userCollections.length > 0 &&
                 userCollections.map((collection) => (
                   <option value={collection.nftAddress}>
-                    {collection.name.substring(0, 32)}...
+                    {collection.name.length > 32 ? collection.name.substring(0, 32) + "..." : collection.name}
                   </option>
                 ))}
               <option
@@ -363,54 +387,9 @@ export default function CreateNft(props) {
       <div
         className={
           (listModal ? "filter blur-2xl " : "") +
-          " w-full  h-full space-y-4 flex flex-col justify-center items-start"
+          "w-full flex flex-col justify-start items-start"
         }
       >
-        <div className="w-full h-full flex justify-around items-center">
-          <div className="w-1/2 h-full flex flex-col justify-center items-start">
-            <h1 className="text-lg font-bold">FOREVER ROYALTIES</h1>
-            <p className="text-gray-500">
-              Forever Royalties are perpetual. You can add royalties up to 20%
-              across 6 accounts
-            </p>
-          </div>
-          <div className="w-1/2 h-full flex flex-col justify-center items-end">
-            <HiPlusCircle
-              onClick={() => incrementRoyalty()}
-              className="text-5xl"
-            />
-          </div>
-        </div>
-        <div className="w-full h-full space-y-2 flex flex-col justify-center items-start">
-          {Array(royalty)
-            .fill(1)
-            .map((i, idx) => (
-              <div
-                key={idx}
-                className="w-full h-full space-x-3 flex justify-around items-center"
-              >
-                <div className="w-2/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
-                  <input
-                    onChange={(e) => changeRoyalties(idx, e.target.value)}
-                    type="text"
-                    className="w-full p-0 text-white bg-brand-gray"
-                    placeholder="Wallet Address*"
-                  />
-                </div>
-                <div className="w-1/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
-                  <input
-                    onChange={(e) => changeRoyalties(idx, "", e.target.value)}
-                    type="text"
-                    className="w-full p-0 text-white bg-brand-gray"
-                    placeholder="Percentage*"
-                  />
-                  <p className="text-md p-0">%</p>
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-      <div className="w-full flex flex-col justify-start items-start">
         <h1 className="text-lg font-bold">PRICING TYPE</h1>
         <div className="w-full flex justify-start space-x-4 items-center">
           <div
@@ -486,12 +465,10 @@ export default function CreateNft(props) {
             <div className="w-full h-full flex justify-between items-center">
               <div className="w-1/2 flex flex-col justify-center items-start space-y-2">
                 <h2>
-                  Royalties:{" "}
-                  <span className="font-bold">{royaltyPerc * 100}%</span>
+                  Royalties: <span className="font-bold">{royaltyPerc}%</span>
                 </h2>
                 <h2>
-                  Platform Fee:{" "}
-                  <span className="font-bold">{royaltyPerc * 100}5%</span>
+                  Platform Fee: <span className="font-bold">5%</span>
                 </h2>
               </div>
               <div className="w-1/2 flex flex-col justify-start items-end space-y-2">
@@ -500,7 +477,7 @@ export default function CreateNft(props) {
                   <span className="font-bold">
                     {Number(price) -
                       Number(price) * 0.2 -
-                      Number(price) * royaltyPerc}{" "}
+                      Number(price) * (royaltyPerc / 100)}{" "}
                     MATIC
                   </span>
                 </h2>

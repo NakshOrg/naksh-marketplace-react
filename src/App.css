@@ -10,7 +10,11 @@
 @font-face {
     font-family: 'Athelas-Regular';
     src: local('Athelas-Regular'), url(./assets/fonts/Athelas-Regular.ttf) format('opentype');
-} 
+}
+
+.font-inter {
+    font-family: 'Inter';
+}
 
 * {
     box-sizing: border-box;

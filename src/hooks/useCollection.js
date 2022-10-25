@@ -14,6 +14,25 @@ import {
 const useCollection = () => {
   const { NAKSH_FACTORY_ADDRESS, evmWalletData, evmProvider } = useAppContext();
 
+  const getRoyalties = async (address) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const contract = new ethers.Contract(
+          address,
+          nftAbi,
+          await ethers.getDefaultProvider(
+            "https://polygon-mumbai.g.alchemy.com/v2/Tv9MYE2mD4zn3ziBLd6S94HvLLjTocju"
+          )
+        );
+        const data = await contract.getRoyalties();
+
+        resolve(data);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
   const getCollection = (address) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -256,6 +275,7 @@ const useCollection = () => {
     getCollectionNFTs,
     getUserCollections,
     getUserCollectionsAndAssets,
+    getRoyalties,
   };
 };
 

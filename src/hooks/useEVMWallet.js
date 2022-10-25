@@ -29,28 +29,6 @@ export const useEVMWallet = () => {
     })();
   }, [signer]);
 
-  useEffect(() => {
-    (async () => {
-      if (signer) {
-        try {
-          const address = await signer.getAddress();
-          const res = await _postArtist({
-            name: address,
-            wallet: address,
-            coverStatus: 0,
-            coverGradient:
-              "linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)",
-            image:
-              "https://bafkreib5pxtx3sxcksxpthu4u2kl7vpvaduirbnt6ax6v6hp5l3enod4hy.ipfs.nftstorage.link/",
-            createdBy: 1,
-          });
-
-          // console.log(res);
-        } catch (e) {}
-      }
-    })();
-  }, [signer]);
-
   const establishHarmonyConnection = async () => {
     if (typeof window !== "undefined") {
       try {

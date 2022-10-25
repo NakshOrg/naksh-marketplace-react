@@ -167,12 +167,12 @@ const CollectionDetails = () => {
                       style={{ width: "187px" }}
                     />
                   </div>
-                  <div className="w-1/2 flex justify-end items-center space-x-4">
+                  {/* <div className="w-1/2 flex justify-end items-center space-x-4">
                     <OutlineBtn
                       text="EDIT COLLECTION"
                       style={{ width: "187px", color: "#fff" }}
                     />
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>

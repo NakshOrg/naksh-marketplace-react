@@ -19,13 +19,15 @@ import configs from '../../configs';
 import * as actionTypes from '../../redux/actions/actionTypes';
 import './uiComponents.css';
 import { Dropdown } from 'react-bootstrap';
-import { _getAllArtists } from '../../services/axios/api';
+import { _getAllArtists, _getNftArtists, _postArtist } from '../../services/axios/api';
 import globalStyles from '../../globalStyles';
 import { helpers } from '../../constants';
 import ConnectWallet from './ConnectWallet';
 import { useAppContext } from '../../context/wallet';
 import { useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import UpdateProfileModal from './UpdateProfileModal';
+import { ethers } from 'ethers';
 
 function Header() {
     
@@ -42,8 +44,9 @@ function Header() {
     const [keyword, setkeyword] = useState("");
     const [showHeaderContents, setShowHeaderContents] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [updateProfileModal, setUpdateProfileModal] = useState(false)
 
-    const { isEVMWalletSignedIn, setIsEVMWalletSignedIn, setEVMWalletData } = useAppContext()
+    const { evmWalletData, isEVMWalletSignedIn, setIsEVMWalletSignedIn, setEVMWalletData } = useAppContext()
     const { disconnect } = useDisconnect()
     const { openConnectModal } = useConnectModal()
 
@@ -82,6 +85,42 @@ function Header() {
         }
 
     }, [keyword]);
+
+    useEffect(() => {
+        if(evmWalletData) {
+            _getNftArtists({
+              artist: ethers.utils.getAddress(evmWalletData.address),
+              owner: ethers.utils.getAddress(evmWalletData.address),
+            }).then(({ data: { artist, owner } }) => {
+              console.log(artist, "dsa")
+                if(!artist) {
+                _postArtist({
+                  name: evmWalletData.address,
+                  wallet: evmWalletData.address,
+                  coverStatus: 0,
+                  coverGradient:
+                    "linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)",
+                  image:
+                    "https://bafkreib5pxtx3sxcksxpthu4u2kl7vpvaduirbnt6ax6v6hp5l3enod4hy.ipfs.nftstorage.link/",
+                  createdBy: 1,
+                });
+              }
+              console.log(
+                !artist.name ||
+                  (artist &&
+                    artist.name.toLowerCase() ===
+                      evmWalletData.address.toLowerCase()),
+                      "Dsadsa"
+              );
+              if(!artist.name || (artist && artist.name.toLowerCase() === evmWalletData.address.toLowerCase())) {
+                setUpdateProfileModal(true)
+              }
+            });
+
+        }
+    }, [evmWalletData])
+
+    useEffect(() => {console.log(updateProfileModal);}, [updateProfileModal]);
 
     function resetSearch() {
         setkeyword("");
@@ -204,11 +243,11 @@ function Header() {
                 </Dropdown>
                 :
                         <div
-                            className="px-3 py-2 border border-white rounded-xl"
-                            style={{ cursor: "pointer", position:"absolute", right:"7%" }}
+                            className="px-4 py-3 border border-white rounded-md text-inter font-semibold"
+                            style={{ cursor: "pointer", position:"absolute", right:"7%", fontSize: '12px' }}
                             onClick={() => setIsModalOpen(true)}
                         >
-                            Connect Wallet
+                            CONNECT WALLET
                         </div>
                 }
             </div>          
@@ -346,6 +385,9 @@ function Header() {
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
             />
+        )}
+        {updateProfileModal && (
+            <UpdateProfileModal setIsOpen={setUpdateProfileModal} />
         )}
         </>
     )

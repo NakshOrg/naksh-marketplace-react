@@ -585,7 +585,7 @@ export default function UserProfile(props) {
                                 : nft.tokenUri
                             }
                             title={nft.title}
-                            nearFee={0}
+                            nearFee={"0"}
                             artistName={nft.artistName}
                             artistImage={nft.artistImg}
                           />
@@ -616,7 +616,7 @@ export default function UserProfile(props) {
                             }
                             image={collection.logo}
                             title={collection.name}
-                            nearFee={0}
+                            nearFee={"0"}
                             artistName={collection.creator.substring(0, 8)}
                             artistImage={""}
                           />
@@ -665,7 +665,7 @@ export default function UserProfile(props) {
                                 : nft.tokenUri
                             }
                             title={nft.title}
-                            nearFee={0}
+                            nearFee={"0"}
                             artistName={nft.artistName}
                             artistImage={nft.artistImg}
                           />
@@ -714,7 +714,7 @@ export default function UserProfile(props) {
                                 : nft.tokenUri
                             }
                             title={nft.title}
-                            nearFee={0}
+                            nearFee={"0"}
                             artistName={nft.artistName.substring(0, 8) + "..."}
                             artistImage={nft.artistImg}
                           />

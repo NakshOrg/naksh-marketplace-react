@@ -105,13 +105,6 @@ function Header() {
                   createdBy: 1,
                 });
               }
-              console.log(
-                !artist.name ||
-                  (artist &&
-                    artist.name.toLowerCase() ===
-                      evmWalletData.address.toLowerCase()),
-                      "Dsadsa"
-              );
               if(!artist.name || (artist && artist.name.toLowerCase() === evmWalletData.address.toLowerCase())) {
                 setUpdateProfileModal(true)
               }

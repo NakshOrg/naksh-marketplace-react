@@ -150,11 +150,11 @@ export default function PolygonNftDetails(props) {
   // }, [nft]);
 
   useEffect(() => {
-    if (evmWalletData && nft && nft.creator) {
+    if (evmWalletData && nft && nft.owner) {
       if (saleData) {
         setPurchasable({
           owner:
-            nft.creator.toLowerCase() === evmWalletData.address.toLowerCase(),
+            nft.owner.toLowerCase() === evmWalletData.address.toLowerCase(),
           auctionEnded:
             saleData.saleType == "0"
               ? Number(saleData.salePrice) <= 0
@@ -163,7 +163,7 @@ export default function PolygonNftDetails(props) {
       } else {
         setPurchasable({
           owner:
-            nft.creator.toLowerCase() === evmWalletData.address.toLowerCase(),
+            nft.owner.toLowerCase() === evmWalletData.address.toLowerCase(),
           auctionEnded: true,
         });
       }
@@ -390,10 +390,12 @@ export default function PolygonNftDetails(props) {
                   borderRadius: 30,
                   objectFit: "cover",
                 }}
-                src={artist?.image ?? profileSvg}
+                src={nft?.artistImg ?? profileSvg}
                 alt="artist"
               />
-              <div style={{ fontSize: 16, marginLeft: 10 }}>{artist?.name}</div>
+              <div style={{ fontSize: 16, marginLeft: 10 }}>
+                {nft?.artistName}
+              </div>
             </div>
           </div>
           <div style={{ marginLeft: 30 }}>
@@ -870,6 +872,7 @@ export default function PolygonNftDetails(props) {
                 />
               </div>
             )}
+            {console.log(purchasable, nft, "dsa")}
             {!purchasable.owner && purchasable.auctionEnded && (
               <div>
                 <GradientBtn

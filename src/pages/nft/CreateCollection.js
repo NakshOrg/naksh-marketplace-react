@@ -12,6 +12,8 @@ import { useHistory } from "react-router-dom";
 import { HiTrash } from "react-icons/hi";
 import { staticValues } from "../../constants";
 import classes from "../profile/profile.module.css";
+import { _getAllArtists } from "../../services/axios/api";
+import helpers from "../../constants/helpers"
 
 export default function CreateCollection(props) {
   const { evmWalletData, evmProvider } = useAppContext();
@@ -37,7 +39,7 @@ export default function CreateCollection(props) {
   const [website, setWebsite] = useState("");
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
-
+  const [artist, setArtist] = useState();
   const [royalty, setRoyalty] = useState(1);
   const [royaltyPerc, setRoyaltyPerc] = useState(0);
   const [royalties, setRoyalties] = useState([{ wallet: "", percentage: "" }]);
@@ -63,24 +65,41 @@ export default function CreateCollection(props) {
     if (!selectedGradient && !cover) errorList.push("Gradient or Cover Image");
     if (!twitter) errorList.push("Twitter");
 
+    let validateList = []
+    if (!helpers.validateLink(twitter)) validateList.push("Twitter");
+    if (instagram && !helpers.validateLink(instagram)
+     ) validateList.push("Instagram");
+    if (facebook && !helpers.validateLink(facebook))
+      validateList.push("Facebook");
+    if (website && !helpers.validateLink(website)) validateList.push("Website");
+
+    if(validateList.length > 0) {
+      toast.error(`${validateList.join(", ")} urls are not valid`)
+    }
+
     if (errorList.length > 0) {
       toast.error(`${errorList.join(", ")} cannot be null`);
       return;
     }
-
-    const toastId = toast.loading("Creating Collection");
+    
+    const toastId = toast.loading("Uploading Images")
 
     const logoUri = await uploadMedia(logo);
 
     try {
       let hash = "";
       const wallets = royalties.map((royalty) => royalty.wallet);
-      const percentages = royalties.map((royalty) => royalty.percentage);
+      const percentages = royalties.map((royalty) => (royalty.percentage * 100));
       if (!isGradient) {
         // console.log(royalties);
         // return
 
         const coverUri = await uploadMedia(cover);
+
+        toast.success("Uploaded Images", {
+          id: toastId,
+        });
+
         const tx = await createCollection(
           name,
           symbol,
@@ -91,11 +110,17 @@ export default function CreateCollection(props) {
           `https://${logoUri}.ipfs.nftstorage.link/`,
           evmWalletData.address,
           percentages,
-          wallets
+          wallets,
+          artist ? artist.name : evmWalletData.address,
+          artist ? artist.image : ""
         );
         hash = tx.hash;
         await tx.wait();
       } else {
+        toast.success("Uploaded Images", {
+          id: toastId
+        })
+
         const tx = await createCollection(
           name,
           symbol,
@@ -106,7 +131,9 @@ export default function CreateCollection(props) {
           `https://${logoUri}.ipfs.nftstorage.link/`,
           evmWalletData.address,
           percentages,
-          wallets
+          wallets,
+          artist ? artist.name : evmWalletData.address,
+          artist ? artist.image : ""
         );
         hash = tx.hash;
         await tx.wait();
@@ -118,27 +145,24 @@ export default function CreateCollection(props) {
         const log = receipt.logs[i];
         if (
           log.topics.includes(
-            "0x6974864ab24c795f57c207a650ae6763287c14a1c55fedc8506acb02796eb1a5"
+            "0xc037fdcc0d960e3e1de3cebdc08307c7d7c615a7a1def85c21e6e29c08f1f5f3"
           )
         ) {
           const decoder = ethers.utils.defaultAbiCoder;
           const decodedData = decoder.decode(
-            ["address", "string", "string", "address"],
+            ["address", "string", "string", "string", "string", "address"],
             log.data
           );
 
-          toast.success(
-            `Successfully created collection at ${decodedData[3]}`,
-            {
-              id: toastId,
-            }
-          );
-          history.push(`/collection/${decodedData[3]}`);
+          history.push(`/collection/${decodedData[5]}`);
           return;
         }
       }
     } catch (e) {
-      // console.log(e);
+      console.log(e);
+      toast.error("Operation was unsuccessful", {
+        id: toastId
+      })
     }
   };
 
@@ -197,6 +221,18 @@ export default function CreateCollection(props) {
     setRoyalties(anotherCopy);
     setRoyalty(royalty - 1);
   };
+
+  useEffect(() => {
+    if (evmWalletData) {
+      _getAllArtists({
+        wallet: evmWalletData.address,
+        sortBy: "createdAt",
+        sort: -1,
+      }).then(({ data: { artists } }) => {
+        if (artists.length > 0) setArtist(artists[0]);
+      });
+    }
+  }, [evmWalletData]);
 
   useEffect(() => {
     if (evmWalletData) {

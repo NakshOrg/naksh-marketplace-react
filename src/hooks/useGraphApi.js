@@ -10,10 +10,16 @@ query B($id: [String!]!) {
       artistImg
       artistName
       creator
+      owner
       minter
+      saleData {
+        id
+        isOnSale
+        salePrice
+      }
     }
 }
-`
+`;
 
 export const GET_SINGLE_NFT = `
 query GetSingleNft($tokenId: String!, $nftAddress: String!) {
@@ -27,11 +33,16 @@ query GetSingleNft($tokenId: String!, $nftAddress: String!) {
       artistImg
       artistName
       creator
+      owner
       minter
+      saleData {
+        id
+        isOnSale
+        salePrice
+      }
     }
 }
-`
-
+`;
 
 export const GET_COLLECTION_NFTS = `
 query GetSingleNft($nftAddress: String!) {
@@ -46,33 +57,83 @@ query GetSingleNft($nftAddress: String!) {
       artistName
       creator
       minter
+      saleData {
+        id
+        isOnSale
+        salePrice
+      }
     }
 }
-`
+`;
 
 export const GET_USER_COLLECTION = `
 query GetUserCollection($creator: String!) {
   collections(where:{creator:$creator}) {
     id
     name
+    description
     symbol
     nftAddress
     creator
+    royaltyPerc
+    logo
+    instagram
+    facebook
+    twitter
+    website
+    coverUri
+    isGradient
+    artistName
+    artistImg
   }
 }
-`
+`;
+
+export const GET_COLLECTION = `
+query GetUserCollection($address: String!) {
+  collection(id: $address) {
+    id
+    name
+    description
+    symbol
+    nftAddress
+    creator
+    royaltyPerc
+    logo
+    instagram
+    facebook
+    twitter
+    website
+    coverUri
+    isGradient
+    artistName
+    artistImg
+  }
+}
+`;
 
 export const GET_COLLECTIONS = `
 query GetUserCollection($skip: Int!) {
   collections(first: 5, skip: $skip) {
     id
     name
+    description
     symbol
     nftAddress
     creator
+    royaltyPerc
+    logo
+    instagram
+    facebook
+    twitter
+    website
+    coverUri
+    isGradient
+    artistName
+    artistImg
   }
 }
-`
+`;
 
 export const GET_NFT_ON_SALE = `
 query getNftonSale {
@@ -89,6 +150,7 @@ query getNftonSale {
       artistImg
       artistName
       creator
+      owner
       minter
     }
     auction {
@@ -113,6 +175,7 @@ query getNftonSale {
     tokenFirstSale
     salePrice
     saleType
+    timestamp
   }
 }
 `
@@ -139,9 +202,32 @@ export const AUCTIONED_NFTS = `
     }
   }
 }
-`
+`;
 
 export const MY_NFTS = `
+query A($address: String!) {
+  nftdatas(where:{owner: $address}) {
+    id
+    nftAddress
+    tokenId
+    tokenUri
+    title
+    description
+    artistImg
+    artistName
+    creator
+    owner
+    minter
+    saleData {
+      id
+      isOnSale
+      salePrice
+    }
+  }
+}
+`;
+
+export const MY_MINTED_NFTS = `
 query A($address: String!) {
   nftdatas(where:{creator: $address}) {
     id
@@ -153,10 +239,16 @@ query A($address: String!) {
     artistImg
     artistName
     creator
+    owner
     minter
+    saleData {
+      id
+      isOnSale
+      salePrice
+    }
   }
 }
-`
+`;
 
 export const SOLD_NFTS = `
 query B{
@@ -175,6 +267,7 @@ query B{
       artistImg
       artistName
       creator
+      owner
       minter
     }
     timestamp
@@ -199,6 +292,7 @@ query B($nftId: String!) {
       artistImg
       artistName
       creator
+      owner
       minter
     }
     timestamp
@@ -223,6 +317,7 @@ query B($address: String!) {
       artistImg
       artistName
       creator
+      owner
       minter
     }
     timestamp

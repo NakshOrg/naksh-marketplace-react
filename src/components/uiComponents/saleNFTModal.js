@@ -36,7 +36,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
 	};
 
 	return (
-    <div className="bg-[#12192B] space-y-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-11/12 rounded-xl p-2 flex flex-col justify-center items-center">
+    <div className="bg-[#12192B] space-y-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-1/2 lg:w-1/3 h-11/12 rounded-xl p-3 flex flex-col justify-center items-center">
       <h1
         className="text-5xl font-bold p-4"
         style={{
@@ -53,9 +53,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
           onClick={() => setSelectedValue(0)}
           className={
             "relative cursor-pointer w-1/3 h-full text-bold  rounded-xl flex flex-col justify-center items-center" +
-            (selectedValue === 0
-              ? " gradient"
-              : "")
+            (selectedValue === 0 ? " gradient" : "")
           }
         >
           <svg
@@ -70,7 +68,9 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
               clipRule="evenodd"
             />
           </svg>
-          <span className="text-xl">Fixed Price</span>
+          <span className="text-md md:text-lg lg:text-xl text-center">
+            Fixed Price
+          </span>
         </div>
         <div
           onClick={() => setSelectedValue(1)}
@@ -91,12 +91,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
               clipRule="evenodd"
             />
           </svg>
-          <span
-            className="text-md md:text-lg lg:text-xl"
-            style={{
-              fontFamily: "Athelas-Bold",
-            }}
-          >
+          <span className="text-md md:text-lg lg:text-xl px-2 text-center">
             Timed Auction
           </span>
         </div>
@@ -106,12 +101,26 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
           <label className="text-gray-600" htmlFor="">
             Enter minimum bid
           </label>
-          <div className="flex justify-around items-cneter">
+          <div className="flex justify-between items-center">
             <input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              step={1}
+              value={Number(value)}
+              onChange={(e) => {
+                let val = e.target.value;
+
+                if (isNaN(Number(val)) || val === "") val = "0";
+
+                setValue(val);
+              }}
               type="text"
-              className="w-full h-full bg-transparent"
+              className="text-xl"
+              style={{
+                width: "80%",
+                padding: "10px",
+                background: "transparent",
+                color: "#fff",
+              }}
+              contentEditable={true}
             />
             <img src={polygon} className="w-5 h-5" />
           </div>

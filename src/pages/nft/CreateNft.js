@@ -13,8 +13,9 @@ import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import { helpers } from "../../constants";
 import { FiX } from "react-icons/fi";
+import { _getAllArtists } from "../../services/axios/api";
 
-const NAKSH_NFT_ADDRESS = "0x6327A7f5285BA2B58736b759b684786A17C05A30";
+const NAKSH_NFT_ADDRESS = "0xA7F4AD36bD0eF14A21D8f50279323356f12c2e56";
 
 export default function CreateNft(props) {
   const { evmWalletData, evmProvider } = useAppContext();
@@ -33,6 +34,8 @@ export default function CreateNft(props) {
   const [image, setImage] = useState();
   const [preview, setPreview] = useState("");
   const [tags, setTags] = useState([]);
+
+  const [artist, setArtist] = useState()
 
   const [value, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState(1);
@@ -53,6 +56,19 @@ export default function CreateNft(props) {
     if (!collection && userCollections.length > 0)
       setCollection(userCollections[0].nftAddress);
   }, [userCollections]);
+
+  useEffect(() => {
+    if(evmWalletData) {
+      _getAllArtists({
+        wallet: evmWalletData.address,
+        sortBy: "createdAt",
+        sort: -1,
+      })
+        .then(({ data: { artists } }) => {
+          if(artists.length > 0) setArtist(artists[0])
+        })
+    }
+  }, [evmWalletData])
 
   useEffect(() => {
     if (collection) {
@@ -123,12 +139,14 @@ export default function CreateNft(props) {
         toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
           id: toastId,
         });
+        console.log(artist.image, "image")
         const nft = await mintNft(
           collection,
           `ipfs://${img}`,
           name,
           description,
-          evmWalletData.address
+          artist ? artist.name : evmWalletData.address,
+          artist ? artist.image : ""
         );
         toast.success("Successfully minted NFT", {
           id: toastId,
@@ -373,7 +391,7 @@ export default function CreateNft(props) {
               <option
                 onClick={() =>
                   helpers.openInNewTab(
-                    "http://localhost:3000/create/collection"
+                    `${window.location.host}/create/collection`
                   )
                 }
                 className=""

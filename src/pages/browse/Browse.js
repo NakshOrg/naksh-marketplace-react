@@ -27,6 +27,7 @@ import { useAppContext } from "../../context/wallet";
 import { ethers } from "ethers";
 import { useTrendingNFTs } from "../../hooks/useTrendingNFTs";
 import useCollection from "../../hooks/useCollection";
+import { CollectionCard } from "../../components/explore/CollectionCard";
 
 // ReactGA.send({ hitType: "pageview", page: "browse" });
 // ReactGA.event({
@@ -41,19 +42,20 @@ import useCollection from "../../hooks/useCollection";
 export default function Browse() {
   const tabContents = [
     { tabName: "NFT", x: 40 }, // x is a hard coded value for animating bottom bar
-    // {tabName: "COLLECTIONS", x:140, },
+    { tabName: "COLLECTIONS", x:140, },
   ];
   const walletInfo = useSelector((state) => state.nearReducer.walletInfo);
   const history = useHistory();
-  console.log(walletInfo, "wallet info");
+  
   const { getNFTsOnSale } = useNFTs();
   const { getTrendingNFTs } = useTrendingNFTs();
   const { isEVMWalletSignedIn, evmWalletData } = useAppContext();
-  const { getCollection } = useCollection();
+  const { getCollection, getCollections } = useCollection();
 
   const [totalEVMNfts, setTotalEVMNfts] = useState([]);
   const [allEVMNfts, setAllEVMNfts] = useState([]);
   const [evmTrendingNfts, setEVMTrendingNfts] = useState([]);
+  const [currentTab, setCurrentTab] = useState(tabContents[0])
 
   const isWalletSignedIn = useSelector(
     (state) => state.nearReducer.isWalletSignedIn
@@ -66,6 +68,20 @@ export default function Browse() {
   const [trendingNfts, setTrendingNfts] = useState([]);
   const [trendingArtists, setTrendingArtists] = useState([]);
   const [topCollections, setTopCollections] = useState([]);
+  const [collections, setCollections] = useState([])
+
+  const chainFilter = [
+    {
+      label: "Near",
+      checked: false,
+      noOfNfts: 0,
+    },
+    {
+      label: "Polygon",
+      checked: true,
+      noOfNfts: 0,
+    },
+  ];
 
   const evmFilter = [
     {
@@ -161,7 +177,9 @@ export default function Browse() {
       ? nearFilter
       : evmFilter,
     limit: 8,
+    chainFilter: chainFilter
   });
+
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -178,9 +196,18 @@ export default function Browse() {
   useEffect(() => {
     if (evmWalletData) {
       getEVMTrendingNfts();
-      fetchEVMNft();
+      if(allEVMNfts.length <= 0) fetchEVMNft();
     }
   }, [evmWalletData]);
+
+  useEffect(() => {
+    if(evmWalletData) {
+      getCollections()
+        .then(res => {
+          setCollections(res)
+        })
+    }
+  }, [evmWalletData])
 
   useEffect(() => {
     if (evmTrendingNfts && evmTrendingNfts.length > 0) {
@@ -203,12 +230,39 @@ export default function Browse() {
 
   const fetchEVMNft = async () => {
     try {
-      console.log("Dsa");
       setLoading(true);
       const nfts = await getNFTsOnSale();
-      console.log(nfts, "nfts");
-      setAllEVMNfts(nfts.slice(0, filterParams.limit));
-      setTotalEVMNfts(nfts);
+      
+      const totalNfts = nfts.slice().sort(function (a, b) {
+        return new Date(Number(b.timestamp)) - new Date(Number(a.timestamp));
+      });;
+      const copiedPriceRanges = [...filterParams.priceRange];
+      totalNfts.map(nft => {
+        const price = Number(ethers.utils.formatEther(nft.salePrice));
+        if (price < 10) {
+          copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
+        } else if (price >= 10 && price <= 49) {
+          copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
+        } else if (price >= 50 && price < 100) {
+          copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
+        } else if (price >= 100 && price < 200) {
+          copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
+        } else if (price >= 200 && price <= 300) {
+          copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
+        }
+      })
+
+      const copiedChainFilter = [...filterParams.chainFilter]
+      copiedChainFilter[1].noOfNfts = nfts.length
+
+      setFilterParams((state) => ({
+        ...state,
+        priceRange: copiedPriceRanges,
+        chainFilter: copiedChainFilter
+      }));
+
+      setAllEVMNfts(totalNfts.slice(0, filterParams.limit));
+      setTotalEVMNfts(totalNfts);
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -325,7 +379,7 @@ export default function Browse() {
         ...state,
         sort: value.name,
       }));
-    } else {
+    } else if(type === "price") {
       const copiedArr = [...filterParams.priceRange];
       copiedArr.map((item, i) => {
         if (i === value) {
@@ -336,6 +390,17 @@ export default function Browse() {
         ...state,
         priceRange: copiedArr,
       }));
+    } else {
+      const copiedArr = [...filterParams.chainFilter];
+      copiedArr.map((item, i) => {
+        if (i === value) {
+          item.checked = !item.checked;
+        }
+      });
+      setFilterParams((state) => ({
+        ...state,
+        chainFilter: copiedArr,
+      }));
     }
   };
 
@@ -344,7 +409,7 @@ export default function Browse() {
       copiedFilterArr = [...totalNfts];
     let firstSetOfEVMData,
       copiedFilterEVMArr = [...totalEVMNfts];
-    console.log(copiedFilterEVMArr, totalEVMNfts, "Das");
+    
     const selectedPriceRanges = filterParams.priceRange.filter(
       (item) => item.checked
     );
@@ -353,12 +418,16 @@ export default function Browse() {
       copiedFilterArr = copiedFilterArr.sort(function (a, b) {
         return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
       });
-      copiedFilterEVMArr = [...totalEVMNfts];
+      copiedFilterEVMArr = copiedFilterEVMArr.sort(function (a, b) {
+        return new Date(Number(b.timestamp)) - new Date(Number(a.timestamp));
+      });
     } else if (filterParams.sort === "Oldest first") {
       copiedFilterArr = copiedFilterArr.sort(function (a, b) {
         return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
       });
-      copiedFilterEVMArr = totalEVMNfts.slice().reverse();
+      copiedFilterEVMArr = copiedFilterEVMArr.sort(function (a, b) {
+        return new Date(Number(a.timestamp)) - new Date(Number(b.timestamp));
+      });
     } else if (filterParams.sort === "Price - High to low") {
       copiedFilterArr = copiedFilterArr.sort(function (a, b) {
         return b.price - a.price;
@@ -494,7 +563,6 @@ export default function Browse() {
   };
 
   const renderEVMNfts = () => {
-    console.log("122a");
     return (
       allEVMNfts.length > 0 &&
       allEVMNfts.map((nft) => {
@@ -522,7 +590,7 @@ export default function Browse() {
               title={nft.nft.title}
               nearFee={ethers.utils.formatEther(nft.salePrice)}
               artistName={nft?.nft.artistName.substring(0, 8)}
-              artistImage={nft?.nft.tokenUri}
+              artistImage={nft?.nft.artistImg}
             />
           </Col>
         );
@@ -530,7 +598,44 @@ export default function Browse() {
     );
   };
 
-  useEffect(() => console.log(topCollections, "Dadwedwqe"), [topCollections]);
+  useEffect(() => {
+    console.log(collections, currentTab, "collections")
+  }, [collections, currentTab])
+
+  const renderEVMCollections = () => {
+    return (
+      collections.length > 0 &&
+      collections.map((collection) => {
+        const url = `/collection/${
+          collection.nftAddress
+        }`;
+        return (
+          <Col
+            key={uuid()}
+            style={{ marginBottom: 25 }}
+            lg={3}
+            md={3}
+            sm={6}
+            xs={12}
+          >
+            <CollectionCard
+              onClick={() => history.push(url)}
+              image={
+                collection.logo.startsWith("ipfs")
+                  ? `https://${collection.logo.substring(
+                      7
+                    )}.ipfs.nftstorage.link`
+                  : collection.logo
+              }
+              title={collection.name}
+              artistName={collection.artistName}
+              artistImg={collection.artistImg}
+            />
+          </Col>
+        );
+      })
+    );
+  };
 
   if (loading) return <Spinner />;
 
@@ -553,9 +658,24 @@ export default function Browse() {
         evmTrendingNfts={evmTrendingNfts}
       />
       <div style={{ marginTop: 80 }}>
-        <Tabs tabContents={tabContents} />
+        <Tabs
+          tabContents={tabContents}
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+        />
         <div style={{ ...globalStyles.flexCenter, marginTop: 30 }}>
           <div className={classes.desktopHeaderSection}>
+            <PriceDropdown
+              title={"Blockchain"}
+              content={staticValues.sortFilter}
+              priceRanges={filterParams.chainFilter}
+              onChange={(val) => handleFilterChange(val, "chain")}
+            />
+          </div>
+          <div
+            className={classes.desktopHeaderSection}
+            style={{ marginLeft: 13 }}
+          >
             <PriceDropdown
               title={"Price range"}
               content={staticValues.sortFilter}
@@ -630,128 +750,162 @@ export default function Browse() {
       ) : (
         <div style={{ margin: "56px 0" }}></div>
       )}
-      <div className={classes.nftContainer}>
-        <Row>
-          {allNfts.length === 0 && allEVMNfts.length === 0 ? (
+      {currentTab.tabName === "NFT" && (
+        <>
+          <div className={classes.nftContainer}>
+            <Row>
+              {allNfts.length === 0 && allEVMNfts.length === 0 ? (
+                <div
+                  style={{
+                    margin: "125px 0",
+                    fontSize: 32,
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  No results found!
+                </div>
+              ) : (
+                <>
+                  {filterParams.chainFilter[0].checked && renderNfts()}
+                  {filterParams.chainFilter[1].checked && renderEVMNfts()}
+                </>
+              )}
+            </Row>
+            <div style={{ marginBottom: 50 }} />
+            <div className={classes.exploreGradientPink} />
+          </div>
+          {allNfts.length >= 8 && (
+            <div className={classes.viewMore} onClick={handleMoreData}>
+              VIEW MORE
+            </div>
+          )}
+          <div onClick={() => setOpen(true)} className={classes.mobileFixedBtn}>
+            FILTER
+          </div>
+          <BottomSheet
+            open={open}
+            onDismiss={() => setOpen(false)}
+            header={false}
+            style={{ height: 300 }}
+            snapPoints={({ minHeight, maxHeight }) => [
+              minHeight * 1.8,
+              maxHeight,
+            ]}
+          >
+            <img
+              onClick={() => setOpen(false)}
+              style={{
+                height: 30,
+                width: 30,
+                position: "absolute",
+                right: "20px",
+                top: "15px",
+              }}
+              src={crossBtn}
+              alt="cross"
+            />
+            <div style={{ marginTop: 35 }}>
+              <div style={{ fontFamily: "Athelas-Bold", fontSize: 18 }}>
+                Sort by
+              </div>
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.27)",
+                  height: 1,
+                  marginBottom: 10,
+                  marginTop: 8,
+                }}
+              />
+              <div className={classes.pillsContainer}>
+                {staticValues.sortFilter.map((item) => {
+                  return (
+                    <div
+                      key={uuid()}
+                      onClick={() => handleFilterChange(item, "sort")}
+                      className={`${classes.pill} ${
+                        filterParams.sort === item.name
+                          ? classes.pillActive
+                          : ""
+                      }`}
+                    >
+                      {item.name}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div style={{ marginTop: 35 }}>
+              <div style={{ fontFamily: "Athelas-Bold", fontSize: 18 }}>
+                Price range
+              </div>
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.27)",
+                  height: 1,
+                  marginBottom: 10,
+                  marginTop: 8,
+                }}
+              />
+              <div className={classes.pillsContainer}>
+                {filterParams.priceRange.map((item, index) => {
+                  return (
+                    <div
+                      key={uuid()}
+                      onClick={() => handleFilterChange(index)}
+                      className={`${classes.pill} ${
+                        item.checked ? classes.pillActive : ""
+                      }`}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
             <div
               style={{
-                margin: "125px 0",
-                fontSize: 32,
-                display: "flex",
-                justifyContent: "center",
+                ...globalStyles.flexRowSpace,
+                position: "absolute",
+                width: "87%",
+                bottom: "20px",
               }}
             >
-              No results found!
+              <div className={classes.clearBtn} onClick={resetFilters}>
+                CLEAR FILTER
+              </div>
+              <div className={classes.applyBtn} onClick={() => setOpen(false)}>
+                APPLY FILTER
+              </div>
             </div>
-          ) : (
-            <>
-              {renderNfts()}
-              {renderEVMNfts()}
-            </>
-          )}
-        </Row>
-        <div style={{ marginBottom: 50 }} />
-        <div className={classes.exploreGradientPink} />
-      </div>
-      {allNfts.length >= 8 && (
-        <div className={classes.viewMore} onClick={handleMoreData}>
-          VIEW MORE
+          </BottomSheet>
+        </>
+      )}
+      {currentTab.tabName === "COLLECTIONS" && (
+        <div className={classes.nftContainer}>
+          <Row>
+            {collections.length === 0 && collections.length === 0 ? (
+              <div
+                style={{
+                  margin: "125px 0",
+                  fontSize: 32,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                No results found!
+              </div>
+            ) : (
+              <>
+                {/* {filterParams.chainFilter[0].checked && renderNfts()} */}
+                {filterParams.chainFilter[1].checked && renderEVMCollections()}
+              </>
+            )}
+          </Row>
+          <div style={{ marginBottom: 50 }} />
+          <div className={classes.exploreGradientPink} />
         </div>
       )}
-      <div onClick={() => setOpen(true)} className={classes.mobileFixedBtn}>
-        FILTER
-      </div>
-      <BottomSheet
-        open={open}
-        onDismiss={() => setOpen(false)}
-        header={false}
-        style={{ height: 300 }}
-        snapPoints={({ minHeight, maxHeight }) => [minHeight * 1.8, maxHeight]}
-      >
-        <img
-          onClick={() => setOpen(false)}
-          style={{
-            height: 30,
-            width: 30,
-            position: "absolute",
-            right: "20px",
-            top: "15px",
-          }}
-          src={crossBtn}
-          alt="cross"
-        />
-        <div style={{ marginTop: 35 }}>
-          <div style={{ fontFamily: "Athelas-Bold", fontSize: 18 }}>
-            Sort by
-          </div>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.27)",
-              height: 1,
-              marginBottom: 10,
-              marginTop: 8,
-            }}
-          />
-          <div className={classes.pillsContainer}>
-            {staticValues.sortFilter.map((item) => {
-              return (
-                <div
-                  key={uuid()}
-                  onClick={() => handleFilterChange(item, "sort")}
-                  className={`${classes.pill} ${
-                    filterParams.sort === item.name ? classes.pillActive : ""
-                  }`}
-                >
-                  {item.name}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div style={{ marginTop: 35 }}>
-          <div style={{ fontFamily: "Athelas-Bold", fontSize: 18 }}>
-            Price range
-          </div>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.27)",
-              height: 1,
-              marginBottom: 10,
-              marginTop: 8,
-            }}
-          />
-          <div className={classes.pillsContainer}>
-            {filterParams.priceRange.map((item, index) => {
-              return (
-                <div
-                  key={uuid()}
-                  onClick={() => handleFilterChange(index)}
-                  className={`${classes.pill} ${
-                    item.checked ? classes.pillActive : ""
-                  }`}
-                >
-                  {item.label}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div
-          style={{
-            ...globalStyles.flexRowSpace,
-            position: "absolute",
-            width: "87%",
-            bottom: "20px",
-          }}
-        >
-          <div className={classes.clearBtn} onClick={resetFilters}>
-            CLEAR FILTER
-          </div>
-          <div className={classes.applyBtn} onClick={() => setOpen(false)}>
-            APPLY FILTER
-          </div>
-        </div>
-      </BottomSheet>
       <Footer />
     </Container>
   );

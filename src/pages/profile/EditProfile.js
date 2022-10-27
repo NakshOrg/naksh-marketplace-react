@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React, { Component, Fragment, useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import toast from "react-hot-toast";
 import { FiArrowLeft } from "react-icons/fi";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -183,6 +184,33 @@ export default function EditProfile(props) {
   };
 
   const saveProfile = async () => {
+    let errorList = []
+
+    if(!name) errorList.push("Name")
+    // if (!coverStatus) errorList.push("Cover");
+    if (!selectedGradient && coverImage) errorList.push("Gradient or Cover Image");
+    if (!image) errorList.push("Logo");
+    // if (!twitter) errorList.push("Twitter")
+    if(!description) errorList.push("Description")
+
+    let validateList = [];
+    if (!helpers.validateLink(twitter)) validateList.push("Twitter");
+    if (instagram && !helpers.validateLink(instagram))
+      validateList.push("Instagram");
+    if (facebook && !helpers.validateLink(facebook))
+      validateList.push("Facebook");
+    if (website && !helpers.validateLink(website)) validateList.push("Website");
+
+    if (validateList.length > 0) {
+      toast.error(`${validateList.join(", ")} urls are not valid`);
+      if(errorList.length <= 0) return
+    }
+
+    if(errorList.length > 0) {
+      toast.error(`${errorList.join(", ")} cannot be null`)
+      return
+    }
+    
     setLoading(true);
 
     let data = {
@@ -296,7 +324,7 @@ export default function EditProfile(props) {
         </div>
         <div className={classes.saveBtnDesktop}>
           <GradientBtn
-            onClick={saveProfile}
+            onClick={() => saveProfile()}
             style={{ width: 200, padding: "0 37px", height: 45 }}
             content={<div>SAVE CHANGES</div>}
           />

@@ -82,14 +82,14 @@ const ConnectWallet = ({ isOpen, setIsOpen }) => {
         <FiX className="text-4xl" />
       </div>
       <h1
-        className="font-bold text-6xl m-4 mb-3"
+        className="font-bold text-2xl lg:text-4xl xl:text-5xl 3xl:text-6xl m-4 mb-3"
         style={{
           fontFamily: "Athelas-Bold",
         }}
       >
         Connect Wallet
       </h1>
-      <p className="text-2xl w-2/3 text-center mb-5 font-inter">
+      <p className="text-md md:text-xl xl:text-xl 3xl:text-2xl w-2/3 text-center mb-5 font-inter">
         Connect to one of our wallets to create a Naksh account and save this
         NFT!
       </p>

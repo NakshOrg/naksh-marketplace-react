@@ -5,6 +5,7 @@ import nftAbi from "../interface/nftAbi.json";
 import { useAppContext } from "../context/wallet";
 import toast from "react-hot-toast";
 import {
+  GET_COLLECTION,
   GET_COLLECTIONS,
   GET_COLLECTION_NFTS,
   GET_SINGLE_NFT,
@@ -36,18 +37,23 @@ const useCollection = () => {
   const getCollection = (address) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const contract = new ethers.Contract(
-          address,
-          nftAbi,
-          await ethers.getDefaultProvider(
-            "https://polygon-mumbai.g.alchemy.com/v2/Tv9MYE2mD4zn3ziBLd6S94HvLLjTocju"
-          )
+        const res = await fetch(
+          "https://api.thegraph.com/subgraphs/name/sk1122/naksh",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              query: GET_COLLECTION,
+              variables: {
+                address
+              },
+            }),
+          }
         );
-        const data = await contract.getCollectionDetails();
-        const admin = await contract.admin();
+        const collection = (await res.json()).data.collection;
 
-        resolve({ admin, ...data });
+        resolve(collection);
       } catch (e) {
+        // console.log(e, "error")
         reject(e);
       }
     });
@@ -70,19 +76,7 @@ const useCollection = () => {
         );
         const collections = (await res.json()).data.collections;
 
-        let c = [];
-
-        for (let i = 0; i < collections.length; i++) {
-          const assets = await getCollection(collections[i].nftAddress);
-
-          c.push({
-            logo: assets.logo,
-            coverUri: !assets.cover.isGradient ? assets.cover.coverUri : "",
-            ...collections[i],
-          });
-        }
-
-        resolve(c);
+        resolve(collections);
       } catch (e) {
         // console.log(e, "error")
         reject(e);
@@ -100,7 +94,9 @@ const useCollection = () => {
     logo,
     admin,
     creatorFees,
-    creators
+    creators,
+    artistName,
+    artistImg
   ) => {
     // @types
 
@@ -153,9 +149,9 @@ const useCollection = () => {
         ];
 
         const artistDetails = [
+          artistName,
           admin,
-          admin,
-          "https://pbs.twimg.com/profile_images/1568702314038575105/rgWQ60ko_400x400.png",
+          artistImg,
         ];
 
         // console.log(artistDetails, collectionDetails, "params")

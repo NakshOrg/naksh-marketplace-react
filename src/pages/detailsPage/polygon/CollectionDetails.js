@@ -6,6 +6,7 @@ import useCollection from "../../../hooks/useCollection";
 import facebook from "../../../assets/svgs/facebook.svg";
 import instagram from "../../../assets/svgs/instagram.svg";
 import website from "../../../assets/svgs/website.svg";
+import twitter from "../../../assets/svgs/twitter.svg";
 import {
   GradientBtn,
   OutlineBtn,
@@ -31,8 +32,8 @@ const CollectionDetails = () => {
   const [soldNfts, setSoldNfts] = useState([]);
 
   const fetchCollection = async () => {
-    const collections = await getCollection(params.address);
-    const nfts = await getCollectionNFTs(params.address);
+    const collections = await getCollection(params.address.toLowerCase().toLowerCase());
+    const nfts = await getCollectionNFTs(params.address.toLowerCase());
 
     let uniqueOwner = {};
 
@@ -44,7 +45,7 @@ const CollectionDetails = () => {
   };
 
   const calculateVolume = async () => {
-    const soldNfts = await getSoldNFTs(params.address);
+    const soldNfts = await getSoldNFTs(params.address.toLowerCase());
     const sorted = soldNfts.sort(
       (a, b) => Number(b.timestamp) - Number(a.timestamp)
     );
@@ -108,62 +109,88 @@ const CollectionDetails = () => {
       {/* <div className="w-full h-96" style={!collection.cover.isGradient ? { backgroundImage:`url("${collection.cover.uri}")`} : { background: collection.cover.uri }}></div> */}
       {collection && (
         <>
-          {collection.cover.isGradient && (
+          {collection.isGradient && (
             <div
               className="w-full h-96"
               style={{
-                background: collection.cover.uri,
+                background: collection.coverUri,
               }}
             ></div>
           )}
-          {!collection.cover.isGradient && (
+          {!collection.isGradient && (
             <img
-              src={collection.cover.uri}
+              src={collection.coverUri}
               className={`w-full h-96 flex justify-center items-center`}
             />
           )}
           <div className="w-full h-full flex flex-col md:flex-row justify-start items-center md:items-start">
             <div className="-mt-40 w-11/12 md:w-1/4 h-full md:mx-20 bg-black/75 backdrop-blur-lg rounded-xl p-10 flex flex-col justify-start items-center space-y-5">
               <div className="rounded-full flex justify-center items-center  w-40 h-40">
-                <img src={collection.logo} />
+                <img src={collection.logo} className="rounded-full" />
               </div>
               <h1 className="font-bold text-3xl">{collection.name}</h1>
               <p className="text-gray-400">
-                Created by {collection.admin.substring(0, 7)}...
+                Created by {collection.creator?.substring(0, 7)}...
               </p>
-              <p className="">
+              <p className="text-center">
                 {!viewMore &&
-                  collection.about &&
-                  collection.about.substring(0, 150)}
-                {viewMore && collection.about}
-                <span
-                  className="text-blue-700 cursor-pointer"
-                  onClick={() => setViewMore(!viewMore)}
-                >
-                  {" "}
-                  view more...
-                </span>
+                  collection.description &&
+                  collection.description?.substring(0, 150)}
+                {viewMore && collection.description}
+                {collection.description?.length > 150 && (
+                  <>
+                    {viewMore ? (
+                      <span
+                        className="text-blue-700 cursor-pointer"
+                        onClick={() => setViewMore(!viewMore)}
+                      >
+                        {" "}
+                        view less...
+                      </span>
+                    ) : (
+                      <span
+                        className="text-blue-700 cursor-pointer"
+                        onClick={() => setViewMore(!viewMore)}
+                      >
+                        {" "}
+                        view more...
+                      </span>
+                    )}
+                  </>
+                )}
               </p>
               <div className="w-full flex justify-center items-center space-x-5">
-                <img
-                  src={facebook}
-                  className="w-10 h-10 bg-white rounded-full p-2"
-                />
-                <img
-                  src={instagram}
-                  className="w-10 h-10 bg-white rounded-full p-2"
-                />
-                <img
-                  src={website}
-                  className="w-10 h-10 bg-white rounded-full p-2"
-                />
+                {collection.facebook && (
+                  <img
+                    src={facebook}
+                    className="w-10 h-10 bg-white rounded-full p-2"
+                  />
+                )}
+                {collection.twitter && (
+                  <img
+                    src={twitter}
+                    className="w-10 h-10 bg-white rounded-full p-2"
+                  />
+                )}
+                {collection.instagram && (
+                  <img
+                    src={instagram}
+                    className="w-10 h-10 bg-white rounded-full p-2"
+                  />
+                )}
+                {collection.website && (
+                  <img
+                    src={website}
+                    className="w-10 h-10 bg-white rounded-full p-2"
+                  />
+                )}
               </div>
-              {collection.admin.toLowerCase() ===
+              {collection.creator?.toLowerCase() ===
                 evmWalletData.address.toLowerCase() && (
                 <div className="w-full h-full flex flex-col justify-start items-center mt-10 pt-10 space-y-8">
                   <div className="w-1/2 flex justify-end items-center space-x-4">
                     <GradientBtn
-                      content="Mint NFT"
+                      content="MINT NFT"
                       style={{ width: "187px" }}
                     />
                   </div>
@@ -224,13 +251,13 @@ const CollectionDetails = () => {
               >
                 {nfts.length <= 0 &&
                   evmWalletData.address.toLowerCase() ===
-                    collection.admin.toLowerCase() && (
+                    collection.creator?.toLowerCase() && (
                     <div
                       onClick={() => history.push(`/create/nft/`)}
                       className="w-1/2 flex justify-center items-center"
                     >
                       <GradientBtn
-                        content={"Mint a NFT"}
+                        content={"MINT A NFT"}
                         style={{ width: "187px", color: "#fff" }}
                       />
                     </div>
@@ -265,7 +292,13 @@ const CollectionDetails = () => {
                                   : nft.tokenUri
                               }
                               title={nft.title}
-                              nearFee={0}
+                              nearFee={
+                                (nft.saleData && nft.saleData?.salePrice)
+                                  ? ethers.utils.formatEther(
+                                      nft.saleData.salePrice
+                                    ).toString()
+                                  : 0
+                              }
                               artistName={`${nft.creator.substring(0, 7)}...`}
                               artistImage={nft.artistImg}
                             />

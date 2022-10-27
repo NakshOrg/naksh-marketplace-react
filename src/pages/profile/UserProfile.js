@@ -25,6 +25,7 @@ import { GradientBtn, OutlineBtn } from "../../components/uiComponents/Buttons";
 import useCollection from "../../hooks/useCollection";
 import { useSavedNFTs } from "../../hooks/useSavedNFTs";
 import { ethers } from "ethers";
+import { CollectionCard } from "../../components/explore/CollectionCard";
 
 const mainText = {
   minted: "Create NFT and mint it now to get forever royalties",
@@ -41,8 +42,8 @@ const btnText = {
 };
 
 export default function UserProfile(props) {
-  const { getUserCollectionsAndAssets, getCollection } = useCollection();
-  const { getMintedNFTs } = useNFTs();
+  const { getUserCollectionsAndAssets, getUserCollections } = useCollection();
+  const { getMintedNFTs, getOwnedNFTs: getEVMOwnedNFTs } = useNFTs();
   const walletInfo = useSelector((state) => state.nearReducer.walletInfo);
   const isWalletSignedIn = useSelector(
     (state) => state.nearReducer.isWalletSignedIn
@@ -62,6 +63,7 @@ export default function UserProfile(props) {
 
   const [loading, setLoading] = useState(false);
   const [artist, setArtist] = useState("");
+  const [mintedNfts, setMintedNfts] = useState([])
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [savedNfts, setSavedNfts] = useState([]);
   const [noUserFound, setNoUserFound] = useState(false);
@@ -101,10 +103,13 @@ export default function UserProfile(props) {
 
   useEffect(() => {
     if (evmProvider) {
-      getUserCollectionsAndAssets(evmWalletData.address)
+      getUserCollections(evmWalletData.address)
         .then((res) => setUserCollections(res))
         .catch((e) => console.error(e));
       getMintedNFTs(evmWalletData.address)
+        .then((res) => setMintedNfts(res))
+        .catch((e) => console.error(e));
+      getEVMOwnedNFTs(evmWalletData.address)
         .then((res) => setOwnedNfts(res))
         .catch((e) => console.error(e));
     }
@@ -548,12 +553,15 @@ export default function UserProfile(props) {
               </div>
               {activeTab === "minted" && (
                 <>
-                  {ownedNfts.length <= 0 ? (
+                  {mintedNfts.length <= 0 ? (
                     <div className="w-full h-80 flex flex-col justify-center items-center space-y-5">
                       <h1 className="font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
-                      <div className="w-1/2 flex justify-center items-center">
+                      <div
+                        onClick={() => history.push(`/create/nft`)}
+                        className="w-1/2 flex justify-center items-center"
+                      >
                         <GradientBtn
                           content={btnText[activeTab]}
                           style={{ width: "187px", color: "#fff" }}
@@ -562,7 +570,7 @@ export default function UserProfile(props) {
                     </div>
                   ) : (
                     <Row>
-                      {ownedNfts.map((nft) => (
+                      {mintedNfts.map((nft) => (
                         <Col
                           key={uuid()}
                           style={{ marginBottom: 25 }}
@@ -585,9 +593,15 @@ export default function UserProfile(props) {
                                 : nft.tokenUri
                             }
                             title={nft.title}
-                            nearFee={"0"}
-                            artistName={nft.artistName}
-                            artistImage={nft.artistImg}
+                            nearFee={
+                              nft.saleData && nft.saleData?.salePrice
+                                ? ethers.utils
+                                    .formatEther(nft.saleData.salePrice)
+                                    .toString()
+                                : 0
+                            }
+                            artistName={artist.name}
+                            artistImage={artist.image}
                           />
                         </Col>
                       ))}
@@ -608,17 +622,18 @@ export default function UserProfile(props) {
                           sm={6}
                           xs={12}
                         >
-                          <NftCard
-                            onClick={() =>
-                              history.push(
-                                `/collection/${collection.nftAddress}`
-                              )
+                          <CollectionCard
+                            onClick={() => history.push(`/collection/${collection.id}`)}
+                            image={
+                              collection.logo.startsWith("ipfs")
+                                ? `https://${collection.logo.substring(
+                                    7
+                                  )}.ipfs.nftstorage.link`
+                                : collection.logo
                             }
-                            image={collection.logo}
                             title={collection.name}
-                            nearFee={"0"}
-                            artistName={collection.creator.substring(0, 8)}
-                            artistImage={""}
+                            artistName={collection.artistName}
+                            artistImg={collection.artistImg}
                           />
                         </Col>
                       ))}
@@ -628,7 +643,10 @@ export default function UserProfile(props) {
                       <h1 className="font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
-                      <div className="w-1/2 flex justify-center items-center">
+                      <div
+                        onClick={() => history.push(`/create/collection`)}
+                        className="w-1/2 flex justify-center items-center"
+                      >
                         <GradientBtn
                           content={btnText[activeTab]}
                           style={{ width: "187px", color: "#fff" }}
@@ -665,8 +683,14 @@ export default function UserProfile(props) {
                                 : nft.tokenUri
                             }
                             title={nft.title}
-                            nearFee={"0"}
-                            artistName={nft.artistName}
+                            nearFee={
+                              nft.saleData && nft.saleData?.salePrice
+                                ? ethers.utils
+                                    .formatEther(nft.saleData.salePrice)
+                                    .toString()
+                                : 0
+                            }
+                            artistName={nft.artistName?.substring(0, 8)}
                             artistImage={nft.artistImg}
                           />
                         </Col>
@@ -677,7 +701,10 @@ export default function UserProfile(props) {
                       <h1 className="font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
-                      <div className="w-1/2 flex justify-center items-center">
+                      <div
+                        onClick={() => history.push(`/browse`)}
+                        className="w-1/2 flex justify-center items-center"
+                      >
                         <GradientBtn
                           content={btnText[activeTab]}
                           style={{ width: "187px", color: "#fff" }}
@@ -726,7 +753,10 @@ export default function UserProfile(props) {
                       <h1 className="font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
-                      <div className="w-1/2 flex justify-center items-center">
+                      <div
+                        onClick={() => history.push(`/browse`)}
+                        className="w-1/2 flex justify-center items-center"
+                      >
                         <GradientBtn
                           content={btnText[activeTab]}
                           style={{ width: "187px", color: "#fff" }}

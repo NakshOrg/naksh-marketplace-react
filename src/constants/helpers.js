@@ -31,7 +31,18 @@ const readImage = (e) => {
     }
 }
 
+const validateLink = (text) => {
+  const isValid = text.match(
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&=]*)/
+  );
+
+  if (!isValid) return false;
+
+  return true;
+};
+
 export default {
     openInNewTab,
-    readImage
+    readImage,
+    validateLink
 }

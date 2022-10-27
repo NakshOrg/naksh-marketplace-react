@@ -14,6 +14,7 @@ import globalStyles from "../../globalStyles";
 import { ethers } from "ethers";
 import { Col } from "react-bootstrap";
 import { default as NFT } from "../../components/explore/NftCard";
+import { CollectionCard } from "../../components/explore/CollectionCard"; 
 
 const arrowStyle = {
   top: "130px",
@@ -155,36 +156,6 @@ function SuggestionNfts({
     );
   }
 
-  function CollectionCard(props) {
-    const { image, title, onClick } = props;
-
-    return (
-      <div
-        style={{ zIndex: 2, height: 300 }}
-        onClick={onClick}
-        className={classes.cardContainer}
-      >
-        <img src={image} alt="nft" />
-        <div className={classes.cardTag}>
-          <div style={globalStyles.flexRowSpace}>
-            <div
-              style={{
-                fontFamily: "Athelas-Bold",
-                fontSize: 14,
-                textTransform: "capitalize",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {title}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   function Contents() {
     return (
       <div style={{ marginTop: 20 }}>
@@ -303,13 +274,21 @@ function SuggestionNfts({
             : topCollections &&
               topCollections.map((collection) => {
                 return (
-                  <div key={uuid()}>
+                  <div key={uuid()} className="p-3">
                     <CollectionCard
                       onClick={() =>
-                        history.push(`/collection/${collection.address}`)
+                        history.push(`/collection/${collection.id}`)
                       }
-                      image={collection.cover[0]}
+                      image={
+                        collection.logo.startsWith("ipfs")
+                          ? `https://${collection.logo.substring(
+                              7
+                            )}.ipfs.nftstorage.link`
+                          : collection.logo
+                      }
                       title={collection.name}
+                      artistName={collection.artistName}
+                      artistImg={collection.artistImg}
                     />
                   </div>
                 );
@@ -321,7 +300,7 @@ function SuggestionNfts({
 
   return (
     <div style={{ marginTop: 70 }}>
-      <Tabs tabContents={tabContents} currentTab={setCurrentTab} />
+      <Tabs tabContents={tabContents} setCurrentTab={setCurrentTab} />
       <Contents />
     </div>
   );

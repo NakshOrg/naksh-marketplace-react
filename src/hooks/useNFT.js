@@ -1,6 +1,5 @@
 import { useAppContext } from "../context/wallet";
 import nakshAbi from "../interface/nakshAbi.json";
-import auctionAbi from "../interface/auctionAbi.json";
 import nftAbi from "../interface/nftAbi.json";
 import { ethers, BigNumber } from "ethers";
 import toast from "react-hot-toast";
@@ -11,21 +10,15 @@ import {
   GET_SINGLE_NFT,
   MY_NFTS,
   NFT_DATA_QUERY,
+  MY_MINTED_NFTS
 } from "./useGraphApi";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 
 export const useNFTs = () => {
-  const [nftsOnSale, setNftsOnSale] = useState([]);
-
   const {
     evmProvider,
     evmWalletData,
     nakshContract,
-    auctionContract,
-    setNakshContract,
     NAKSH_ADDRESS,
-    NAKSH_AUCTION_ADDRESS,
   } = useAppContext();
 
   const getManyNFTs = async (ids) => {
@@ -264,6 +257,7 @@ export const useNFTs = () => {
           gasPrice: evmProvider.getGasPrice(),
           gasLimit: 10000000,
         });
+        await auction.wait()
         toast.success("Successfully ended auction", {
           id: toastId,
         });
@@ -306,7 +300,8 @@ export const useNFTs = () => {
     tokenUri,
     title,
     description,
-    artistName = ""
+    artistName,
+    artistImg
   ) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -316,12 +311,15 @@ export const useNFTs = () => {
           evmWalletData.signer
         );
 
+        console.log(artistName, artistImg)
+
         const nft = await contract.mintByArtistOrAdmin(
           evmWalletData.address,
           tokenUri,
           title,
           description,
-          artistName ? artistName : evmWalletData.address,
+          artistName,
+          artistImg,
           {
             gasPrice: evmProvider.getGasPrice(),
             gasLimit: 10000000,
@@ -394,6 +392,32 @@ export const useNFTs = () => {
   };
 
   const getMintedNFTs = async (address) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(
+          "https://api.thegraph.com/subgraphs/name/sk1122/naksh",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              query: MY_MINTED_NFTS,
+              variables: {
+                address: address,
+              },
+            }),
+          }
+        );
+        const nft = (await res.json()).data.nftdatas;
+        // console.log(nft)
+
+        resolve(nft);
+      } catch (e) {
+        // console.log(e, "error")
+        reject(e);
+      }
+    });
+  };
+
+  const getOwnedNFTs = async (address) => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await fetch(
@@ -484,5 +508,6 @@ export const useNFTs = () => {
     endAuction,
     getSoldNFT,
     getSoldNFTs,
+    getOwnedNFTs
   };
 };

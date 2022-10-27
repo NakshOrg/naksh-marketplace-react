@@ -93,7 +93,7 @@ const ConnectWallet = ({ isOpen, setIsOpen }) => {
         Connect to one of our wallets to create a Naksh account and save this
         NFT!
       </p>
-      <div className="walletCardFlex mb-5 md:mb-0 space-y-5 md:space-y-0">
+      <div className="flex flex-col md:flex-row justify-around items-center w-full h-[30%] mb-5 md:mb-0 space-y-5 md:space-y-0">
         <WalletCard
           src={near}
           onClick={() => connectNear()}

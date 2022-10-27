@@ -1,5 +1,5 @@
-REACT_APP_BASEURL = http://apidev.naksh.org/admin
-REACT_APP_CLIENT_BASEURL = http://apidev.naksh.org/client
+REACT_APP_BASEURL = https://apidev.naksh.org/admin
+REACT_APP_CLIENT_BASEURL = https://apidev.naksh.org/client
 REACT_APP_NAKSH_CONTRACT_WALLET = nft1.abhishekvenunathan.testnet
 REACT_APP_NAKSH_MARKET_WALLET = market1.abhishekvenunathan.testnet
 

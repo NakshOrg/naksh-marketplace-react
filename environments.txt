@@ -1,9 +1,0 @@
-REACT_APP_BASEURL = https://apidev.naksh.org/admin
-REACT_APP_CLIENT_BASEURL = https://apidev.naksh.org/client
-REACT_APP_NAKSH_CONTRACT_WALLET = nft1.abhishekvenunathan.testnet
-REACT_APP_NAKSH_MARKET_WALLET = market1.abhishekvenunathan.testnet
-
-REACT_APP_BASEURL_PRODUCTION = https://api.naksh.org/admin
-REACT_APP_CLIENT_BASEURL_PRODUCTION = https://api.naksh.org/client
-REACT_APP_NAKSH_CONTRACT_WALLET_PRODUCTION = nft1.naksh.near
-REACT_APP_NAKSH_MARKET_WALLET_PRODUCTION = market1.naksh.near

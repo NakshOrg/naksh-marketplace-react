@@ -37,8 +37,8 @@ const mainText = {
 const btnText = {
   minted: "Mint NFTs",
   collections: "Create Collection",
-  owned: "Explore Marketplace",
-  saved: "Explore Marketplace",
+  owned: "EXPLORE MARKETPLACE",
+  saved: "EXPLORE MARKETPLACE",
 };
 
 export default function UserProfile(props) {

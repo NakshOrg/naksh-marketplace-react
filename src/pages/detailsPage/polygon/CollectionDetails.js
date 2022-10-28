@@ -15,6 +15,7 @@ import NftCard from "../../../components/explore/NftCard";
 import { Col, Row } from "react-bootstrap";
 import classes from "../../browse/browse.module.css";
 import { ethers } from "ethers";
+import helpers from "../../../constants/helpers"
 
 const CollectionDetails = () => {
   const { evmWalletData, evmProvider } = useAppContext();
@@ -126,7 +127,7 @@ const CollectionDetails = () => {
           <div className="w-full h-full flex flex-col md:flex-row justify-start items-center md:items-start">
             <div className="-mt-40 w-11/12 md:w-1/4 h-full md:mx-20 bg-black/75 backdrop-blur-lg rounded-xl p-10 flex flex-col justify-start items-center space-y-5">
               <div className="rounded-full flex justify-center items-center  w-40 h-40">
-                <img src={collection.logo} className="rounded-full" />
+                <img src={collection.logo} className="w-full h-full rounded-full" />
               </div>
               <h1 className="font-bold text-3xl">{collection.name}</h1>
               <p className="text-gray-400">
@@ -162,26 +163,30 @@ const CollectionDetails = () => {
               <div className="w-full flex justify-center items-center space-x-5">
                 {collection.facebook && (
                   <img
+                    onClick={() => helpers.openInNewTab(collection.facebook)}
                     src={facebook}
-                    className="w-10 h-10 bg-white rounded-full p-2"
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
                   />
                 )}
                 {collection.twitter && (
                   <img
+                    onClick={() => helpers.openInNewTab(collection.twitter)}
                     src={twitter}
-                    className="w-10 h-10 bg-white rounded-full p-2"
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
                   />
                 )}
                 {collection.instagram && (
                   <img
+                    onClick={() => helpers.openInNewTab(collection.instagram)}
                     src={instagram}
-                    className="w-10 h-10 bg-white rounded-full p-2"
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
                   />
                 )}
                 {collection.website && (
                   <img
+                    onClick={() => helpers.openInNewTab(collection.website)}
                     src={website}
-                    className="w-10 h-10 bg-white rounded-full p-2"
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
                   />
                 )}
               </div>
@@ -190,6 +195,7 @@ const CollectionDetails = () => {
                 <div className="w-full h-full flex flex-col justify-start items-center mt-10 pt-10 space-y-8">
                   <div className="w-1/2 flex justify-end items-center space-x-4">
                     <GradientBtn
+                      onClick={() => history.push("/create/nft")}
                       content="MINT NFT"
                       style={{ width: "187px" }}
                     />
@@ -293,10 +299,10 @@ const CollectionDetails = () => {
                               }
                               title={nft.title}
                               nearFee={
-                                (nft.saleData && nft.saleData?.salePrice)
-                                  ? ethers.utils.formatEther(
-                                      nft.saleData.salePrice
-                                    ).toString()
+                                nft.saleData && nft.saleData?.salePrice
+                                  ? ethers.utils
+                                      .formatEther(nft.saleData.salePrice)
+                                      .toString()
                                   : 0
                               }
                               artistName={`${nft.creator.substring(0, 7)}...`}

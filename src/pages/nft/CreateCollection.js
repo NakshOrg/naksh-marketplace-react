@@ -65,6 +65,16 @@ export default function CreateCollection(props) {
     if (!selectedGradient && !cover) errorList.push("Gradient or Cover Image");
     if (!twitter) errorList.push("Twitter");
 
+    let totalPerc = 0
+
+    royalties.map((royalty, idx) => {
+      console.log(royalty.percentage, isNaN(Number(royalty.percentage)), "percentage")
+      if(!(ethers.utils.isAddress(royalty.wallet))) errorList.push(`Address at ${idx}`)
+      if(isNaN(Number(royalty.percentage))) errorList.push(`Percentage at ${idx}`)
+
+      totalPerc += Number(royalty.percentage)
+    })
+
     let validateList = []
     if (!helpers.validateLink(twitter)) validateList.push("Twitter");
     if (instagram && !helpers.validateLink(instagram)
@@ -75,10 +85,18 @@ export default function CreateCollection(props) {
 
     if(validateList.length > 0) {
       toast.error(`${validateList.join(", ")} urls are not valid`)
+
+      if(errorList.length <= 0) return
+    }
+
+    if(totalPerc > 95) {
+      toast.error("Total Percentage can't be greater than 95")
+      
+      if(errorList.length <= 0) return
     }
 
     if (errorList.length > 0) {
-      toast.error(`${errorList.join(", ")} cannot be null`);
+      toast.error(`${errorList.join(", ")} cannot be null or is invalid`);
       return;
     }
     
@@ -176,11 +194,11 @@ export default function CreateCollection(props) {
       let a = [...v];
 
       if (index < a.length) {
-        if (values.wallet) {
+        if (values.wallet || values.wallet === "") {
           a[index].wallet = values.wallet;
         }
 
-        if (values.percentage) {
+        if (values.percentage || values.percentage === "") {
           a[index].percentage = values.percentage;
         }
       } else {
@@ -236,6 +254,7 @@ export default function CreateCollection(props) {
 
   useEffect(() => {
     if (evmWalletData) {
+      console.log("called")
       changeRoyalties(0, { wallet: evmWalletData.address, percentage: "5" });
     }
   }, [evmWalletData]);
@@ -475,9 +494,13 @@ export default function CreateCollection(props) {
                 <div className="w-1/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
                   <input
                     value={royalties[idx].percentage}
-                    onChange={(e) =>
-                      changeRoyalties(idx, { percentage: e.target.value })
-                    }
+                    onChange={(e) => {
+                      let val = e.target.value;
+
+                      if (isNaN(Number(val))) return;
+                      console.log(idx, val, "val")
+                      changeRoyalties(idx, { percentage: val });
+                    }}
                     type="text"
                     className="w-full p-0 text-white bg-brand-gray"
                     placeholder="Percentage*"

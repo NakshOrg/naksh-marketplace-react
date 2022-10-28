@@ -289,7 +289,18 @@ export default function Browse() {
   const getEVMTrendingNfts = async () => {
     try {
       const trendingNfts = await getTrendingNFTs();
-      setEVMTrendingNfts([...trendingNfts, ...trendingNfts]);
+      
+      if(trendingNfts.length < 5) {
+        let copyArray = []
+
+        for(let i = 0; i < 5; i++) {
+          copyArray.push(trendingNfts[i % trendingNfts.length])
+        }
+
+        setEVMTrendingNfts(copyArray)
+      } else {
+        setEVMTrendingNfts(trendingNfts);
+      }
     } catch (e) {
       console.error(e, "error in getEVMTrendingNfts");
     }

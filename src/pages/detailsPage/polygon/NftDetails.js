@@ -99,13 +99,14 @@ export default function PolygonNftDetails(props) {
     if (nft) {
       try {
         _getNftArtists({
-          artist: ethers.utils.getAddress(nft.artistName),
-          owner: ethers.utils.getAddress(nft.creator),
+          artist: ethers.utils.getAddress(nft.creator),
+          owner: ethers.utils.getAddress(nft.owner),
         }).then(({ data: { artist, owner } }) => {
+          console.log(artist.image, "dasdsafwrw");
           setArtist(artist);
           setOwnerData(owner);
         });
-      } catch (e) {}
+      } catch (e) {console.log(e, "dasdsafwrw");}
     }
   }, [nft]);
 
@@ -391,11 +392,11 @@ export default function PolygonNftDetails(props) {
                   borderRadius: 30,
                   objectFit: "cover",
                 }}
-                src={nft?.artistImg ?? profileSvg}
+                src={artist ? artist.image : nft?.artistImg ? nft?.artistImg : profileSvg}
                 alt="artist"
               />
               <div style={{ fontSize: 16, marginLeft: 10 }}>
-                {nft?.artistName.substring(0, 15)}
+                {artist ? artist.name : nft?.artistName.substring(0, 15)}
               </div>
             </div>
           </div>

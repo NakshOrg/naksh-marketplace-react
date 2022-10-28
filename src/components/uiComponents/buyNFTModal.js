@@ -32,9 +32,13 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
           fontFamily: "Athelas-Bold",
         }}
       >
-        Place an offer
+        {saleData.saleType.toString() === "0" ? "Buy NFT" : "Place an offer"}
       </h1>
-      <p className="text-xl">You are about to bid to {nft.title}</p>
+      <p className="text-xl">
+        {saleData.saleType.toString() === "0"
+          ? `You are about to buy ${nft.title}`
+          : `You are about to bid to ${nft.title}`}
+      </p>
       <div
         className="walletCardFlex"
         style={{ flexDirection: "column", marginTop: "30px" }}
@@ -51,7 +55,7 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
             backdropFilter: "blur(96.1806px)",
           }}
         >
-          {saleData.saleType.toString() !== "0" ? 
+          {saleData.saleType.toString() !== "0" ? (
             <input
               value={value}
               onChange={(e) => {
@@ -70,17 +74,19 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
                 color: badValue ? "red" : "#fff",
               }}
             />
-            :
-            <div className="text-xl"
+          ) : (
+            <div
+              className="text-xl"
               style={{
                 width: "80%",
                 padding: "10px",
                 background: "transparent",
                 color: badValue ? "red" : "#fff",
-              }}>
-                {value}
+              }}
+            >
+              {value}
             </div>
-          }
+          )}
           <img src={polygon} className="ml-2 w-5 h-5" />
         </div>
         <div
@@ -99,7 +105,7 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
               width: "100%",
             }}
           >
-            Minimum Offer
+            {saleData.saleType.toString() === "0" ? "Price" : "Minimum Offer"}
           </p>
           <div className="w-full lg:w-1/2 flex justify-end items-center space-x-1">
             <p className="text-xl">

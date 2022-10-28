@@ -311,8 +311,6 @@ export const useNFTs = () => {
           evmWalletData.signer
         );
 
-        console.log(artistName, artistImg)
-
         const nft = await contract.mintByArtistOrAdmin(
           evmWalletData.address,
           tokenUri,
@@ -333,6 +331,80 @@ export const useNFTs = () => {
         const receipt = await evmProvider.getTransactionReceipt(nft.hash);
 
         // console.log(receipt, "receipt")
+
+        for (let i = 0; i < receipt.logs.length; i++) {
+          const log = receipt.logs[i];
+          if (
+            log.topics.includes(
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+            )
+          ) {
+            // console.log(log.topics[3], log.topics, "token id")
+            resolve({
+              hash: nft.hash,
+              tokenId: log.topics[3],
+            });
+            return;
+          }
+        }
+
+        resolve({
+          hash: nft.hash,
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  const bulkMint = async (
+    nftAddress,
+    tokenUri,
+    title,
+    description,
+    artistName,
+    artistImg,
+    times
+  ) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let tokenUriArr = []
+        let titleArr = []
+        let descriptionArr = []
+
+        for(let i = 0; i < times; i++) {
+          tokenUriArr.push(
+            tokenUri
+          )
+          titleArr.push(title)
+          descriptionArr.push(description)
+        }
+        
+        const contract = new ethers.Contract(
+          nftAddress,
+          nftAbi,
+          evmWalletData.signer
+        );
+
+        const nft = await contract.bulkMintByArtist(
+          tokenUriArr,
+          titleArr,
+          descriptionArr,
+          artistName,
+          artistImg,
+          {
+            gasPrice: evmProvider.getGasPrice(),
+            gasLimit: 1000000,
+          }
+        );
+
+        await nft.wait();
+
+        // console.log(nft)
+
+        const receipt = await evmProvider.getTransactionReceipt(nft.hash);
+
+        console.log(receipt, "receipt")
 
         for (let i = 0; i < receipt.logs.length; i++) {
           const log = receipt.logs[i];
@@ -508,6 +580,7 @@ export const useNFTs = () => {
     endAuction,
     getSoldNFT,
     getSoldNFTs,
-    getOwnedNFTs
+    getOwnedNFTs,
+    bulkMint
   };
 };

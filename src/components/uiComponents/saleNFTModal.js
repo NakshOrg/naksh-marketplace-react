@@ -52,7 +52,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
         <div
           onClick={() => setSelectedValue(0)}
           className={
-            "relative cursor-pointer w-1/3 h-full text-bold  rounded-xl flex flex-col justify-center items-center" +
+            "relative cursor-pointer w-1/3 h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
             (selectedValue === 0 ? " gradient" : "")
           }
         >
@@ -99,7 +99,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
       <div className="w-full flex flex-col justify-center items-center p-3 space-y-4">
         <div className="p-4 rounded-xl space-y-4 bg-[#24293C] w-full h-fit flex flex-col justify-around items-around">
           <label className="text-gray-600" htmlFor="">
-            Enter minimum bid
+            {selectedValue === 0 ? "Enter price" : "Enter minimum bid"}
           </label>
           <div className="flex justify-between items-center">
             <input

@@ -19,7 +19,7 @@ const NAKSH_NFT_ADDRESS = "0xA7F4AD36bD0eF14A21D8f50279323356f12c2e56";
 
 export default function CreateNft(props) {
   const { evmWalletData, evmProvider } = useAppContext();
-  const { mintNft, uploadMedia, listNFT } = useNFTs();
+  const { mintNft, uploadMedia, listNFT, bulkMint } = useNFTs();
   const { getUserCollections, getRoyalties } = useCollection();
 
   const [royalty, setRoyalty] = useState(1);
@@ -107,9 +107,6 @@ export default function CreateNft(props) {
 
   const changeQuantity = (value, operation = "+") => {
     if (operation === "+") {
-      if (quantity === 10) {
-        return;
-      }
       setQuantity((q) => q + value);
     } else {
       if (quantity === 1) {
@@ -134,26 +131,54 @@ export default function CreateNft(props) {
 
     const toastId = toast.loading("Uploading NFT");
     try {
-      if (image) {
-        const img = await uploadMedia(image);
-        toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
-          id: toastId,
-        });
-        console.log(artist.image, "image")
-        const nft = await mintNft(
-          collection,
-          `ipfs://${img}`,
-          name,
-          description,
-          artist ? artist.name : evmWalletData.address,
-          artist ? artist.image : ""
-        );
-        toast.success("Successfully minted NFT", {
-          id: toastId,
-        });
-        return nft;
+      if(quantity > 1) {
+        if(image) {
+          console.log("1111111111")
+          const img = await uploadMedia(image)
+          toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
+            id: toastId,
+          });
+
+          const nft = await bulkMint(
+            collection,
+            `ipfs://${img}`,
+            name,
+            description,
+            artist ? artist.name : evmWalletData.address,
+            artist ? artist.image : "",
+            quantity
+          );
+          toast.success("Successfully minted NFT", {
+            id: toastId,
+          });
+          return nft;
+        }
+      } else {
+        if (image) {
+          const img = await uploadMedia(image);
+          toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
+            id: toastId,
+          });
+          
+          const nft = await mintNft(
+            collection,
+            `ipfs://${img}`,
+            name,
+            description,
+            artist ? artist.name : evmWalletData.address,
+            artist ? artist.image : ""
+          );
+          toast.success("Successfully minted NFT", {
+            id: toastId,
+          });
+          return nft;
+        }
       }
+
     } catch (e) {
+      toast.error("Faced issue in minting nft", {
+        id: toastId
+      })
       console.error(e);
     }
   };
@@ -494,7 +519,7 @@ export default function CreateNft(props) {
                   You Will Receive:{" "}
                   <span className="font-bold">
                     {Number(price) -
-                      Number(price) * 0.2 -
+                      Number(price) * 0.05 -
                       Number(price) * (royaltyPerc / 100)}{" "}
                     MATIC
                   </span>
@@ -504,7 +529,7 @@ export default function CreateNft(props) {
           </div>
           <div className="w-full md:w-1/2 h-full py-3 md:py-0 md:px-5 space-x-4 flex justify-center md:justify-end items-center">
             <h1 className="text-md font-normal text-gray-400">
-              Quantity (Max 10)
+              Quantity
             </h1>
             <div className="flex justify-center items-center space-x-3">
               <FiMinus

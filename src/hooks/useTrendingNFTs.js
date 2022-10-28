@@ -45,31 +45,36 @@ export const useTrendingNFTs = () => {
         const data = await res.data;
         const trendingNfts = data.nfts.sort((a, b) => b.trending - a.trending);
 
-        // console.log(trendingNfts)
-        const nfts = await getManyNFTs(trendingNfts.map((d) => d.token));
+        const trendingNftsUnique = [
+          ...new Map(trendingNfts.map((item) => [item["token"], item])).values(),
+        ];
+
+        
+        const nfts = await getManyNFTs(trendingNftsUnique.map((d) => d.token));
+        
         const sellingNFTs = await getNFTsOnSale();
         // console.log(sellingNFTs)
 
         let newNFTs = [];
 
         nfts.map((n, idx) => {
+          let found = false
           sellingNFTs.map((nft) => {
             if (n.id === nft.id) {
+              
               newNFTs.push({
                 salePrice: nft.salePrice,
                 ...n,
               });
-            } else {
-              newNFTs.push({
-                salePrice: 0,
-                ...n,
-              });
+
+              found = true
+              return
             }
           });
 
           // console.log(idx, newNFTs.length)
 
-          if (idx >= newNFTs.length - 1) {
+          if (!found) {
             newNFTs.push({
               salePrice: 0,
               ...n,

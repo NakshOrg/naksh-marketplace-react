@@ -180,7 +180,7 @@ const useCollection = () => {
         });
         resolve(tx);
       } catch (e) {
-        toast.success("Can't create a collection", {
+        toast.error("Can't create a collection", {
           id: toastId,
         });
         reject(e);

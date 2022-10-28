@@ -916,7 +916,7 @@ export default function PolygonNftDetails(props) {
                   opacity: purchasable ? 1 : 0.6,
                 }}
                 onClick={() => buyMatic()}
-                content={<div>PURCHASE WITH FIAT</div>}
+                content={<div>PURCHASE WITH INR</div>}
               />
             </div>
           </Col>

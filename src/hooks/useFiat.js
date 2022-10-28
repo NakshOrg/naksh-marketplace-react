@@ -37,12 +37,13 @@ export const useFiat = () => {
   useEffect(() => {
     if (fiat) {
       const fiatAmount = Number(amount) < 100 ? "100" : amount;
-
-      // console.log(widget, "DSA")
+      
       if (widget && widget.fiatAmount && widget.fiatAmount === fiatAmount) {
-        widget.init();
+        // widget.init();
 
         return;
+      } else {
+        
       }
 
       let createWidget = new window.onMetaWidget({

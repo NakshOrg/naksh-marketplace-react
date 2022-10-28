@@ -47,7 +47,7 @@ export default function PolygonNftDetails(props) {
   const convertAmountToMatic = async (price) => {
     try {
       //   console.log(price);
-      const fromURL = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`;
+      const fromURL = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=inr`;
 
       const res = await axios({
         url: fromURL,
@@ -55,9 +55,11 @@ export default function PolygonNftDetails(props) {
 
       const data = res.data;
 
-      if (data && data["matic-network"] && data["matic-network"].usd) {
-        return data["matic-network"].usd * price;
+      if (data && data["matic-network"] && data["matic-network"].inr) {
+        return data["matic-network"].inr * price;
       }
+
+
       throw new Error("Can't find price at the moment");
     } catch (e) {
       alert(e.message);
@@ -285,7 +287,6 @@ export default function PolygonNftDetails(props) {
       const amount = await convertAmountToMatic(
         Number(ethers.utils.formatEther(saleData.salePrice))
       );
-      //   console.log(amount);
       setAmount(amount);
       setFiat(true);
     } else {

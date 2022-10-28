@@ -307,7 +307,7 @@ export default function CreateNft(props) {
         <div className="w-1/2 flex justify-end items-center space-x-4">
           <GradientBtn
             onClick={() => setListModal(true)}
-            content="Mint NFT"
+            content="MINT NFT"
             style={{ width: "187px" }}
           />
         </div>

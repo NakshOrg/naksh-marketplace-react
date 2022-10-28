@@ -4,6 +4,10 @@ import { Col, Row, Container } from "react-bootstrap";
 import { FiFacebook, FiGlobe } from "react-icons/fi";
 import { BsInstagram } from "react-icons/bs";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import facebook from "../../assets/svgs/facebook.svg";
+import instagram from "../../assets/svgs/instagram.svg";
+import website from "../../assets/svgs/website.svg";
+import twitter from "../../assets/svgs/twitter.svg";
 
 import profileSvg from "../../assets/svgs/profile-icon-big.svg";
 import NftCard from "../../components/explore/NftCard";
@@ -26,6 +30,7 @@ import useCollection from "../../hooks/useCollection";
 import { useSavedNFTs } from "../../hooks/useSavedNFTs";
 import { ethers } from "ethers";
 import { CollectionCard } from "../../components/explore/CollectionCard";
+import helpers from "../../constants/helpers"
 
 const mainText = {
   minted: "Create NFT and mint it now to get forever royalties",
@@ -494,9 +499,34 @@ export default function UserProfile(props) {
               </h1>
               <p className="text-gray-400">{artist && artist.description}</p>
               <div className="w-full flex justify-center items-center space-x-5">
-                {/* <img src={facebook} className="w-10 h-10 bg-white rounded-full p-2" />
-                                <img src={instagram} className="w-10 h-10 bg-white rounded-full p-2" />
-                                <img src={website} className="w-10 h-10 bg-white rounded-full p-2" /> */}
+                {artist.facebook && (
+                  <img
+                    onClick={() => helpers.openInNewTab(artist.facebook)}
+                    src={facebook}
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
+                  />
+                )}
+                {artist.twitter && (
+                  <img
+                    onClick={() => helpers.openInNewTab(artist.twitter)}
+                    src={twitter}
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
+                  />
+                )}
+                {artist.instagram && (
+                  <img
+                    onClick={() => helpers.openInNewTab(artist.instagram)}
+                    src={instagram}
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
+                  />
+                )}
+                {artist.website && (
+                  <img
+                    onClick={() => helpers.openInNewTab(artist.website)}
+                    src={website}
+                    className="w-10 h-10 bg-white rounded-full p-2 cursor-pointer"
+                  />
+                )}
               </div>
               <div className="w-full h-full flex flex-col justify-start items-center mt-10 pt-10 space-y-8">
                 <div className="w-1/2 flex justify-end items-center space-x-4">

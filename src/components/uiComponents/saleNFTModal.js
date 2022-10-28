@@ -10,7 +10,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
 
 	const [value, setValue] = useState('');
 	const [selectedValue, setSelectedValue] = useState(0);
-	const [auctionTime, setAuctionTime] = useState(1);
+	const [auctionTime, setAuctionTime] = useState("1");
 
 	const listNft = async () => {
 		if (selectedValue === 0) {
@@ -22,7 +22,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
 			const currDate = new Date();
 			const currUnix = currDate.getTime() / 1000;
 
-			currDate.setDate(currDate.getDate() + auctionTime);
+			currDate.setDate(currDate.getDate() + Number(auctionTime));
 			const nextUnix = currDate.getTime() / 1000;
 
 			// auction nft
@@ -106,7 +106,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
               value={value}
               onChange={(e) => {
                 let val = e.target.value;
-                
+
                 if (isNaN(Number(val))) return;
 
                 setValue(val);
@@ -132,8 +132,14 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
             <div className="flex justify-around items-cneter">
               <input
                 value={auctionTime}
-                onChange={(e) => setAuctionTime(Number(e.target.value))}
-                type="number"
+                onChange={(e) => {
+                  let val = e.target.value;
+
+                  if (isNaN(Number(val))) return;
+
+                  setAuctionTime(val);
+                }}
+                type="text"
                 className="w-full h-full bg-transparent"
               />
               <span>Days</span>

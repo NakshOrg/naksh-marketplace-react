@@ -395,7 +395,7 @@ export default function PolygonNftDetails(props) {
                 alt="artist"
               />
               <div style={{ fontSize: 16, marginLeft: 10 }}>
-                {nft?.artistName}
+                {nft?.artistName.substring(0, 15)}
               </div>
             </div>
           </div>

@@ -14,16 +14,15 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
 		if(saleData.saleType === "0" || saleData.saleType === 0) {
 			await buyNFTonSale(nft, nft.nftAddress, nft.tokenId, price)
 		} else {
-			await buyNFT({address: nft.nftAddress, ...nft}, value, price.toString())
+			await buyNFT({address: nft.nftAddress, ...nft}, ethers.utils.parseEther(value).toString(), price.toString())
 		}
 		window.location.reload(false);
 	}
-	const [value, setValue] = useState(saleData.auction && saleData.auction.highestBid ? saleData.auction.highestBid : price);
-
-	useEffect(() => {
-		console.log(Number(ethers.utils.formatEther(value.toString())), "number");
-		if(Number(ethers.utils.formatEther(value.toString())) < 0) setValue("0")
-	}, [value])
+	const [value, setValue] = useState(
+    saleData.auction && saleData.auction.highestBid
+      ? ethers.utils.formatEther(saleData.auction.highestBid.toString())
+      : ethers.utils.formatEther(price.toString())
+  );
 
 	return (
     <div className="bg-[#12192B] space-y-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-1/2 lg:w-1/3 h-11/12 rounded-xl p-2 flex flex-col justify-center items-center">
@@ -35,18 +34,14 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
       >
         Place an offer
       </h1>
-      <p
-        className="text-xl"
-      >
-        You are about to bid to {nft.title}
-      </p>
+      <p className="text-xl">You are about to bid to {nft.title}</p>
       <div
         className="walletCardFlex"
         style={{ flexDirection: "column", marginTop: "30px" }}
       >
         <div
           style={{
-			width: "80%",
+            width: "80%",
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
@@ -56,34 +51,36 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
             backdropFilter: "blur(96.1806px)",
           }}
         >
-          <input
-            value={Number(ethers.utils.formatEther(value.toString()))}
-            onChange={(e) => {
-              const v =
-                saleData && saleData.auction
-                  ? saleData.auction.highestBid
-                  : saleData.salePrice;
-              let val = e.target.value;
+          {saleData.saleType.toString() !== "0" ? 
+            <input
+              value={value}
+              onChange={(e) => {
+                let val = e.target.value;
 
-              if (isNaN(Number(val)) || val === "") val = "0";
+                if (isNaN(Number(val))) return;
 
-              if (Number(val) < Number(ethers.utils.formatEther(v))) {
-                setBadValue(true);
-              } else {
-                setBadValue(false);
-              }
-              setValue(ethers.utils.parseEther(val));
-            }}
-            type="text"
-            className="text-xl"
-            style={{
-              width: "80%",
-              padding: "10px",
-              background: "transparent",
-              color: badValue ? "red" : "#fff",
-            }}
-            contentEditable={true}
-          />
+                setValue(val);
+              }}
+              type="text"
+              className="text-xl"
+              style={{
+                width: "80%",
+                padding: "10px",
+                background: "transparent",
+                color: badValue ? "red" : "#fff",
+              }}
+            />
+            :
+            <div className="text-xl"
+              style={{
+                width: "80%",
+                padding: "10px",
+                background: "transparent",
+                color: badValue ? "red" : "#fff",
+              }}>
+                {value}
+            </div>
+          }
           <img src={polygon} className="ml-2 w-5 h-5" />
         </div>
         <div

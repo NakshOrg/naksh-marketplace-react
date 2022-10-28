@@ -354,7 +354,7 @@ export default function UserProfile(props) {
               image={nft.tokenUri}
               title={nft.title}
               nearFee={number}
-              artistName={nft?.artistName}
+              artistName={nft?.artistName.substring(0, 15)}
               artistImage={nft?.tokenUri}
             />
           </Col>
@@ -489,7 +489,7 @@ export default function UserProfile(props) {
               />
               <h1 className="font-bold text-3xl">
                 {artist
-                  ? artist.name
+                  ? artist.name.substring(0, 15)
                   : evmWalletData.address.substring(0, 6) + "..."}
               </h1>
               <p className="text-gray-400">{artist && artist.description}</p>
@@ -600,7 +600,7 @@ export default function UserProfile(props) {
                                     .toString()
                                 : 0
                             }
-                            artistName={artist.name}
+                            artistName={artist.name.substring(0, 15)}
                             artistImage={artist.image}
                           />
                         </Col>
@@ -623,7 +623,9 @@ export default function UserProfile(props) {
                           xs={12}
                         >
                           <CollectionCard
-                            onClick={() => history.push(`/collection/${collection.id}`)}
+                            onClick={() =>
+                              history.push(`/collection/${collection.id}`)
+                            }
                             image={
                               collection.logo.startsWith("ipfs")
                                 ? `https://${collection.logo.substring(
@@ -632,7 +634,7 @@ export default function UserProfile(props) {
                                 : collection.logo
                             }
                             title={collection.name}
-                            artistName={collection.artistName}
+                            artistName={collection.artistName.substring(0, 15)}
                             artistImg={collection.artistImg}
                           />
                         </Col>

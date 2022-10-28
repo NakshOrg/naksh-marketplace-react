@@ -42,7 +42,7 @@ function NftCard(props) {
                 <div style={{...globalStyles.flexRowSpace, marginTop:5}}>
                     <div style={globalStyles.flexRowSpace}>
                         {artistImage && <img style={{height:20, width:20, borderRadius:20, objectFit:"cover"}} src={artistImage} alt='artist'/>}
-                        {artistName && <div style={{fontSize:11, opacity:0.67, marginLeft:5, textTransform:"capitalize", color:"#fff"}}>{artistName}</div>}
+                        {artistName && <div style={{fontSize:11, opacity:0.67, marginLeft:5, textTransform:"capitalize", color:"#fff"}}>{artistName.substring(0, 15)}</div>}
                     </div>
                     {/* <div style={{fontSize:11, opacity:0.67}}>{price}</div> */}
                 </div>

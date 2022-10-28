@@ -103,12 +103,11 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
           </label>
           <div className="flex justify-between items-center">
             <input
-              step={1}
-              value={Number(value)}
+              value={value}
               onChange={(e) => {
                 let val = e.target.value;
-
-                if (isNaN(Number(val)) || val === "") val = "0";
+                
+                if (isNaN(Number(val))) return;
 
                 setValue(val);
               }}

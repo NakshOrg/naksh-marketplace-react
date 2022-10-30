@@ -38,7 +38,7 @@ const CollectionDetails = () => {
 
     let uniqueOwner = {};
 
-    nfts.map((nft) => (uniqueOwner[nft.creator] = true));
+    nfts.map((nft) => (uniqueOwner[nft.owner] = true));
 
     setOwners(Object.keys(uniqueOwner).length);
     setCollection(collections);
@@ -127,7 +127,10 @@ const CollectionDetails = () => {
           <div className="w-full h-full flex flex-col md:flex-row justify-start items-center md:items-start">
             <div className="-mt-40 w-11/12 md:w-1/4 h-full md:mx-20 bg-black/75 backdrop-blur-lg rounded-xl p-10 flex flex-col justify-start items-center space-y-5">
               <div className="rounded-full flex justify-center items-center  w-40 h-40">
-                <img src={collection.logo} className="w-full h-full rounded-full" />
+                <img
+                  src={collection.logo}
+                  className="w-full h-full rounded-full"
+                />
               </div>
               <h1 className="font-bold text-3xl">{collection.name}</h1>
               <p className="text-gray-400">
@@ -285,9 +288,13 @@ const CollectionDetails = () => {
                             <NftCard
                               onClick={() =>
                                 history.push(
-                                  `/polygon/nftdetails/${
-                                    nft.nftAddress
-                                  }/${nft.tokenId.toString()}`
+                                  nft?.erc721
+                                    ? `/polygon/nftdetails/${
+                                        nft.nftAddress
+                                      }/${nft.tokenId.toString()}`
+                                    : `/polygon/${nft.owner}/${
+                                        nft.nftAddress
+                                      }/${nft.tokenId.toString()}`
                                 )
                               }
                               image={

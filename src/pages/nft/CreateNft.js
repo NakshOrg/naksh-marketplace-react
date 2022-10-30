@@ -130,8 +130,18 @@ export default function CreateNft(props) {
     }
 
     const toastId = toast.loading("Uploading NFT");
+    let erc721 = true
+
+    if(collection === NAKSH_NFT_ADDRESS) erc721 = true
+
+    const collectionDetails = userCollections.find(c => c.id.toLowerCase() === collection)
+
+    console.log(erc721, collectionDetails, "dsadsadsadsadsa")
+
+    erc721 = collectionDetails.erc721
+
     try {
-      if(quantity > 1) {
+      if(!erc721) {
         if(image) {
           console.log("1111111111")
           const img = await uploadMedia(image)
@@ -155,6 +165,7 @@ export default function CreateNft(props) {
         }
       } else {
         if (image) {
+          console.log('2222222222222222')
           const img = await uploadMedia(image);
           toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
             id: toastId,

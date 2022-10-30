@@ -577,7 +577,9 @@ export default function Browse() {
     return (
       allEVMNfts.length > 0 &&
       allEVMNfts.map((nft) => {
-        const url = `/polygon/nftdetails/${
+        const url = nft.nft.erc721 ? `/polygon/nftdetails/${
+          nft.nft.nftAddress
+        }/${nft.nft.tokenId.toString()}` : `/polygon/${nft.nft.owner}/${
           nft.nft.nftAddress
         }/${nft.nft.tokenId.toString()}`;
         return (

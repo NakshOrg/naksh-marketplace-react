@@ -1,6 +1,8 @@
 import { useAppContext } from "../context/wallet";
 import nakshAbi from "../interface/nakshAbi.json";
 import nftAbi from "../interface/nftAbi.json";
+import nft1155Abi from "../interface/nft1155Abi.json"
+import nakshAbi1155 from "../interface/nakshAbi1155.json";
 import { ethers, BigNumber } from "ethers";
 import toast from "react-hot-toast";
 import {
@@ -10,7 +12,8 @@ import {
   GET_SINGLE_NFT,
   MY_NFTS,
   NFT_DATA_QUERY,
-  MY_MINTED_NFTS
+  MY_MINTED_NFTS,
+  NFT_DATA_OWNER_QUERY
 } from "./useGraphApi";
 
 export const useNFTs = () => {
@@ -19,7 +22,35 @@ export const useNFTs = () => {
     evmWalletData,
     nakshContract,
     NAKSH_ADDRESS,
+    NAKSH_ADDRESS_1155,
   } = useAppContext();
+
+  const getNFTOwners = async (nftAddress, tokenId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(
+          "https://api.thegraph.com/subgraphs/name/sk1122/naksh",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              query: NFT_DATA_OWNER_QUERY,
+              variables: {
+                nftAddress,
+                tokenId
+              },
+            }),
+          }
+        );
+        const nft = (await res.json()).data.nftdatas;
+        // console.log(nft)
+
+        resolve(nft ? nft : []);
+      } catch (e) {
+        // console.log(e, "error")
+        reject(e);
+      }
+    });
+  }
 
   const getManyNFTs = async (ids) => {
     return new Promise(async (resolve, reject) => {
@@ -110,6 +141,38 @@ export const useNFTs = () => {
       try {
         const tx = await contract.buyTokenOnSale(tokenId, nftAddress, {
           value: BigNumber.from(value.toString()),
+          gasPrice: evmProvider.getGasPrice(),
+          gasLimit: 1000000,
+        });
+
+        await tx.wait();
+
+        toast.success(`Successfully bought ${nft.title}`, {
+          id: toastId,
+        });
+        resolve(tx);
+      } catch (e) {
+        toast.error(`Can't buy ${nft.title}`, {
+          id: toastId,
+        });
+        reject(e);
+      }
+    });
+  };
+
+  const buyNFTonSale1155 = async (nft, nftAddress, tokenId, value, owner, quantity) => {
+    return new Promise(async (resolve, reject) => {
+      const toastId = toast.loading(`Buying ${nft.title}`);
+      const contract = new ethers.Contract(
+        NAKSH_ADDRESS_1155,
+        nakshAbi1155,
+        evmWalletData.signer
+      );
+
+      try {
+        console.log(tokenId, nftAddress, owner, quantity, "nftAddresss")
+        const tx = await contract.buyTokenOnSale(tokenId, nftAddress, owner, quantity, {
+          value: BigNumber.from((Number(value) * Number(quantity)).toString()),
           gasPrice: evmProvider.getGasPrice(),
           gasLimit: 1000000,
         });
@@ -230,6 +293,50 @@ export const useNFTs = () => {
       });
     }
   };
+
+  const listNFT1155 = async (nft, typeOfListing, quantity, config) => {
+    const toastId = toast.loading("Listing your NFT");
+    try {
+      const contract = new ethers.Contract(
+        NAKSH_ADDRESS_1155,
+        nakshAbi1155,
+        evmWalletData.signer
+      );
+
+      if (nft !== undefined && config !== undefined) {
+        await approveNFT(nft.nftAddress, nft.tokenId, NAKSH_ADDRESS_1155, false);
+        if (typeOfListing === 0) {
+          const tx = await contract.setSale(
+            nft.nftAddress,
+            nft.tokenId,
+            quantity,
+            BigNumber.from(config.price),
+            {
+              gasPrice: evmProvider.getGasPrice(),
+              gasLimit: 10000000,
+            }
+          );
+          await tx.wait();
+          toast.success("Successfully listed your NFT", {
+            id: toastId,
+          });
+        } else {
+          toast.error("Wrong config, auction not supported on ERC1155", {
+            id: toastId
+          })
+        }
+      } else {
+        toast.error("Problem with selected nft", {
+          id: toastId,
+        });
+      }
+    } catch (e) {
+      // console.log(e);
+      toast.error("Problem with selected nft", {
+        id: toastId,
+      });
+    }
+  }
 
   const getBids = async (nftAddress, tokenId) => {
     return new Promise(async (resolve, reject) => {
@@ -367,34 +474,24 @@ export const useNFTs = () => {
     times
   ) => {
     return new Promise(async (resolve, reject) => {
-      try {
-        let tokenUriArr = []
-        let titleArr = []
-        let descriptionArr = []
-
-        for(let i = 0; i < times; i++) {
-          tokenUriArr.push(
-            tokenUri
-          )
-          titleArr.push(title)
-          descriptionArr.push(description)
-        }
-        
+      try {        
         const contract = new ethers.Contract(
           nftAddress,
-          nftAbi,
+          nft1155Abi,
           evmWalletData.signer
         );
 
-        const nft = await contract.bulkMintByArtist(
-          tokenUriArr,
-          titleArr,
-          descriptionArr,
+        const nft = await contract.mintByArtistOrAdmin(
+          evmWalletData.address,
+          tokenUri,
+          times,
+          title,
+          description,
           artistName,
           artistImg,
           {
             gasPrice: evmProvider.getGasPrice(),
-            gasLimit: 1000000,
+            gasLimit: 10000000,
           }
         );
 
@@ -431,29 +528,49 @@ export const useNFTs = () => {
     });
   };
 
-  const approveNFT = async (address, tokenId, to) => {
+  const approveNFT = async (address, tokenId, to, erc721 = true) => {
     return new Promise(async (resolve, reject) => {
       const toastId = toast.loading(
         "Approving NFT " + tokenId + " from " + address
       );
       try {
-        const contract = new ethers.Contract(
-          address,
-          nftAbi,
-          evmWalletData.signer
-        );
+        if(erc721) {
+          const contract = new ethers.Contract(
+            address,
+            nftAbi,
+            evmWalletData.signer
+          );
+  
+          const approved = await contract.approve(to, Number(tokenId), {
+            gasPrice: evmProvider.getGasPrice(),
+            gasLimit: 10000000,
+          });
+  
+          await approved.wait();
+  
+          toast.success("Successfully approved NFT", {
+            id: toastId,
+          });
+          resolve(approved);
+        } else {
+          const contract = new ethers.Contract(
+            address,
+            nft1155Abi,
+            evmWalletData.signer
+          );
 
-        const approved = await contract.approve(to, Number(tokenId), {
-          gasPrice: evmProvider.getGasPrice(),
-          gasLimit: 10000000,
-        });
+          const approved = await contract.setApprovalForAll(to, true, {
+            gasPrice: evmProvider.getGasPrice(),
+            gasLimit: 10000000,
+          });
 
-        await approved.wait();
+          await approved.wait();
 
-        toast.success("Successfully approved NFT", {
-          id: toastId,
-        });
-        resolve(approved);
+          toast.success("Successfully approved NFT", {
+            id: toastId,
+          });
+          resolve(approved);
+        }
       } catch (e) {
         toast.error("Can't approve NFT", {
           id: toastId,
@@ -581,6 +698,9 @@ export const useNFTs = () => {
     getSoldNFT,
     getSoldNFTs,
     getOwnedNFTs,
-    bulkMint
+    bulkMint,
+    listNFT1155,
+    buyNFTonSale1155,
+    getNFTOwners
   };
 };

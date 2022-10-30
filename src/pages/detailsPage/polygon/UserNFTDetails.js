@@ -36,9 +36,9 @@ import axios from "axios";
 import { useSavedNFTs } from "../../../hooks/useSavedNFTs";
 import useCollection from "../../../hooks/useCollection";
 
-export default function PolygonNftDetails(props) {
-  const { getNFT, getNFTsOnSale, buyNFT, endAuction, getNFTOwners } = useNFTs();
-  const { nakshContract, evmWalletData, NAKSH_ADDRESS_1155 } = useAppContext();
+export default function UserPolygonNftDetails(props) {
+  const { getNFT, getManyNFTs, getNFTsOnSale, buyNFT, endAuction } = useNFTs();
+  const { nakshContract, evmWalletData } = useAppContext();
   const { updateTrendingNFT } = useTrendingNFTs();
 
   const { setFiat, setAmount, fiat } = useFiat();
@@ -86,8 +86,6 @@ export default function PolygonNftDetails(props) {
   const [savedNft, setSavedNft] = useState(false);
   const [user, setUser] = useState();
   const [collection, setCollection] = useState()
-  const [owners, setOwners] = useState([])
-  const [totalQuantity, setTotalQuantity] = useState(0)
 
   const [auctionData, setAuctionData] = useState({});
   const [bids, setBids] = useState([]);
@@ -146,25 +144,6 @@ export default function PolygonNftDetails(props) {
     }
   }, [saleData]);
 
-  useEffect(() => {
-    if(collection) {
-      if(!collection.erc721) {
-        getNFTOwners(params.address, params.id)
-          .then(res => {
-            const copy = res
-              .slice()
-              .filter(
-                (item) => item.owner.toLowerCase() !== NAKSH_ADDRESS_1155.toLowerCase()
-              );
-            let totalQuantity = 0
-            res.map(nft => totalQuantity += Number(nft.quantity))
-            setTotalQuantity(totalQuantity)
-            setOwners(copy)
-          })
-      }
-    }
-  }, [collection])
-
   // useEffect(() => {
   // 	if (nft && nft.tokenId) {
   // 		getBids(nft.tokenId)
@@ -176,6 +155,7 @@ export default function PolygonNftDetails(props) {
   useEffect(() => {
     if (evmWalletData && nft && nft.owner) {
       if (saleData) {
+        console.log(nft.owner, evmWalletData.address, saleData.saleType, saleData.salePrice, 'yoyoyo')
         setPurchasable({
           owner:
             nft.owner.toLowerCase() === evmWalletData.address.toLowerCase(),
@@ -248,10 +228,13 @@ export default function PolygonNftDetails(props) {
       setLoading(true);
       const nfts = await getNFTsOnSale();
 
-      const nft = await getNFT(params.address, params.id);
-      //   console.log(nft, "nft");
+      const nftss = await getManyNFTs([`${params.user.toLowerCase()}-${params.address.toLowerCase()}-${params.id.toLowerCase()}`]);
+      if (nftss.length <= 0) {
+        throw new Error("NFT not found");
+      }
 
-      //   console.log(nfts, "nffff");
+      const nft = nftss[0]
+
       const moreNfts = nfts.filter(
         (item) =>
           item.nft.tokenId.toString() !== params.id ||
@@ -260,10 +243,12 @@ export default function PolygonNftDetails(props) {
 
       const foundNft = nfts.find(
         (item) =>
+          item.nft.owner.toLowerCase() === params.user.toLowerCase() &&
           item.nft.tokenId.toString() === params.id &&
           item.nft.nftAddress.toLowerCase() === params.address.toLowerCase()
       );
       setPrice(foundNft ? Number(foundNft.salePrice) : 0);
+      console.log(foundNft, nfts, "yoyoyo")
       setSaleData(foundNft);
 
       getCollection(nft.nftAddress)
@@ -345,32 +330,19 @@ export default function PolygonNftDetails(props) {
         <div style={{ marginTop: 14, ...globalStyles.flexRow }}>
           <div>
             <div style={{ fontSize: 14, opacity: 0.66 }}>Quantity</div>
-            {nft?.erc721 ? (
-              <div
-                style={{
-                  fontFamily: 200,
-                  fontSize: 16,
-                  opacity: 0.95,
-                  marginTop: 5,
-                  letterSpacing: "0.5px",
-                }}
-              >
-                {nft?.quantity} available{" "}
-                {saleData ? <span> and {saleData.quantity} on sale</span> : ""}
-              </div>
-            ) : (
-              <div
-                style={{
-                  fontFamily: 200,
-                  fontSize: 16,
-                  opacity: 0.95,
-                  marginTop: 5,
-                  letterSpacing: "0.5px",
-                }}
-              >
-                {totalQuantity} available{" "}
-              </div>
-            )}
+            <div
+              style={{
+                fontFamily: 200,
+                fontSize: 16,
+                opacity: 0.95,
+                marginTop: 5,
+                letterSpacing: "0.5px",
+              }}
+            >
+              {nft?.quantity} available
+              {" "}
+              {saleData ? <span> and {saleData.quantity} on sale</span> : ""}
+            </div>
           </div>
           <div style={{ marginLeft: 30 }}>
             <div style={{ fontSize: 14, opacity: 0.66 }}>Collection</div>
@@ -422,43 +394,19 @@ export default function PolygonNftDetails(props) {
                 cursor: "pointer",
               }}
             >
-              {nft?.erc721 ? (
-                <>
-                  <img
-                    style={{
-                      height: 30,
-                      width: 30,
-                      borderRadius: 30,
-                      objectFit: "cover",
-                    }}
-                    src={
-                      artist
-                        ? artist.image
-                        : nft?.artistImg
-                        ? nft?.artistImg
-                        : profileSvg
-                    }
-                    alt="artist"
-                  />
-                  <div style={{ fontSize: 16, marginLeft: 10 }}>
-                    {artist ? artist.name : nft?.artistName.substring(0, 15)}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <img
-                    style={{
-                      height: 30,
-                      width: 30,
-                      borderRadius: 30,
-                      objectFit: "cover",
-                    }}
-                    src={profileSvg}
-                    alt="artist"
-                  />
-                  <div style={{ fontSize: 16, marginLeft: 10 }}>Multiple</div>
-                </>
-              )}
+              <img
+                style={{
+                  height: 30,
+                  width: 30,
+                  borderRadius: 30,
+                  objectFit: "cover",
+                }}
+                src={artist ? artist.image : nft?.artistImg ? nft?.artistImg : profileSvg}
+                alt="artist"
+              />
+              <div style={{ fontSize: 16, marginLeft: 10 }}>
+                {artist ? artist.name : nft?.artistName.substring(0, 15)}
+              </div>
             </div>
           </div>
           <div style={{ marginLeft: 30 }}>
@@ -471,51 +419,27 @@ export default function PolygonNftDetails(props) {
             >
               Owner(s)
             </div>
-            {nft?.erc721 ? (
-              <div style={globalStyles.flexRow}>
-                <img
-                  style={{
-                    height: 30,
-                    width: 30,
-                    borderRadius: 30,
-                    objectFit: "cover",
-                  }}
-                  src={ownerData?.image ?? profileSvg}
-                  alt="artist"
-                />
-                <div
-                  style={{
-                    fontSize: 16,
-                    marginLeft: 10,
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {nft?.owner_id}
-                </div>
+            <div style={globalStyles.flexRow}>
+              <img
+                style={{
+                  height: 30,
+                  width: 30,
+                  borderRadius: 30,
+                  objectFit: "cover",
+                }}
+                src={ownerData?.image ?? profileSvg}
+                alt="artist"
+              />
+              <div
+                style={{
+                  fontSize: 16,
+                  marginLeft: 10,
+                  wordBreak: "break-word",
+                }}
+              >
+                {nft?.owner_id}
               </div>
-            ) : (
-              <div style={globalStyles.flexRow}>
-                <img
-                  style={{
-                    height: 30,
-                    width: 30,
-                    borderRadius: 30,
-                    objectFit: "cover",
-                  }}
-                  src={profileSvg}
-                  alt="artist"
-                />
-                <div
-                  style={{
-                    fontSize: 16,
-                    marginLeft: 10,
-                    wordBreak: "break-word",
-                  }}
-                >
-                  Multiple
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </>
@@ -525,42 +449,6 @@ export default function PolygonNftDetails(props) {
   const otherDetails = () => {
     return (
       <>
-        {collection?.erc721 ? (
-          <span></span>
-        ) : (
-          <div>
-            <div style={{ marginTop: 14, ...globalStyles.flexRow }}>
-              <div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    opacity: 0.66,
-                    marginBottom: 6,
-                  }}
-                >
-                  Owners
-                </div>
-                {owners.map((owner) => (
-                  <div
-                    onClick={() => history.push(`/polygon/${owner.owner}/${params.address}/${params.id}`)}
-                    style={{
-                      ...globalStyles.flexRow,
-                      cursor: "pointer",
-                    }}
-                    className="py-1"
-                  >
-                    <div style={{ fontSize: 16, marginLeft: 10 }}>
-                      {owner.owner.substring(0, 8)}...
-                    </div>
-                    <div style={{ fontSize: 16, marginLeft: 10 }}>
-                      Owns {owner.quantity}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
         {/* {nft?.metadata?.extra?.materialMediumUsed &&
             <div style={{marginTop:20}}>
                 <div style={{fontSize:14, opacity:0.66}}>Material Medium Used</div>
@@ -680,7 +568,7 @@ export default function PolygonNftDetails(props) {
         >
           <NftCard
             onClick={() =>
-              nft?.nft.erc721
+              nft?.erc721
                 ? `/polygon/nftdetails/${
                     nft.nft.nftAddress
                   }/${nft.nft.tokenId.toString()}`
@@ -751,7 +639,7 @@ export default function PolygonNftDetails(props) {
                 >
                   {nft?.title}
                 </h1>
-                {saleData && saleData.salePrice && (
+                {saleData && saleData.salePrice && 
                   <div className="font-inter flex items-center">
                     <span className="text-gray-400">Price:</span>{" "}
                     <span className="ml-2 font-bold">
@@ -759,7 +647,7 @@ export default function PolygonNftDetails(props) {
                     </span>
                     <img src={polygon} className="ml-2 w-5 h-5" />
                   </div>
-                )}
+                }
               </div>
               <div style={{ display: "flex" }}>
                 <span
@@ -879,143 +767,116 @@ export default function PolygonNftDetails(props) {
                 &nbsp;&nbsp; This nft is now yours!
               </div>
             )}
-            {nft?.erc721 && (
-              <>
-                {purchasable.owner &&
-                  !purchasable.auctionEnded &&
-                  saleData &&
-                  saleData.auction && (
-                    <div>
-                      <GradientBtn
-                        style={{
-                          marginTop: 30,
-                          cursor: purchasable ? "pointer" : "no-drop",
-                          opacity: purchasable ? 1 : 0.6,
-                        }}
-                        onClick={() => endAuction(params.address, params.id)}
-                        content={<div>END AUCTION</div>}
-                      />
-                    </div>
-                  )}
-                {purchasable.owner &&
-                  purchasable.auctionEnded &&
-                  saleData &&
-                  saleData.auction && (
-                    <div>
-                      <GradientBtn
-                        style={{
-                          marginTop: 30,
-                          cursor: purchasable ? "pointer" : "no-drop",
-                          opacity: purchasable ? 1 : 0.6,
-                        }}
-                        onClick={() => endAuction(params.address, params.id)}
-                        content={<div>END AUCTION</div>}
-                      />
-                    </div>
-                  )}
-                {!purchasable.owner &&
-                  purchasable.auctionEnded &&
-                  saleData &&
-                  saleData.auction &&
-                  saleData.auction.highestBidder &&
-                  saleData.auction.highestBidder.toLowerCase() ===
-                    evmWalletData.address.toLowerCase() && (
-                    <div>
-                      <GradientBtn
-                        style={{
-                          marginTop: 30,
-                          cursor: purchasable ? "pointer" : "no-drop",
-                          opacity: purchasable ? 1 : 0.6,
-                        }}
-                        onClick={() => endAuction()}
-                        content={<div>CLAIM NFT</div>}
-                      />
-                    </div>
-                  )}
-                {!purchasable.owner &&
-                  !purchasable.auctionEnded &&
-                  saleData &&
-                  saleData.isOnSale &&
-                  ((saleData.auction && saleData.auction.highestBidder
-                    ? saleData.auction.highestBidder.toLowerCase() !==
-                      evmWalletData.address.toLowerCase()
-                    : saleData.saleType == "1") ||
-                    saleData.saleType === "0") && (
-                    <div>
-                      <GradientBtn
-                        style={{
-                          marginTop: 30,
-                          cursor: purchasable ? "pointer" : "no-drop",
-                          opacity: purchasable ? 1 : 0.6,
-                        }}
+            {purchasable.owner &&
+              !purchasable.auctionEnded &&
+              saleData &&
+              saleData.auction && (
+                <div>
+                  <GradientBtn
+                    style={{
+                      marginTop: 30,
+                      cursor: purchasable ? "pointer" : "no-drop",
+                      opacity: purchasable ? 1 : 0.6,
+                    }}
+                    onClick={() => endAuction(params.address, params.id)}
+                    content={<div>END AUCTION</div>}
+                  />
+                </div>
+              )}
+            {purchasable.owner &&
+              purchasable.auctionEnded &&
+              saleData &&
+              saleData.auction && (
+                <div>
+                  <GradientBtn
+                    style={{
+                      marginTop: 30,
+                      cursor: purchasable ? "pointer" : "no-drop",
+                      opacity: purchasable ? 1 : 0.6,
+                    }}
+                    onClick={() => endAuction(params.address, params.id)}
+                    content={<div>END AUCTION</div>}
+                  />
+                </div>
+              )}
+            {!purchasable.owner &&
+              purchasable.auctionEnded &&
+              saleData &&
+              saleData.auction &&
+              saleData.auction.highestBidder &&
+              saleData.auction.highestBidder.toLowerCase() ===
+                evmWalletData.address.toLowerCase() && (
+                <div>
+                  <GradientBtn
+                    style={{
+                      marginTop: 30,
+                      cursor: purchasable ? "pointer" : "no-drop",
+                      opacity: purchasable ? 1 : 0.6,
+                    }}
+                    onClick={() => endAuction()}
+                    content={<div>CLAIM NFT</div>}
+                  />
+                </div>
+              )}
+            {!purchasable.owner &&
+              !purchasable.auctionEnded &&
+              saleData &&
+              saleData.isOnSale &&
+              ((saleData.auction && saleData.auction.highestBidder
+                ? saleData.auction.highestBidder.toLowerCase() !==
+                  evmWalletData.address.toLowerCase()
+                : saleData.saleType == "1") ||
+                saleData.saleType === "0") && (
+                <div>
+                  <GradientBtn
+                    style={{
+                      marginTop: 30,
+                      cursor: purchasable ? "pointer" : "no-drop",
+                      opacity: purchasable ? 1 : 0.6,
+                    }}
+                    onClick={() =>
+                      purchasable && nft?.salePrice
+                        ? setIsModalOpen(true)
+                        : null
+                    }
+                    content={
+                      <div
                         onClick={() =>
-                          purchasable && nft?.salePrice
+                          !purchasable.owner && price > 0
                             ? setIsModalOpen(true)
-                            : null
+                            : setIsModalOpen(false)
                         }
-                        content={
-                          <div
-                            onClick={() =>
-                              !purchasable.owner && price > 0
-                                ? setIsModalOpen(true)
-                                : setIsModalOpen(false)
-                            }
-                          >
-                            PURCHASE FOR{" "}
-                            {saleData.auction && saleData.auction.highestBid
-                              ? ethers.utils.formatEther(
-                                  saleData.auction.highestBid
-                                )
-                              : ethers.utils.formatEther(price.toString())}{" "}
-                            MATIC
-                          </div>
-                        }
-                      />
-                    </div>
-                  )}
-                {!purchasable.owner &&
-                  !purchasable.auctionEnded &&
-                  saleData &&
-                  saleData.auction &&
-                  saleData.auction.highestBidder &&
-                  saleData.auction.highestBidder.toLowerCase() ==
-                    evmWalletData.address.toLowerCase() && (
-                    <div>
-                      <GradientBtn
-                        style={{
-                          marginTop: 30,
-                          cursor: purchasable ? "pointer" : "no-drop",
-                          opacity: purchasable ? 1 : 0.6,
-                        }}
-                        content={<div>HIGHEST BIDDER</div>}
-                      />
-                    </div>
-                  )}
-                {!purchasable.owner && purchasable.auctionEnded && (
-                  <div>
-                    <GradientBtn
-                      style={{
-                        marginTop: 30,
-                        cursor: purchasable ? "pointer" : "no-drop",
-                        opacity: purchasable ? 1 : 0.6,
-                      }}
-                      content={<div>AUCTION ENDED</div>}
-                    />
-                  </div>
-                )}
-                {purchasable.owner &&
-                  purchasable.auctionEnded &&
-                  auctionData &&
-                  auctionData.highestBidder &&
-                  auctionData.highestBidder.toLowerCase() ===
-                    evmWalletData.addrses.toLowerCase() && (
-                    <div className={classes.ownedBtn}>
-                      <img style={{ height: 30 }} src={party} alt="party" />
-                      &nbsp;&nbsp; AUCTION ENDED!
-                    </div>
-                  )}
-              </>
-            )}
+                      >
+                        PURCHASE FOR{" "}
+                        {saleData.auction && saleData.auction.highestBid
+                          ? ethers.utils.formatEther(
+                              saleData.auction.highestBid
+                            )
+                          : ethers.utils.formatEther(price.toString())}{" "}
+                        MATIC
+                      </div>
+                    }
+                  />
+                </div>
+              )}
+            {!purchasable.owner &&
+              !purchasable.auctionEnded &&
+              saleData &&
+              saleData.auction &&
+              saleData.auction.highestBidder &&
+              saleData.auction.highestBidder.toLowerCase() ==
+                evmWalletData.address.toLowerCase() && (
+                <div>
+                  <GradientBtn
+                    style={{
+                      marginTop: 30,
+                      cursor: purchasable ? "pointer" : "no-drop",
+                      opacity: purchasable ? 1 : 0.6,
+                    }}
+                    content={<div>HIGHEST BIDDER</div>}
+                  />
+                </div>
+              )}
             {saleData && !saleData.isOnSale && (
               <div>
                 <GradientBtn
@@ -1028,6 +889,29 @@ export default function PolygonNftDetails(props) {
                 />
               </div>
             )}
+            {!purchasable.owner && purchasable.auctionEnded && (
+              <div>
+                <GradientBtn
+                  style={{
+                    marginTop: 30,
+                    cursor: purchasable ? "pointer" : "no-drop",
+                    opacity: purchasable ? 1 : 0.6,
+                  }}
+                  content={<div>AUCTION ENDED</div>}
+                />
+              </div>
+            )}
+            {purchasable.owner &&
+              purchasable.auctionEnded &&
+              auctionData &&
+              auctionData.highestBidder &&
+              auctionData.highestBidder.toLowerCase() ===
+                evmWalletData.addrses.toLowerCase() && (
+                <div className={classes.ownedBtn}>
+                  <img style={{ height: 30 }} src={party} alt="party" />
+                  &nbsp;&nbsp; AUCTION ENDED!
+                </div>
+              )}
             {purchasable.owner && purchasable.auctionEnded && price <= 0 && (
               <GradientBtn
                 style={{
@@ -1070,7 +954,7 @@ export default function PolygonNftDetails(props) {
           saleData={saleData}
           nft={nft}
           price={price}
-          erc721={collection?.erc721}
+          erc721={false}
         />
       )}
       {isSaleModalOpen && (

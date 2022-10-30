@@ -17,6 +17,19 @@ query B($id: [String!]!) {
         isOnSale
         salePrice
       }
+      quantity
+      erc721
+    }
+}
+`;
+
+export const NFT_DATA_OWNER_QUERY = `
+query B($nftAddress: String!, $tokenId: String!) {
+    nftdatas(where:{nftAddress: $nftAddress, tokenId: $tokenId}) {
+      id
+      owner
+    	quantity
+      erc721
     }
 }
 `;
@@ -40,6 +53,8 @@ query GetSingleNft($tokenId: String!, $nftAddress: String!) {
         isOnSale
         salePrice
       }
+      quantity
+      erc721
     }
 }
 `;
@@ -56,12 +71,15 @@ query GetSingleNft($nftAddress: String!) {
       artistImg
       artistName
       creator
+      owner
       minter
       saleData {
         id
         isOnSale
         salePrice
       }
+      quantity
+      erc721
     }
 }
 `;
@@ -85,6 +103,7 @@ query GetUserCollection($creator: String!) {
     isGradient
     artistName
     artistImg
+    erc721
   }
 }
 `;
@@ -108,6 +127,7 @@ query GetUserCollection($address: String!) {
     isGradient
     artistName
     artistImg
+    erc721
   }
 }
 `;
@@ -131,6 +151,7 @@ query GetUserCollection($skip: Int!) {
     isGradient
     artistName
     artistImg
+    erc721
   }
 }
 `;
@@ -152,6 +173,8 @@ query getNftonSale {
       creator
       owner
       minter
+      quantity
+      erc721
     }
     auction {
       id
@@ -161,6 +184,7 @@ query getNftonSale {
       price
       nft {
         id
+        erc721
       }
       owner
       highestBid
@@ -176,9 +200,10 @@ query getNftonSale {
     salePrice
     saleType
     timestamp
+    quantity
   }
 }
-`
+`;
 
 export const AUCTIONED_NFTS = `
 {
@@ -190,6 +215,7 @@ export const AUCTIONED_NFTS = `
     price
     nft {
       id
+      erc721
     }
     owner
     highestBid
@@ -223,6 +249,8 @@ query A($address: String!) {
       isOnSale
       salePrice
     }
+    quantity
+    erc721
   }
 }
 `;
@@ -246,6 +274,8 @@ query A($address: String!) {
       isOnSale
       salePrice
     }
+    quantity
+    erc721
   }
 }
 `;
@@ -269,11 +299,13 @@ query B{
       creator
       owner
       minter
+      erc721
     }
     timestamp
+    quantity
   }
 }
-`
+`;
 
 export const A_SOLD_NFT = `
 query B($nftId: String!) {
@@ -294,11 +326,13 @@ query B($nftId: String!) {
       creator
       owner
       minter
+      erc721
     }
     timestamp
+    quantity
   }
 }
-`
+`;
 
 export const COLLECTION_SOLD_NFTS = `
 query B($address: String!) {
@@ -319,8 +353,10 @@ query B($address: String!) {
       creator
       owner
       minter
+      erc721
     }
     timestamp
+    quantity
   }
 }
-`
+`;

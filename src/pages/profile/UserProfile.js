@@ -92,8 +92,8 @@ export default function UserProfile(props) {
       }).then(({ data: { artist, owner } }) => {
         const savedNft = artist?.savedNft;
         console.log(savedNft, "Dsa");
-        const queryData = savedNft.map((nft) => `${nft.address}-${nft.token}`);
-        console.log(queryData, "dasdsdsa");
+        const queryData = savedNft.map((nft) => [`${nft.address}-${nft.token}`, `${evmWalletData.address}-${nft.address}-${nft.token}`]).flat();
+        
         getManyNFTs(queryData).then((res) => {
           console.log(res, "daswerwr");
           setSavedNFTs(res);
@@ -612,7 +612,13 @@ export default function UserProfile(props) {
                           <NftCard
                             onClick={() =>
                               history.push(
-                                `/polygon/nftdetails/${nft.nftAddress}/${nft.tokenId}`
+                                nft?.erc721
+                                  ? `/polygon/nftdetails/${
+                                      nft.nftAddress
+                                    }/${nft.tokenId.toString()}`
+                                  : `/polygon/${nft.owner}/${
+                                      nft.nftAddress
+                                    }/${nft.tokenId.toString()}`
                               )
                             }
                             image={
@@ -704,7 +710,13 @@ export default function UserProfile(props) {
                           <NftCard
                             onClick={() =>
                               history.push(
-                                `/polygon/nftdetails/${nft.nftAddress}/${nft.tokenId}`
+                                nft?.erc721
+                                  ? `/polygon/nftdetails/${
+                                      nft.nftAddress
+                                    }/${nft.tokenId.toString()}`
+                                  : `/polygon/${nft.owner}/${
+                                      nft.nftAddress
+                                    }/${nft.tokenId.toString()}`
                               )
                             }
                             image={
@@ -762,7 +774,13 @@ export default function UserProfile(props) {
                           <NftCard
                             onClick={() =>
                               history.push(
-                                `/polygon/nftdetails/${nft.nftAddress}/${nft.tokenId}`
+                                nft?.erc721
+                                  ? `/polygon/nftdetails/${
+                                      nft.nftAddress
+                                    }/${nft.tokenId.toString()}`
+                                  : `/polygon/${nft.owner}/${
+                                      nft.nftAddress
+                                    }/${nft.tokenId.toString()}`
                               )
                             }
                             image={

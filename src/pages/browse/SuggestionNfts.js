@@ -189,9 +189,13 @@ function SuggestionNfts({
                     <NftCard
                       onClick={() =>
                         history.push(
-                          `/polygon/nftdetails/${
-                            nft.nft.nftAddress
-                          }/${nft.nft.tokenId.toString()}`
+                          nft?.nft.erc721
+                            ? `/polygon/nftdetails/${
+                                nft.nft.nftAddress
+                              }/${nft.nft.tokenId.toString()}`
+                            : `/polygon/${nft.nft.owner}/${
+                                nft.nft.nftAddress
+                              }/${nft.nft.tokenId.toString()}`
                         )
                       }
                       image={
@@ -237,9 +241,13 @@ function SuggestionNfts({
                     <NftCard
                       onClick={() =>
                         history.push(
-                          `/polygon/nftdetails/${
-                            nft.nftAddress
-                          }/${nft.tokenId.toString()}`
+                          nft?.nft.erc721
+                            ? `/polygon/nftdetails/${
+                                nft.nft.nftAddress
+                              }/${nft.nft.tokenId.toString()}`
+                            : `/polygon/${nft.nft.owner}/${
+                                nft.nft.nftAddress
+                              }/${nft.nft.tokenId.toString()}`
                         )
                       }
                       image={

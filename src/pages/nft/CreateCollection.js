@@ -43,6 +43,7 @@ export default function CreateCollection(props) {
   const [royalty, setRoyalty] = useState(1);
   const [royaltyPerc, setRoyaltyPerc] = useState(0);
   const [royalties, setRoyalties] = useState([{ wallet: "", percentage: "" }]);
+  const [erc721, setERC721] = useState(true)
 
   const ref = useRef(null);
   const coverRef = useRef(null);
@@ -130,7 +131,8 @@ export default function CreateCollection(props) {
           percentages,
           wallets,
           artist ? artist.name : evmWalletData.address,
-          artist ? artist.image : ""
+          artist ? artist.image : "",
+          erc721
         );
         hash = tx.hash;
         await tx.wait();
@@ -151,7 +153,8 @@ export default function CreateCollection(props) {
           percentages,
           wallets,
           artist ? artist.name : evmWalletData.address,
-          artist ? artist.image : ""
+          artist ? artist.image : "",
+          erc721
         );
         hash = tx.hash;
         await tx.wait();
@@ -295,6 +298,20 @@ export default function CreateCollection(props) {
           <h1 className="text-xl md:text-3xl font-bold">Create Collection</h1>
         </div>
         <div className="w-1/2 flex justify-end items-center space-x-4">
+          <select
+            value={erc721 ? "ERC721" : "ERC1155"}
+            onChange={(e) =>{
+              console.log(e.target.value, e.target.value === "ERC721", "value")
+              setERC721(e.target.value === "ERC721")
+            }}
+            className="p-3 text-white bg-brand-gray"
+            name="collectionType"
+            id="collectionType"
+            placeholder="Collection Type"
+          >
+            <option value="ERC721">ERC721</option>
+            <option value="ERC1155">ERC1155</option>
+          </select>
           <GradientBtn
             onClick={() => createCollectionWrapper()}
             content="SAVE CHANGES"
@@ -498,7 +515,7 @@ export default function CreateCollection(props) {
                       let val = e.target.value;
 
                       if (isNaN(Number(val))) return;
-                      console.log(idx, val, "val")
+                      console.log(idx, val, "val");
                       changeRoyalties(idx, { percentage: val });
                     }}
                     type="text"

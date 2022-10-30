@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 
 import factoryAbi from "../interface/factoryAbi.json";
+import factoryAbi1155 from "../interface/factoryAbi1155.json";
 import nftAbi from "../interface/nftAbi.json";
 import { useAppContext } from "../context/wallet";
 import toast from "react-hot-toast";
@@ -13,7 +14,7 @@ import {
 } from "./useGraphApi";
 
 const useCollection = () => {
-  const { NAKSH_FACTORY_ADDRESS, evmWalletData, evmProvider } = useAppContext();
+  const { NAKSH_FACTORY_ADDRESS, NAKSH_FACTORY_ADDRESS_1155, evmWalletData, evmProvider } = useAppContext();
 
   const getRoyalties = async (address) => {
     return new Promise(async (resolve, reject) => {
@@ -96,7 +97,8 @@ const useCollection = () => {
     creatorFees,
     creators,
     artistName,
-    artistImg
+    artistImg,
+    erc721 = true
   ) => {
     // @types
 
@@ -156,29 +158,59 @@ const useCollection = () => {
 
         // console.log(artistDetails, collectionDetails, "params")
 
-        const contract = new ethers.Contract(
-          NAKSH_FACTORY_ADDRESS,
-          factoryAbi,
-          evmWalletData.signer
-        );
-        // console.log(NAKSH_FACTORY_ADDRESS, artistDetails, collectionDetails, admin, creatorFees, creators)
-        const tx = await contract.deployNftCollection(
-          artistDetails,
-          collectionDetails,
-          admin,
-          creatorFees[0] === "" ? [] : creatorFees,
-          creators[0] === "" ? [] : creators,
-          {
-            gasPrice: evmProvider.getGasPrice(),
-            gasLimit: 10000000,
-          }
-        );
+        if(erc721) {
+          const contract = new ethers.Contract(
+            NAKSH_FACTORY_ADDRESS,
+            factoryAbi,
+            evmWalletData.signer
+          );
+          
+          const tx = await contract.deployNftCollection(
+            artistDetails,
+            collectionDetails,
+            admin,
+            creatorFees[0] === "" ? [] : creatorFees,
+            creators[0] === "" ? [] : creators,
+            {
+              gasPrice: evmProvider.getGasPrice(),
+              gasLimit: 10000000,
+            }
+          );
+  
+          await tx.wait();
+          toast.success("Successfully created a collection", {
+            id: toastId,
+          });
+          resolve(tx);
+        } else {
+          const contract = new ethers.Contract(
+            NAKSH_FACTORY_ADDRESS_1155,
+            factoryAbi1155,
+            evmWalletData.signer
+          );
 
-        await tx.wait();
-        toast.success("Successfully created a collection", {
-          id: toastId,
-        });
-        resolve(tx);
+          console.log("yoyoyo")
+
+          const tx = await contract.deployNftCollection(
+            artistDetails,
+            collectionDetails,
+            admin,
+            creatorFees[0] === "" ? [] : creatorFees,
+            creators[0] === "" ? [] : creators,
+            {
+              gasPrice: evmProvider.getGasPrice(),
+              gasLimit: 10000000,
+            }
+          );
+
+          console.log(tx, "yoyoyo");
+
+          await tx.wait();
+          toast.success("Successfully created a collection", {
+            id: toastId,
+          });
+          resolve(tx);
+        }
       } catch (e) {
         toast.error("Can't create a collection", {
           id: toastId,

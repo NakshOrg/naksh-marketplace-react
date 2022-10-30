@@ -5,33 +5,43 @@ import toast from "react-hot-toast";
 import { ethers } from "ethers";
 import polygon from "../../assets/svgs/white-polygon-logo.svg";
 
-const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
-	const { listNFT } = useNFTs();
-
-	const [value, setValue] = useState('');
+const SaleNFTModal = ({ isOpen, setIsOpen, nft, erc721 }) => {
+	const { listNFT, listNFT1155 } = useNFTs();
+  
+  const [value, setValue] = useState('');
 	const [selectedValue, setSelectedValue] = useState(0);
 	const [auctionTime, setAuctionTime] = useState("1");
+  const [quantity, setQuantity] = useState("0")
 
 	const listNft = async () => {
-		if (selectedValue === 0) {
-			// set nft on sale (fixed price)
-			await listNFT(nft, selectedValue, {
-				price: ethers.utils.parseEther(value),
-			});
-		} else {
-			const currDate = new Date();
-			const currUnix = currDate.getTime() / 1000;
+		if(!erc721) {
+      if(selectedValue === 0) {
+        await listNFT1155(nft, selectedValue, Number(quantity), {
+          price: ethers.utils.parseEther(value)
+        })
+      }
+    } else {
+      if (selectedValue === 0) {
+        // set nft on sale (fixed price)
+        await listNFT(nft, selectedValue, {
+          price: ethers.utils.parseEther(value),
+        });
+      } else {
+        const currDate = new Date();
+        const currUnix = currDate.getTime() / 1000;
+  
+        currDate.setDate(currDate.getDate() + Number(auctionTime));
+        const nextUnix = currDate.getTime() / 1000;
+  
+        // auction nft
+        // set nft on sale (time duration)
+        await listNFT(nft, selectedValue, {
+          price: ethers.utils.parseEther(value),
+          auctionTime: nextUnix - currUnix,
+        });
+      }
+    }
 
-			currDate.setDate(currDate.getDate() + Number(auctionTime));
-			const nextUnix = currDate.getTime() / 1000;
-
-			// auction nft
-			// set nft on sale (time duration)
-			await listNFT(nft, selectedValue, {
-				price: ethers.utils.parseEther(value),
-				auctionTime: nextUnix - currUnix,
-			});
-		}
 		window.location.reload(false);
 	};
 
@@ -143,6 +153,27 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft }) => {
                 className="w-full h-full bg-transparent"
               />
               <span>Days</span>
+            </div>
+          </div>
+        )}
+        {!erc721 && (
+          <div className="p-4 rounded-xl space-y-4 bg-[#24293C] w-full h-fit flex flex-col justify-around items-around">
+            <label className="text-gray-600" htmlFor="">
+              Quantity
+            </label>
+            <div className="flex justify-around items-cneter">
+              <input
+                value={quantity}
+                onChange={(e) => {
+                  let val = e.target.value;
+
+                  if (isNaN(Number(val))) return;
+
+                  setQuantity(val);
+                }}
+                type="text"
+                className="w-full h-full bg-transparent"
+              />
             </div>
           </div>
         )}

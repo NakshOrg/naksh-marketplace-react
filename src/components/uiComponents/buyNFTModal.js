@@ -6,16 +6,23 @@ import { FiX } from "react-icons/fi";
 import { ethers } from "ethers";
 import polygon from "../../assets/svgs/white-polygon-logo.svg";
 
-const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
-	const { buyNFT, buyNFTonSale } = useNFTs();
+const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData, erc721 }) => {
+	const { buyNFT, buyNFTonSale, buyNFTonSale1155 } = useNFTs();
 	const [badValue, setBadValue] = useState(false)
+  const [quantity, setQuantity] = useState("1")
 	
 	const buyNFTWrapper = async () => {
-		if(saleData.saleType === "0" || saleData.saleType === 0) {
-			await buyNFTonSale(nft, nft.nftAddress, nft.tokenId, price)
-		} else {
-			await buyNFT({address: nft.nftAddress, ...nft}, ethers.utils.parseEther(value).toString(), price.toString())
-		}
+    if(erc721) {
+      if(saleData.saleType === "0" || saleData.saleType === 0) {
+        await buyNFTonSale(nft, nft.nftAddress, nft.tokenId, price)
+      } else {
+        await buyNFT({address: nft.nftAddress, ...nft}, ethers.utils.parseEther(value).toString(), price.toString())
+      }
+    } else {
+      if(saleData.saleType === "0" || saleData.saleType === 0) {
+        await buyNFTonSale1155(nft, nft.nftAddress, nft.tokenId, price, nft.owner, Number(quantity))
+      }
+    }
 		window.location.reload(false);
 	}
 	const [value, setValue] = useState(
@@ -84,11 +91,52 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData }) => {
                 color: badValue ? "red" : "#fff",
               }}
             >
-              {value}
+              {Number(value) * Number(quantity ? quantity : "1")}
             </div>
           )}
           <img src={polygon} className="ml-2 w-5 h-5" />
         </div>
+        {!erc721 && (
+          <div
+            style={{
+              width: "80%",
+              marginBottom: "20px",
+              background: "#24293C",
+              backdropFilter: "blur(96.1806px)",
+              padding: "10px",
+            }}
+          >
+            <span className="text-gray-500 text-sm p-3">Quantity</span>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <input
+                value={quantity}
+                onChange={(e) => {
+                  let val = e.target.value;
+
+                  if (isNaN(Number(val))) return;
+
+                  setQuantity(val);
+                }}
+                placeholder="Quantity"
+                type="text"
+                className="text-xl"
+                style={{
+                  width: "80%",
+                  padding: "10px",
+                  background: "transparent",
+                  color: "#fff",
+                }}
+              />
+              <img src={polygon} className="invisible ml-2 w-5 h-5" />
+            </div>
+          </div>
+        )}
         <div
           style={{
             width: "80%",

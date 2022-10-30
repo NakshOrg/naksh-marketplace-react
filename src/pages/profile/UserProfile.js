@@ -62,7 +62,7 @@ export default function UserProfile(props) {
     : walletInfo && walletInfo.getAccountId();
 
   const { getManyNFTs } = useNFTs();
-  const { contract, evmWalletData, evmWallet, evmProvider } = useAppContext();
+  const { contract, evmWalletData, evmWallet, evmProvider, NAKSH_ADDRESS_1155 } = useAppContext();
   const [totalEVMNfts, setTotalEVMNfts] = useState(true);
   const [allEVMNfts, setAllEVMNfts] = useState([]);
 
@@ -112,10 +112,23 @@ export default function UserProfile(props) {
         .then((res) => setUserCollections(res))
         .catch((e) => console.error(e));
       getMintedNFTs(evmWalletData.address)
-        .then((res) => setMintedNfts(res))
+        .then((res) => {
+          let copy = res.filter(
+            (item) =>
+              item.owner.toLowerCase() !== NAKSH_ADDRESS_1155.toLowerCase()
+          );
+
+          setMintedNfts(copy)
+        })
         .catch((e) => console.error(e));
       getEVMOwnedNFTs(evmWalletData.address)
-        .then((res) => setOwnedNfts(res))
+        .then((res) => {
+          let copy = res.filter(
+            (item) =>
+              item.owner.toLowerCase() !== NAKSH_ADDRESS_1155.toLowerCase()
+          );
+          setOwnedNfts(copy)
+        })
         .catch((e) => console.error(e));
     }
   }, [evmProvider]);

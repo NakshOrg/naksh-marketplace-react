@@ -338,6 +338,65 @@ export const useNFTs = () => {
     }
   }
 
+  const cancelSale = async (address, tokenId) => {
+    return new Promise(async (resolve, reject) => {
+      const toastId = toast.loading("Cancelling listing...");
+      try {
+        const contract = new ethers.Contract(
+          NAKSH_ADDRESS,
+          nakshAbi,
+          evmWalletData.signer
+        );
+
+        const tx = await contract.cancelSale(address, tokenId, {
+          gasPrice: evmProvider.getGasPrice(),
+          gasLimit: 10000000,
+        });
+
+        await tx.wait();
+        toast.success("Canceled Listing", {
+          id: toastId,
+        });
+
+        resolve(tx);
+      } catch (e) {
+        toast.error("Can't cancel listing", {
+          id: toastId,
+        });
+      }
+    });
+  };
+
+  const cancelSale1155 = async (address, tokenId, quantity) => {
+    return new Promise(async (resolve, reject) => {
+      const toastId = toast.loading("Cancelling listing...");
+      try {
+        const contract = new ethers.Contract(
+          NAKSH_ADDRESS_1155,
+          nakshAbi1155,
+          evmWalletData.signer
+        );
+
+        const tx = await contract.cancelSale(address, tokenId, quantity, {
+          gasPrice: evmProvider.getGasPrice(),
+          gasLimit: 10000000,
+        })
+
+        await tx.wait()
+        toast.success("Canceled Listing", {
+          id: toastId
+        })
+
+        resolve(tx)
+      } catch (e) {
+        console.log(e, "error")
+        toast.error("Can't cancel listing", {
+          id: toastId
+        })
+      }
+    })
+  }
+
   const getBids = async (nftAddress, tokenId) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -701,6 +760,8 @@ export const useNFTs = () => {
     bulkMint,
     listNFT1155,
     buyNFTonSale1155,
-    getNFTOwners
+    getNFTOwners,
+    cancelSale,
+    cancelSale1155
   };
 };

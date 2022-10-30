@@ -37,7 +37,14 @@ import { useSavedNFTs } from "../../../hooks/useSavedNFTs";
 import useCollection from "../../../hooks/useCollection";
 
 export default function PolygonNftDetails(props) {
-  const { getNFT, getNFTsOnSale, buyNFT, endAuction, getNFTOwners } = useNFTs();
+  const {
+    getNFT,
+    getNFTsOnSale,
+    buyNFT,
+    endAuction,
+    getNFTOwners,
+    cancelSale,
+  } = useNFTs();
   const { nakshContract, evmWalletData, NAKSH_ADDRESS_1155 } = useAppContext();
   const { updateTrendingNFT } = useTrendingNFTs();
 
@@ -301,6 +308,11 @@ export default function PolygonNftDetails(props) {
           address: params.address,
         });
 
+    window.location.reload();
+  };
+
+  const cancelSales = async () => {
+    await cancelSale(params.address, params.id, Number(saleData.quantity));
     window.location.reload();
   };
 
@@ -1012,6 +1024,23 @@ export default function PolygonNftDetails(props) {
                     <div className={classes.ownedBtn}>
                       <img style={{ height: 30 }} src={party} alt="party" />
                       &nbsp;&nbsp; AUCTION ENDED!
+                    </div>
+                  )}
+                {purchasable.owner &&
+                  ((saleData && saleData.saleType === "0") ||
+                    saleData.saleType === 0) && (
+                    <div>
+                      <GradientBtn
+                        style={{
+                          marginTop: 30,
+                          cursor: purchasable ? "pointer" : "no-drop",
+                          opacity: purchasable ? 1 : 0.6,
+                        }}
+                        onClick={() => {
+                          cancelSales();
+                        }}
+                        content={<div>CANCEL LISTING</div>}
+                      />
                     </div>
                   )}
               </>

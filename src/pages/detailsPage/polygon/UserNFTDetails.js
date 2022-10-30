@@ -37,7 +37,7 @@ import { useSavedNFTs } from "../../../hooks/useSavedNFTs";
 import useCollection from "../../../hooks/useCollection";
 
 export default function UserPolygonNftDetails(props) {
-  const { getNFT, getManyNFTs, getNFTsOnSale, buyNFT, endAuction } = useNFTs();
+  const { getNFT, getManyNFTs, getNFTsOnSale, buyNFT, endAuction, cancelSale1155 } = useNFTs();
   const { nakshContract, evmWalletData } = useAppContext();
   const { updateTrendingNFT } = useTrendingNFTs();
 
@@ -288,6 +288,11 @@ export default function UserPolygonNftDetails(props) {
 
     window.location.reload();
   };
+
+  const cancelSale = async () => {
+    await cancelSale1155(params.address, params.id, Number(saleData.quantity));
+    window.location.reload();
+  }
 
   const buyMatic = async () => {
     // console.log("Das");
@@ -639,7 +644,7 @@ export default function UserPolygonNftDetails(props) {
                 >
                   {nft?.title}
                 </h1>
-                {saleData && saleData.salePrice && 
+                {saleData && saleData.salePrice && (
                   <div className="font-inter flex items-center">
                     <span className="text-gray-400">Price:</span>{" "}
                     <span className="ml-2 font-bold">
@@ -647,7 +652,7 @@ export default function UserPolygonNftDetails(props) {
                     </span>
                     <img src={polygon} className="ml-2 w-5 h-5" />
                   </div>
-                }
+                )}
               </div>
               <div style={{ display: "flex" }}>
                 <span
@@ -923,6 +928,23 @@ export default function UserPolygonNftDetails(props) {
                 content={<div>WANT TO LIST THIS NFT?</div>}
               />
             )}
+            {purchasable.owner &&
+              ((saleData && (saleData.saleType === "0" ||
+                saleData.saleType === 0))) && (
+                <div>
+                  <GradientBtn
+                    style={{
+                      marginTop: 30,
+                      cursor: purchasable ? "pointer" : "no-drop",
+                      opacity: purchasable ? 1 : 0.6,
+                    }}
+                    onClick={() => {
+                      cancelSale()
+                    }}
+                    content={<div>CANCEL LISTING</div>}
+                  />
+                </div>
+              )}
             <div>
               <GradientBtn
                 style={{

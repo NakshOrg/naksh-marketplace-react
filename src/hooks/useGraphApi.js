@@ -133,8 +133,8 @@ query GetUserCollection($address: String!) {
 `;
 
 export const GET_COLLECTIONS = `
-query GetUserCollection($skip: Int!) {
-  collections(first: 5, skip: $skip) {
+query GetUserCollection {
+  collections {
     id
     name
     description

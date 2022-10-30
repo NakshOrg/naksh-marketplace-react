@@ -18,7 +18,7 @@ import { ethers } from "ethers";
 import helpers from "../../../constants/helpers"
 
 const CollectionDetails = () => {
-  const { evmWalletData, evmProvider } = useAppContext();
+  const { evmWalletData, evmProvider, NAKSH_ADDRESS_1155 } = useAppContext();
   const { getCollection, getCollectionNFTs } = useCollection();
   const { getSoldNFTs } = useNFTs();
   const params = useParams();
@@ -38,11 +38,13 @@ const CollectionDetails = () => {
 
     let uniqueOwner = {};
 
-    nfts.map((nft) => (uniqueOwner[nft.owner] = true));
+    let copy = nfts.filter(item => item.owner.toLowerCase() !== NAKSH_ADDRESS_1155.toLowerCase())
+    
+    copy.map((nft) => (uniqueOwner[nft.owner] = true));
 
     setOwners(Object.keys(uniqueOwner).length);
     setCollection(collections);
-    setNFTs(nfts);
+    setNFTs(copy);
   };
 
   const calculateVolume = async () => {

@@ -69,9 +69,6 @@ const useCollection = () => {
             method: "POST",
             body: JSON.stringify({
               query: GET_COLLECTIONS,
-              variables: {
-                skip,
-              },
             }),
           }
         );

@@ -93,13 +93,13 @@ export default function UserProfile(props) {
         const savedNft = artist?.savedNft;
         console.log(savedNft, "Dsa");
         const queryData = savedNft.map((nft) => [`${nft.address}-${nft.token}`, `${evmWalletData.address}-${nft.address}-${nft.token}`]).flat();
-        
+        console.log(queryData, "queryData")
         getManyNFTs(queryData).then((res) => {
           console.log(res, "daswerwr");
           setSavedNFTs(res);
         });
       });
-    }
+    } 
   }, [evmWalletData]);
 
   useEffect(() => {

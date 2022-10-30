@@ -70,7 +70,7 @@ export default function UserPolygonNftDetails(props) {
   const history = useHistory();
   const { getCollection } = useCollection()
 
-  useEffect(() => updateTrendingNFT(params.address, params.id), []);
+  useEffect(() => updateTrendingNFT(`${params.user}-${params.address}`, params.id), []);
 
   const [loading, setLoading] = useState(true);
   const [nft, setNft] = useState(null);
@@ -278,12 +278,12 @@ export default function UserPolygonNftDetails(props) {
       ? await removeNFT(user?._id, {
           blockchain: 1,
           token: params.id,
-          address: params.address,
+          address: `${params.user}-${params.address}`,
         })
       : await saveNFT(user?._id, {
           blockchain: 1,
           token: params.id,
-          address: params.address,
+          address: `${params.user}-${params.address}`,
         });
 
     window.location.reload();

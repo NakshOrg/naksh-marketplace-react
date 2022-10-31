@@ -425,10 +425,15 @@ export default function CreateNft(props) {
                   </option>
                 ))}
               <option
-                onClick={() =>
-                  helpers.openInNewTab(
-                    `${window.location.host}/create/collection`
-                  )
+                onClick={() => {
+                  const a = document.createElement("a");
+                  a.setAttribute(
+                    "href",
+                    `${window.location.protocol}//${window.location.host}/create/collection`
+                  );
+                  a.setAttribute("target", "_blank");
+                  a.click();
+                }
                 }
                 className=""
               >

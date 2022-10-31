@@ -14,9 +14,10 @@ import { useHistory } from "react-router-dom";
 import { helpers } from "../../constants";
 import { FiX } from "react-icons/fi";
 import { _getAllArtists } from "../../services/axios/api";
+import UploadCoverImageNFTModal from "../../components/uiComponents/uploadVideoCover";
 
-const NAKSH_NFT_ADDRESS = "0xABb0f60525470913ff90128555E35D6EC3Dc1f06";
-const NAKSH_NFT_ADDRESS_1155 = "0x0f2Fd40C8c0Dc19e625bb3777db1595792Afe172";
+const NAKSH_NFT_ADDRESS = "0x9E3Aa3d41640D9bBA9ae183B18b0A8B95568509F";
+const NAKSH_NFT_ADDRESS_1155 = "0x86A7Ebc3cDaF3D7017C6B5b9B93e0d6eF2CF2478";
 
 export default function CreateNft(props) {
   const { evmWalletData, evmProvider } = useAppContext();
@@ -35,6 +36,9 @@ export default function CreateNft(props) {
   const [image, setImage] = useState();
   const [preview, setPreview] = useState("");
   const [tags, setTags] = useState([]);
+  const [coverImage, setCoverImage] = useState()
+  const [coverModal, setCoverModal] = useState(false)
+  const [erc721, setERC721] = useState(true)
 
   const [artist, setArtist] = useState()
 
@@ -143,47 +147,99 @@ export default function CreateNft(props) {
     try {
       if(!erc721) {
         if(image) {
-          const img = await uploadMedia(image)
-          
-          toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
-            id: toastId,
-          });
+          if(image.type.startsWith("video")) {
+            const video = await uploadMedia(image)
+            const img = await uploadMedia(coverImage);
 
-          const nft = await bulkMint(
-            collection,
-            `ipfs://${img}`,
-            name,
-            description,
-            artist ? artist.name : evmWalletData.address,
-            artist ? artist.image : "",
-            quantity,
-            image.type.startsWith("video") ? true : false
-          );
-          toast.success("Successfully minted NFT", {
-            id: toastId,
-          });
-          return nft;
+            console.log(coverImage, img, "image", video)
+  
+            toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
+              id: toastId,
+            });
+  
+            const nft = await bulkMint(
+              collection,
+              `ipfs://${img}`,
+              name,
+              description,
+              artist ? artist.name : evmWalletData.address,
+              artist ? artist.image : "",
+              quantity,
+              `ipfs://${video}`,
+              image.type.startsWith("video") ? true : false
+            );
+            toast.success("Successfully minted NFT", {
+              id: toastId,
+            });
+            return nft;
+          } else {
+            const img = await uploadMedia(image);
+
+            toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
+              id: toastId,
+            });
+
+            const nft = await bulkMint(
+              collection,
+              `ipfs://${img}`,
+              name,
+              description,
+              artist ? artist.name : evmWalletData.address,
+              artist ? artist.image : "",
+              quantity,
+              `ipfs://`,
+              image.type.startsWith("video") ? true : false
+            );
+            toast.success("Successfully minted NFT", {
+              id: toastId,
+            });
+            return nft;
+          }
         }
       } else {
         if (image) {
-          const img = await uploadMedia(image);
-          toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
-            id: toastId,
-          });
-          
-          const nft = await mintNft(
-            collection,
-            `ipfs://${img}`,
-            name,
-            description,
-            artist ? artist.name : evmWalletData.address,
-            artist ? artist.image : "",
-            image.type.startsWith("video") ? true : false
-          );
-          toast.success("Successfully minted NFT", {
-            id: toastId,
-          });
-          return nft;
+          if(image.type.startsWith("video")) {
+            const img = await uploadMedia(coverImage);
+            const video = await uploadMedia(image)
+            toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
+              id: toastId,
+            });
+            
+            const nft = await mintNft(
+              collection,
+              `ipfs://${img}`,
+              name,
+              description,
+              artist ? artist.name : evmWalletData.address,
+              artist ? artist.image : "",
+              `ipfs://${video}`,
+              image.type.startsWith("video") ? true : false
+            );
+            toast.success("Successfully minted NFT", {
+              id: toastId,
+            });
+            return nft;
+          } else {
+            const img = await uploadMedia(image);
+            toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
+              id: toastId,
+            });
+
+            const nft = await mintNft(
+              collection,
+              `ipfs://${img}`,
+              name,
+              description,
+              artist ? artist.name : evmWalletData.address,
+              artist ? artist.image : "",
+              `ipfs://`,
+              image.type.startsWith("video") ? true : false
+            );
+            toast.success("Successfully minted NFT", {
+              id: toastId,
+            });
+            return nft;
+          }
         }
       }
 
@@ -342,6 +398,23 @@ export default function CreateNft(props) {
     }
   }, [evmProvider]);
 
+  useEffect(() => {
+    if(collection && userCollections.length > 0) {
+      let erc721 = true;
+  
+      if (collection.toLowerCase() === NAKSH_NFT_ADDRESS.toLowerCase())
+        erc721 = true;
+  
+      const collectionDetails = userCollections.find(
+        (c) => c.id.toLowerCase() === collection
+      );
+  
+      erc721 = collectionDetails ? collectionDetails.erc721 : erc721;
+
+      setERC721(erc721)
+    }
+  }, [collection, userCollections])
+
   return (
     <div
       onClick={() => (listModal ? setListModal(false) : {})}
@@ -359,7 +432,12 @@ export default function CreateNft(props) {
         </div>
         <div className="w-1/2 flex justify-end items-center space-x-4">
           <GradientBtn
-            onClick={() => setListModal(true)}
+            onClick={() => {
+              if (image.type.startsWith("video")) {
+                // setCoverModal(true)
+              }
+              setListModal(true);
+            }}
             content="MINT NFT"
             style={{ width: "187px" }}
           />
@@ -463,7 +541,9 @@ export default function CreateNft(props) {
               {userCollections.length > 0 &&
                 userCollections.map((collection) => (
                   <option value={collection.nftAddress}>
-                    {collection.name.length > 32 ? collection.name.substring(0, 32) + "..." : collection.name}
+                    {collection.name.length > 32
+                      ? collection.name.substring(0, 32) + "..."
+                      : collection.name}
                   </option>
                 ))}
               <option
@@ -475,8 +555,7 @@ export default function CreateNft(props) {
                   );
                   a.setAttribute("target", "_blank");
                   a.click();
-                }
-                }
+                }}
                 className=""
               >
                 + Create New
@@ -514,27 +593,29 @@ export default function CreateNft(props) {
             </svg>
             <span className="text-xl">Fixed Price</span>
           </div>
-          <div
-            onClick={() => setSelectedValue(1)}
-            className={
-              "p-5 cursor-pointer h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
-              (selectedValue === 1 ? " bg-white text-black" : "")
-            }
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-10 w-10"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+          {erc721 && 
+            <div
+              onClick={() => setSelectedValue(1)}
+              className={
+                "p-5 cursor-pointer h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
+                (selectedValue === 1 ? " bg-white text-black" : "")
+              }
             >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-md md:text-lg lg:text-xl">Timed Auction</span>
-          </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-10 w-10"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="text-md md:text-lg lg:text-xl">Timed Auction</span>
+            </div>
+          }
         </div>
       </div>
       <div className={(listModal ? "filter blur-2xl " : "") + " space-y-4 "}>
@@ -586,9 +667,7 @@ export default function CreateNft(props) {
             </div>
           </div>
           <div className="w-full md:w-1/2 h-full py-3 md:py-0 md:px-5 space-x-4 flex justify-center md:justify-end items-center">
-            <h1 className="text-md font-normal text-gray-400">
-              Quantity
-            </h1>
+            <h1 className="text-md font-normal text-gray-400">Quantity</h1>
             <div className="flex justify-center items-center space-x-3">
               <FiMinus
                 onClick={() => changeQuantity(1, "-")}
@@ -610,7 +689,27 @@ export default function CreateNft(props) {
           " filter-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         }
       >
-        <ListNftModal mint={enlistLaterMint} listAndMint={listAndMint} />
+        <ListNftModal
+          mint={enlistLaterMint}
+          listAndMint={listAndMint}
+          setIsOpen={setCoverModal}
+          image={coverImage}
+          setImage={setCoverImage}
+          isVideo={image?.type?.startsWith("video")}
+        />
+      </div>
+      <div
+        className={
+          (!coverModal ? "hidden" : "") +
+          " w-full filter-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        }
+      >
+        <UploadCoverImageNFTModal
+          setIsOpen={setCoverModal}
+          image={coverImage}
+          setImage={setCoverImage}
+          isVideo={image?.type?.startsWith("video")}
+        />
       </div>
     </div>
   );

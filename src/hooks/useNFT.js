@@ -306,6 +306,7 @@ export const useNFTs = () => {
       if (nft !== undefined && config !== undefined) {
         await approveNFT(nft.nftAddress, nft.tokenId, NAKSH_ADDRESS_1155, false);
         if (typeOfListing === 0) {
+          console.log(nft, quantity, config.price, "priceee")
           const tx = await contract.setSale(
             nft.nftAddress,
             nft.tokenId,
@@ -469,6 +470,7 @@ export const useNFTs = () => {
     description,
     artistName,
     artistImg,
+    videoUri,
     isVideo = false
   ) => {
     return new Promise(async (resolve, reject) => {
@@ -482,6 +484,7 @@ export const useNFTs = () => {
         const nft = await contract.mintByArtistOrAdmin(
           evmWalletData.address,
           tokenUri,
+          videoUri,
           title,
           description,
           artistName,
@@ -534,6 +537,7 @@ export const useNFTs = () => {
     artistName,
     artistImg,
     times,
+    videoUri,
     isVideo = false
   ) => {
     return new Promise(async (resolve, reject) => {
@@ -547,6 +551,7 @@ export const useNFTs = () => {
         const nft = await contract.mintByArtistOrAdmin(
           evmWalletData.address,
           tokenUri,
+          videoUri,
           times,
           title,
           description,

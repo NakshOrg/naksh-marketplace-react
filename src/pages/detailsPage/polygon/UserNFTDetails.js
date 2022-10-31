@@ -123,7 +123,11 @@ export default function UserPolygonNftDetails(props) {
 
         if (nfts.length > 0) {
           const found = nfts.find(
-            (nft) => nft.address === params.address && nft.token === params.id
+            (nft) =>
+              (nft.address.toLowerCase() === params.address.toLowerCase() ||
+                `${params.user}-${params.address}`.toLowerCase() ===
+                  nft.address.toLowerCase()) &&
+              nft.token === params.id
           );
 
           if (found) setSavedNft(true);
@@ -581,15 +585,21 @@ export default function UserPolygonNftDetails(props) {
           xs={12}
         >
           <NftCard
-            onClick={() =>
-              nft?.erc721
+            onClick={() => {
+              const link = nft?.nft.erc721
                 ? `/polygon/nftdetails/${
                     nft.nft.nftAddress
                   }/${nft.nft.tokenId.toString()}`
                 : `/polygon/${nft.nft.owner}/${
                     nft.nft.nftAddress
-                  }/${nft.nft.tokenId.toString()}`
-            }
+                  }/${nft.nft.tokenId.toString()}`;
+              const a = document.createElement("a");
+              a.setAttribute(
+                "href",
+                link
+              );
+              a.click();
+            }}
             image={
               nft.nft.tokenUri.startsWith("ipfs")
                 ? `https://${nft.nft.tokenUri.substring(
@@ -622,22 +632,28 @@ export default function UserPolygonNftDetails(props) {
         >
           <Col lg={7} md={7}>
             <div style={{ textAlign: "center" }}>
-              {nft?.isVideo ?
+              {nft?.isVideo ? (
                 <div id="tv_container">
-                  <video ref={ref} className={classes.nftImage} controls autoPlay muted>
+                  <video
+                    ref={ref}
+                    className={classes.nftImage}
+                    controls
+                    autoPlay
+                    muted
+                  >
                     <source
                       src={
                         nft.tokenUri.startsWith("ipfs")
-                          ? `https://${nft.tokenUri.substring(
+                          ? `https://${nft.videoUri.substring(
                               7
                             )}.ipfs.nftstorage.link`
-                          : nft.tokenUri
+                          : nft.videoUri
                       }
                     />
                     nft
                   </video>
                 </div>
-                :
+              ) : (
                 <img
                   className={classes.nftImage}
                   src={
@@ -649,7 +665,7 @@ export default function UserPolygonNftDetails(props) {
                   }
                   alt="nft"
                 />
-              }
+              )}
             </div>
           </Col>
           <Col className={classes.descriptionCol} lg={5} md={5}>

@@ -59,10 +59,11 @@ export default function AppWrapper() {
   const [nakshContract, setNakshContract] = useState();
   const [factoryContract, setFactoryContract] = useState();
   const [isEVMWalletSignedIn, setIsEVMWalletSignedIn] = useState(false);
-  const NAKSH_ADDRESS = "0x5cba6F142b2DAF5ca316E2FC206fEe423Fa8d55b";
-  const NAKSH_FACTORY_ADDRESS = "0xE4B037c12ca4692253B3572488c967B8EBdE4288";
-  const NAKSH_ADDRESS_1155 = "0xC88b8B5443cFa95218B854AAB5Ba0Faf677CEA89";
-  const NAKSH_FACTORY_ADDRESS_1155 = "0xD99f85cAbca6dE1d4D0C64635FA0A6412b942Ded";
+  const NAKSH_ADDRESS = "0xb645197a3C209ef01Be5E8829b7dcea0907CC742";
+  const NAKSH_FACTORY_ADDRESS = "0x414267a7312ef0B1D08df884432FB25FD850a006";
+  const NAKSH_ADDRESS_1155 = "0xE797D68B12590Ef34029DF41b694208C7B8ecCA7";
+  const NAKSH_FACTORY_ADDRESS_1155 =
+    "0xF63552cF0aa97345C9EBc25dC2fEA82A76a9ffFf";
 
   useEffect(() => {
     const provider = new ethers.providers.JsonRpcProvider(

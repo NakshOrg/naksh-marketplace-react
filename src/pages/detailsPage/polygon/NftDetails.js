@@ -271,6 +271,7 @@ export default function PolygonNftDetails(props) {
           item.nft.nftAddress.toLowerCase() === params.address.toLowerCase()
       );
       setPrice(foundNft ? Number(foundNft.salePrice) : 0);
+      console.log(foundNft, "foundNft")
       setSaleData(foundNft);
 
       getCollection(nft.nftAddress)
@@ -367,8 +368,8 @@ export default function PolygonNftDetails(props) {
                   letterSpacing: "0.5px",
                 }}
               >
-                {nft?.quantity} available{" "}
-                {saleData ? <span> and {saleData.quantity} on sale</span> : ""}
+                {saleData && <span>{saleData.quantity} on sale and </span>}
+                <span>{nft?.quantity} available</span>
               </div>
             ) : (
               <div
@@ -740,19 +741,14 @@ export default function PolygonNftDetails(props) {
             <div style={{ textAlign: "center" }}>
               {nft?.isVideo ? (
                 <div id="tv_container">
-                  <video
-                    className={classes.nftImage}
-                    controls
-                    autoPlay
-                    muted
-                  >
+                  <video className={classes.nftImage} controls autoPlay muted>
                     <source
                       src={
                         nft.tokenUri.startsWith("ipfs")
-                          ? `https://${nft.tokenUri.substring(
+                          ? `https://${nft.videoUri.substring(
                               7
                             )}.ipfs.nftstorage.link`
-                          : nft.tokenUri
+                          : nft.videoUri
                       }
                     />
                     nft
@@ -1001,13 +997,31 @@ export default function PolygonNftDetails(props) {
                                 : setIsModalOpen(false)
                             }
                           >
-                            PURCHASE FOR{" "}
-                            {saleData.auction && saleData.auction.highestBid
-                              ? ethers.utils.formatEther(
-                                  saleData.auction.highestBid
-                                )
-                              : ethers.utils.formatEther(price.toString())}{" "}
-                            MATIC
+                            {(saleData && saleData.auction) ? (
+                              <span>
+                                BID FOR{" "}
+                                {saleData.auction && saleData.auction.highestBid
+                                  ? ethers.utils.formatEther(
+                                      saleData.auction.highestBid
+                                    )
+                                  : ethers.utils.formatEther(
+                                      price.toString()
+                                    )}{" "}
+                                MATIC
+                              </span>
+                            ) : (
+                              <span>
+                                PURCHASE FOR{" "}
+                                {saleData.auction && saleData.auction.highestBid
+                                  ? ethers.utils.formatEther(
+                                      saleData.auction.highestBid
+                                    )
+                                  : ethers.utils.formatEther(
+                                      price.toString()
+                                    )}{" "}
+                                MATIC
+                              </span>
+                            )}
                           </div>
                         }
                       />

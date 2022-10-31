@@ -190,8 +190,8 @@ function Header() {
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
                             <Dropdown.Item onClick={() => history.push("/aboutnaksh")}>About Naksh</Dropdown.Item>
-                            <Dropdown.Item onClick={() => history.push("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
-                            <Dropdown.Item onClick={() => history.push("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item>
+                            {/* <Dropdown.Item onClick={() => history.push("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item> */}
                         </Dropdown.Menu>
                     </Dropdown>
                     <Dropdown>
@@ -298,7 +298,7 @@ function Header() {
                         About NAKSH
                     </motion.div>
                 </div>
-                <div onClick={() => navigateItem("/ourartists")}>
+                {/* <div onClick={() => navigateItem("/ourartists")}>
                     <motion.div
                         initial="hidden"
                         animate="visible"
@@ -315,7 +315,7 @@ function Header() {
                     >
                         near protocol
                     </motion.div>
-                </div> 
+                </div>  */}
                 <div onClick={() => navigateItem("/blogs")}>
                     <motion.div
                         initial="hidden"

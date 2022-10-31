@@ -49,6 +49,7 @@ const CollectionDetails = () => {
 
   const calculateVolume = async () => {
     const soldNfts = await getSoldNFTs(params.address.toLowerCase());
+    console.log(soldNfts,"wohoo")
     const sorted = soldNfts.sort(
       (a, b) => Number(b.timestamp) - Number(a.timestamp)
     );

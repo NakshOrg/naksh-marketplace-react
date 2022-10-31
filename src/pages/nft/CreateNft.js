@@ -19,7 +19,7 @@ const NAKSH_NFT_ADDRESS = "0xA7F4AD36bD0eF14A21D8f50279323356f12c2e56";
 
 export default function CreateNft(props) {
   const { evmWalletData, evmProvider } = useAppContext();
-  const { mintNft, uploadMedia, listNFT, bulkMint } = useNFTs();
+  const { mintNft, uploadMedia, listNFT, bulkMint, listNFT1155 } = useNFTs();
   const { getUserCollections, getRoyalties } = useCollection();
 
   const [royalty, setRoyalty] = useState(1);
@@ -136,14 +136,11 @@ export default function CreateNft(props) {
 
     const collectionDetails = userCollections.find(c => c.id.toLowerCase() === collection)
 
-    console.log(erc721, collectionDetails, "dsadsadsadsadsa")
-
     erc721 = collectionDetails.erc721
 
     try {
       if(!erc721) {
         if(image) {
-          console.log("1111111111")
           const img = await uploadMedia(image)
           toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
             id: toastId,
@@ -165,7 +162,6 @@ export default function CreateNft(props) {
         }
       } else {
         if (image) {
-          console.log('2222222222222222')
           const img = await uploadMedia(image);
           toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
             id: toastId,
@@ -208,16 +204,39 @@ export default function CreateNft(props) {
     const token = await mint();
 
     // console.log({ nftAddress: collection, tokenId: ethers.utils.stripZeros(token.tokenId).toString() })
+    let erc721 = true
+    if (collection === NAKSH_NFT_ADDRESS) erc721 = true;
 
-    if (selectedValue === 0)
-      await listNFT(
-        {
-          nftAddress: collection,
-          tokenId: ethers.utils.stripZeros(token.tokenId).toString(),
-        },
-        selectedValue,
-        { price: ethers.utils.parseEther(price).toString() }
-      );
+    const collectionDetails = userCollections.find(
+      (c) => c.id.toLowerCase() === collection
+    );
+
+    erc721 = collectionDetails.erc721;
+
+    if (selectedValue === 0) {
+      if(erc721) {
+        await listNFT(
+          {
+            nftAddress: collection,
+            tokenId: ethers.utils.stripZeros(token.tokenId).toString(),
+          },
+          selectedValue,
+          { price: ethers.utils.parseEther(price).toString() }
+        );
+      } else {
+        await listNFT1155(
+          {
+            nftAddress: collection,
+            tokenId: token.tokenId,
+          },
+          selectedValue,
+          Number(quantity),
+          {
+            price: ethers.utils.parseEther(price).toString(),
+          }
+        );
+      }
+    }
     else {
       const currDate = new Date();
       const currUnix = currDate.getTime() / 1000;
@@ -241,11 +260,14 @@ export default function CreateNft(props) {
       );
     }
 
-    history.push(
+    if(erc721) history.push(
       `/polygon/nftdetails/${collection}/${ethers.utils
         .stripZeros(token.tokenId)
         .toString()}`
     );
+    else history.push(
+      `/polygon/${evmWalletData.address}/${collection}/${token.tokenId}`
+    ); 
   };
 
   const uploadFile = (e) => {

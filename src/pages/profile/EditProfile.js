@@ -489,13 +489,13 @@ export default function EditProfile(props) {
         SOCIAL MEDIA
       </div>
       <Row style={{ marginBottom: 60 }}>
-        <Col lg={6}>
+        {/* <Col lg={6}>
           <MaterialInput
             label="Instagram"
             onChange={(e) => setInstagram(e.target.value)}
             value={instagram}
           />
-        </Col>
+        </Col> */}
         <Col lg={6}>
           <MaterialInput
             label="Twitter"
@@ -503,7 +503,7 @@ export default function EditProfile(props) {
             value={twitter}
           />
         </Col>
-        <Col lg={6}>
+        {/* <Col lg={6}>
           <MaterialInput
             label="Facebook"
             onChange={(e) => setFacebook(e.target.value)}
@@ -516,7 +516,7 @@ export default function EditProfile(props) {
             onChange={(e) => setWebsite(e.target.value)}
             value={website}
           />
-        </Col>
+        </Col> */}
       </Row>
       <div className={classes.saveBtnMobile}>
         <GradientBtn

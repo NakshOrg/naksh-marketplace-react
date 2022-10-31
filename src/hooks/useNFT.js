@@ -566,13 +566,13 @@ export const useNFTs = () => {
           const log = receipt.logs[i];
           if (
             log.topics.includes(
-              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+              "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62"
             )
           ) {
-            // console.log(log.topics[3], log.topics, "token id")
+            console.log(log.data, ethers.utils.stripZeros(log.data).toString(), "token id")
             resolve({
               hash: nft.hash,
-              tokenId: log.topics[3],
+              tokenId: ethers.utils.stripZeros(log.data).toString().split(",")[0],
             });
             return;
           }

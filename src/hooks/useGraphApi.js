@@ -336,7 +336,7 @@ query B($nftId: String!) {
 
 export const COLLECTION_SOLD_NFTS = `
 query B($address: String!) {
-  soldNFTs(where: {nft_starts_with:$address}) {
+  soldNFTs(where: {nft_contains_nocase:$address}) {
     id,
     buyer
     seller

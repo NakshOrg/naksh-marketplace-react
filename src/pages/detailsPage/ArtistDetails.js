@@ -20,9 +20,11 @@ import { helpers } from '../../constants';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import { useSelector } from 'react-redux';
 import uuid from 'react-uuid';
+import { useAppContext } from "../../context/wallet";
 
 export default function ArtistDetails() {
 
+    const { evmWalletData } = useAppContext()
     const params = useParams();
     const history = useHistory();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo);
@@ -44,10 +46,10 @@ export default function ArtistDetails() {
     }, []);
 
     useEffect(() => {
-        if(walletInfo) {
+        if(walletInfo || evmWalletData) {
             getArtists();
         }
-    }, [walletInfo]);
+    }, [walletInfo, evmWalletData]);
 
     const getArtists = () => {
 

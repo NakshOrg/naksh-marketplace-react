@@ -1010,8 +1010,8 @@ export default function PolygonNftDetails(props) {
                     </div>
                   )}
                 {purchasable.owner &&
-                  ((saleData && (saleData.saleType === "0" ||
-                    saleData.saleType === 0))) && (
+                  saleData &&
+                  (saleData.saleType === "0" || saleData.saleType === 0) && (
                     <div>
                       <GradientBtn
                         style={{

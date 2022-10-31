@@ -314,6 +314,8 @@ export default function Browse() {
       for (let i = 0; i < evmTrendingNfts.length; i++) {
         const nft = evmTrendingNfts[i];
 
+        if(!nft) continue
+
         if (alreadyMapped[nft.nftAddress]) continue;
         alreadyMapped[nft.nftAddress] = true;
 

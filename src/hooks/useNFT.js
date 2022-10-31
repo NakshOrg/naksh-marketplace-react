@@ -453,6 +453,7 @@ export const useNFTs = () => {
     });
 
     const data = await res.json();
+    console.log(data, "data")
 
     if (!data || !data.value || !data.value.cid) {
       return "";
@@ -467,7 +468,8 @@ export const useNFTs = () => {
     title,
     description,
     artistName,
-    artistImg
+    artistImg,
+    isVideo = false
   ) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -484,6 +486,7 @@ export const useNFTs = () => {
           description,
           artistName,
           artistImg,
+          isVideo,
           {
             gasPrice: evmProvider.getGasPrice(),
             gasLimit: 10000000,
@@ -530,7 +533,8 @@ export const useNFTs = () => {
     description,
     artistName,
     artistImg,
-    times
+    times,
+    isVideo = false
   ) => {
     return new Promise(async (resolve, reject) => {
       try {        
@@ -548,6 +552,7 @@ export const useNFTs = () => {
           description,
           artistName,
           artistImg,
+          isVideo,
           {
             gasPrice: evmProvider.getGasPrice(),
             gasLimit: 10000000,

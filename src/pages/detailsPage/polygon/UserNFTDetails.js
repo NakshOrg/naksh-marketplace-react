@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useEffect, useState } from "react";
+import React, { Component, Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import { motion } from "framer-motion";
 import {
@@ -86,6 +86,8 @@ export default function UserPolygonNftDetails(props) {
   const [savedNft, setSavedNft] = useState(false);
   const [user, setUser] = useState();
   const [collection, setCollection] = useState()
+  const [video, setVideo] = useState(true)
+  const ref = useRef()
 
   const [auctionData, setAuctionData] = useState({});
   const [bids, setBids] = useState([]);
@@ -344,9 +346,10 @@ export default function UserPolygonNftDetails(props) {
                 letterSpacing: "0.5px",
               }}
             >
-              {nft?.quantity} available
-              {" "}
-              {saleData ? <span> and {saleData.quantity} on sale</span> : ""}
+              {saleData && (
+                <span>{saleData.quantity} on sale and </span>
+              )}
+                <span>{nft?.quantity} available</span>
             </div>
           </div>
           <div style={{ marginLeft: 30 }}>
@@ -406,7 +409,13 @@ export default function UserPolygonNftDetails(props) {
                   borderRadius: 30,
                   objectFit: "cover",
                 }}
-                src={artist ? artist.image : nft?.artistImg ? nft?.artistImg : profileSvg}
+                src={
+                  artist
+                    ? artist.image
+                    : nft?.artistImg
+                    ? nft?.artistImg
+                    : profileSvg
+                }
                 alt="artist"
               />
               <div style={{ fontSize: 16, marginLeft: 10 }}>
@@ -592,7 +601,7 @@ export default function UserPolygonNftDetails(props) {
             nearFee={number}
             artistName={nft?.nft.artistName?.substring(0, 8) + "..."}
             artistImage={
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+              nft.nft.artistImg ?? profileSvg
             }
             near={false}
           />
@@ -613,17 +622,35 @@ export default function UserPolygonNftDetails(props) {
         >
           <Col lg={7} md={7}>
             <div style={{ textAlign: "center" }}>
-              <img
-                className={classes.nftImage}
-                src={
-                  nft.tokenUri.startsWith("ipfs")
-                    ? `https://${nft.tokenUri.substring(
-                        7
-                      )}.ipfs.nftstorage.link`
-                    : nft.tokenUri
-                }
-                alt="nft"
-              />
+              {console.log(nft, "nft")}
+              {nft?.isVideo ?
+                <div id="tv_container">
+                  <video ref={ref} className={classes.nftImage} controls autoPlay muted>
+                    <source
+                      src={
+                        nft.tokenUri.startsWith("ipfs")
+                          ? `https://${nft.tokenUri.substring(
+                              7
+                            )}.ipfs.nftstorage.link`
+                          : nft.tokenUri
+                      }
+                    />
+                    nft
+                  </video>
+                </div>
+                :
+                <img
+                  className={classes.nftImage}
+                  src={
+                    nft.tokenUri.startsWith("ipfs")
+                      ? `https://${nft.tokenUri.substring(
+                          7
+                        )}.ipfs.nftstorage.link`
+                      : nft.tokenUri
+                  }
+                  alt="nft"
+                />
+              }
             </div>
           </Col>
           <Col className={classes.descriptionCol} lg={5} md={5}>
@@ -929,8 +956,8 @@ export default function UserPolygonNftDetails(props) {
               />
             )}
             {purchasable.owner &&
-              ((saleData && (saleData.saleType === "0" ||
-                saleData.saleType === 0))) && (
+              saleData &&
+              (saleData.saleType === "0" || saleData.saleType === 0) && (
                 <div>
                   <GradientBtn
                     style={{
@@ -939,7 +966,7 @@ export default function UserPolygonNftDetails(props) {
                       opacity: purchasable ? 1 : 0.6,
                     }}
                     onClick={() => {
-                      cancelSale()
+                      cancelSale();
                     }}
                     content={<div>CANCEL LISTING</div>}
                   />

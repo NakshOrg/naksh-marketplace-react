@@ -19,6 +19,7 @@ query B($id: [String!]!) {
       }
       quantity
       erc721
+      isVideo
     }
 }
 `;
@@ -30,6 +31,7 @@ query B($nftAddress: String!, $tokenId: String!) {
       owner
     	quantity
       erc721
+      isVideo
     }
 }
 `;
@@ -55,6 +57,7 @@ query GetSingleNft($tokenId: String!, $nftAddress: String!) {
       }
       quantity
       erc721
+      isVideo
     }
 }
 `;
@@ -80,6 +83,7 @@ query GetSingleNft($nftAddress: String!) {
       }
       quantity
       erc721
+      isVideo
     }
 }
 `;
@@ -175,6 +179,7 @@ query getNftonSale {
       minter
       quantity
       erc721
+      isVideo
     }
     auction {
       id
@@ -216,6 +221,7 @@ export const AUCTIONED_NFTS = `
     nft {
       id
       erc721
+      isVideo
     }
     owner
     highestBid
@@ -251,6 +257,7 @@ query A($address: String!) {
     }
     quantity
     erc721
+    isVideo
   }
 }
 `;
@@ -276,6 +283,7 @@ query A($address: String!) {
     }
     quantity
     erc721
+    isVideo
   }
 }
 `;
@@ -300,6 +308,7 @@ query B{
       owner
       minter
       erc721
+      isVideo
     }
     timestamp
     quantity
@@ -327,6 +336,7 @@ query B($nftId: String!) {
       owner
       minter
       erc721
+      isVideo
     }
     timestamp
     quantity
@@ -354,6 +364,7 @@ query B($address: String!) {
       owner
       minter
       erc721
+      isVideo
     }
     timestamp
     quantity

@@ -15,7 +15,8 @@ import { helpers } from "../../constants";
 import { FiX } from "react-icons/fi";
 import { _getAllArtists } from "../../services/axios/api";
 
-const NAKSH_NFT_ADDRESS = "0xA7F4AD36bD0eF14A21D8f50279323356f12c2e56";
+const NAKSH_NFT_ADDRESS = "0xABb0f60525470913ff90128555E35D6EC3Dc1f06";
+const NAKSH_NFT_ADDRESS_1155 = "0x0f2Fd40C8c0Dc19e625bb3777db1595792Afe172";
 
 export default function CreateNft(props) {
   const { evmWalletData, evmProvider } = useAppContext();
@@ -137,11 +138,12 @@ export default function CreateNft(props) {
     const collectionDetails = userCollections.find(c => c.id.toLowerCase() === collection)
 
     erc721 = collectionDetails.erc721
-
+    
     try {
       if(!erc721) {
         if(image) {
           const img = await uploadMedia(image)
+          console.log(img,'imgage')
           toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
             id: toastId,
           });
@@ -153,7 +155,8 @@ export default function CreateNft(props) {
             description,
             artist ? artist.name : evmWalletData.address,
             artist ? artist.image : "",
-            quantity
+            quantity,
+            image.type.startsWith("video") ? true : false
           );
           toast.success("Successfully minted NFT", {
             id: toastId,
@@ -173,7 +176,8 @@ export default function CreateNft(props) {
             name,
             description,
             artist ? artist.name : evmWalletData.address,
-            artist ? artist.image : ""
+            artist ? artist.image : "",
+            image.type.startsWith("video") ? true : false
           );
           toast.success("Successfully minted NFT", {
             id: toastId,
@@ -193,11 +197,25 @@ export default function CreateNft(props) {
   const enlistLaterMint = async () => {
     const token = await mint();
 
-    history.push(
-      `/polygon/nftdetails/${collection}/${ethers.utils
-        .stripZeros(token.tokenId)
-        .toString()}`
+    let erc721 = true;
+    if (collection === NAKSH_NFT_ADDRESS) erc721 = true;
+
+    const collectionDetails = userCollections.find(
+      (c) => c.id.toLowerCase() === collection
     );
+
+    erc721 = collectionDetails.erc721;
+
+    if (erc721)
+      history.push(
+        `/polygon/nftdetails/${collection}/${ethers.utils
+          .stripZeros(token.tokenId)
+          .toString()}`
+      );
+    else
+      history.push(
+        `/polygon/${evmWalletData.address}/${collection}/${token.tokenId}`
+      ); 
   };
 
   const listAndMint = async () => {

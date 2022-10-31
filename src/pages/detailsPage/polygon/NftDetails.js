@@ -691,15 +691,21 @@ export default function PolygonNftDetails(props) {
           xs={12}
         >
           <NftCard
-            onClick={() =>
-              nft?.nft.erc721
+            onClick={() => {
+              const link = nft?.nft.erc721
                 ? `/polygon/nftdetails/${
                     nft.nft.nftAddress
                   }/${nft.nft.tokenId.toString()}`
                 : `/polygon/${nft.nft.owner}/${
                     nft.nft.nftAddress
-                  }/${nft.nft.tokenId.toString()}`
-            }
+                  }/${nft.nft.tokenId.toString()}`;
+              const a = document.createElement("a");
+              a.setAttribute(
+                "href",
+                link
+              );
+              a.click();
+            }}
             image={
               nft.nft.tokenUri.startsWith("ipfs")
                 ? `https://${nft.nft.tokenUri.substring(

@@ -622,7 +622,6 @@ export default function UserPolygonNftDetails(props) {
         >
           <Col lg={7} md={7}>
             <div style={{ textAlign: "center" }}>
-              {console.log(nft, "nft")}
               {nft?.isVideo ?
                 <div id="tv_container">
                   <video ref={ref} className={classes.nftImage} controls autoPlay muted>

@@ -738,17 +738,39 @@ export default function PolygonNftDetails(props) {
         >
           <Col lg={7} md={7}>
             <div style={{ textAlign: "center" }}>
-              <img
-                className={classes.nftImage}
-                src={
-                  nft.tokenUri.startsWith("ipfs")
-                    ? `https://${nft.tokenUri.substring(
-                        7
-                      )}.ipfs.nftstorage.link`
-                    : nft.tokenUri
-                }
-                alt="nft"
-              />
+              {nft?.isVideo ? (
+                <div id="tv_container">
+                  <video
+                    className={classes.nftImage}
+                    controls
+                    autoPlay
+                    muted
+                  >
+                    <source
+                      src={
+                        nft.tokenUri.startsWith("ipfs")
+                          ? `https://${nft.tokenUri.substring(
+                              7
+                            )}.ipfs.nftstorage.link`
+                          : nft.tokenUri
+                      }
+                    />
+                    nft
+                  </video>
+                </div>
+              ) : (
+                <img
+                  className={classes.nftImage}
+                  src={
+                    nft.tokenUri.startsWith("ipfs")
+                      ? `https://${nft.tokenUri.substring(
+                          7
+                        )}.ipfs.nftstorage.link`
+                      : nft.tokenUri
+                  }
+                  alt="nft"
+                />
+              )}
             </div>
           </Col>
           <Col className={classes.descriptionCol} lg={5} md={5}>

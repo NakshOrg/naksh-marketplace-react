@@ -133,17 +133,18 @@ export default function CreateNft(props) {
     const toastId = toast.loading("Uploading NFT");
     let erc721 = true
 
-    if(collection === NAKSH_NFT_ADDRESS) erc721 = true
-
+    if(collection.toLowerCase() === NAKSH_NFT_ADDRESS.toLowerCase()) erc721 = true
+    
     const collectionDetails = userCollections.find(c => c.id.toLowerCase() === collection)
 
-    erc721 = collectionDetails.erc721
+    erc721 = collectionDetails ? collectionDetails.erc721 : erc721
+
     
     try {
       if(!erc721) {
         if(image) {
           const img = await uploadMedia(image)
-          console.log(img,'imgage')
+          
           toast.loading("Successfully uploaded NFT on IPFS, Minting now...", {
             id: toastId,
           });
@@ -198,13 +199,13 @@ export default function CreateNft(props) {
     const token = await mint();
 
     let erc721 = true;
-    if (collection === NAKSH_NFT_ADDRESS) erc721 = true;
+    if (collection.toLowerCase() === NAKSH_NFT_ADDRESS.toLowerCase()) erc721 = true;
 
     const collectionDetails = userCollections.find(
       (c) => c.id.toLowerCase() === collection
     );
 
-    erc721 = collectionDetails.erc721;
+    erc721 = collectionDetails ? collectionDetails.erc721 : erc721;
 
     if (erc721)
       history.push(
@@ -223,13 +224,14 @@ export default function CreateNft(props) {
 
     // console.log({ nftAddress: collection, tokenId: ethers.utils.stripZeros(token.tokenId).toString() })
     let erc721 = true
-    if (collection === NAKSH_NFT_ADDRESS) erc721 = true;
+    if (collection.toLowerCase() === NAKSH_NFT_ADDRESS.toLowerCase())
+      erc721 = true;
 
     const collectionDetails = userCollections.find(
-      (c) => c.id.toLowerCase() === collection
+      (c) => c.id.toLowerCase() === collection.toLowerCase()
     );
 
-    erc721 = collectionDetails.erc721;
+    erc721 = collectionDetails ? collectionDetails.erc721 : erc721;
 
     if (selectedValue === 0) {
       if(erc721) {

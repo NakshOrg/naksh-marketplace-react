@@ -99,13 +99,13 @@ export default function NftDetails(props) {
             owner && setOwnerData(owner);
           })
           .catch((err) => {
-            alert("something went wrong!");
+            alert("something went wrong, please refresh the page!");
             setLoading(false);
           });
       })
       .catch((err) => {
         // // console.log(err);
-        alert("something went wrong!");
+        alert("something went wrong, please refresh the page!");
         setLoading(false);
       });
   };

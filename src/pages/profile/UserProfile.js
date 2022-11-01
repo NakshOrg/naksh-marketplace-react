@@ -143,7 +143,7 @@ export default function UserProfile(props) {
       })
       .catch((err) => {
         // console.log(err);
-        alert("something went wrong!");
+        alert("something went wrong, please refresh the page!");
         setLoading(false);
       });
   };
@@ -315,7 +315,7 @@ export default function UserProfile(props) {
       setLoading(false);
     } catch (e) {
       // console.log(e);
-      // alert("something went wrong!");
+      // alert("something went wrong, please refresh the page!");
       setLoading(false);
     }
   };

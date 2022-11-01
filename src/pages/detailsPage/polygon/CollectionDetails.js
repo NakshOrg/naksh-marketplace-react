@@ -33,18 +33,24 @@ const CollectionDetails = () => {
   const [soldNfts, setSoldNfts] = useState([]);
 
   const fetchCollection = async () => {
-    const collections = await getCollection(params.address.toLowerCase().toLowerCase());
-    const nfts = await getCollectionNFTs(params.address.toLowerCase());
+    try {
+      const collections = await getCollection(params.address.toLowerCase().toLowerCase());
+      const nfts = await getCollectionNFTs(params.address.toLowerCase());
+  
+      if(!collections) throw "error"
 
-    let uniqueOwner = {};
-
-    let copy = nfts.filter(item => item.owner.toLowerCase() !== NAKSH_ADDRESS_1155.toLowerCase())
-    
-    copy.map((nft) => (uniqueOwner[nft.owner] = true));
-
-    setOwners(Object.keys(uniqueOwner).length);
-    setCollection(collections);
-    setNFTs(copy);
+      let uniqueOwner = {};
+  
+      let copy = nfts.filter(item => item.owner.toLowerCase() !== NAKSH_ADDRESS_1155.toLowerCase())
+      
+      copy.map((nft) => (uniqueOwner[nft.owner] = true));
+  
+      setOwners(Object.keys(uniqueOwner).length);
+      setCollection(collections);
+      setNFTs(copy);
+    } catch (e) {
+      alert("something went wrong, please refresh the page")
+    }
   };
 
   const calculateVolume = async () => {

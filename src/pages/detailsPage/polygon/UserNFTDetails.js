@@ -268,7 +268,7 @@ export default function UserPolygonNftDetails(props) {
       setLoading(false);
     } catch (e) {
         console.log(e, "Er");
-      alert("something went wrong!");
+      alert("something went wrong, please refresh the page!");
       setLoading(false);
     }
   };

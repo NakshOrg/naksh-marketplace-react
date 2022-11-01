@@ -42,6 +42,7 @@
     "wagmi": "^0.6.7",
     "web-vitals": "^1.1.2"
   },
+  "watchOptions": { "ignored": "/node_modules/" },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

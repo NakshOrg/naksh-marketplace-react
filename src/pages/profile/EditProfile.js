@@ -240,7 +240,8 @@ export default function EditProfile(props) {
 
     if (imageRaw !== null) {
       const urlRes = await _getPresignedUrl({
-        module: "artist",
+        module: "artistImage",
+        artist: artistId,
         totalFiles: 1,
       });
       const uploadRes = await _uploadFileAws(

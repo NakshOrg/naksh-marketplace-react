@@ -203,12 +203,12 @@ function SuggestionNfts({
                           ? `https://${nft.nft.tokenUri.substring(
                               7
                             )}.ipfs.nftstorage.link`
-                          : nft.tokenUri
+                          : nft.nft.tokenUri
                       }
                       title={nft.nft.title}
                       nearFee={ethers.utils.formatEther(nft.salePrice)}
                       artistName={nft?.nft.artistName}
-                      artistImage={nft?.nft.tokenUri}
+                      artistImage={nft?.nft.artistImg}
                       near={false}
                     />
                   </div>
@@ -251,16 +251,16 @@ function SuggestionNfts({
                         )
                       }
                       image={
-                        nft.tokenUri.startsWith("ipfs")
-                          ? `https://${nft.tokenUri.substring(
+                        nft?.tokenUri.startsWith("ipfs")
+                          ? `https://${nft?.tokenUri?.substring(
                               7
                             )}.ipfs.nftstorage.link`
-                          : nft.tokenUri
+                          : nft?.tokenUri
                       }
-                      title={nft.title}
-                      nearFee={ethers.utils.formatEther(nft.salePrice)}
+                      title={nft?.title}
+                      nearFee={ethers.utils.formatEther(nft?.salePrice)}
                       artistName={nft?.artistName}
-                      artistImage={nft?.tokenUri}
+                      artistImage={nft?.artistImg}
                     />
                   </div>
                 ))

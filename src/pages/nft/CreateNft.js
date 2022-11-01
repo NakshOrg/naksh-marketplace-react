@@ -43,7 +43,7 @@ export default function CreateNft(props) {
   const [artist, setArtist] = useState()
 
   const [value, setValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState(1);
+  const [selectedValue, setSelectedValue] = useState(0);
   const [auctionTime, setAuctionTime] = useState(1);
 
   const [userCollections, setUserCollections] = useState([]);
@@ -412,6 +412,9 @@ export default function CreateNft(props) {
       erc721 = collectionDetails ? collectionDetails.erc721 : erc721;
 
       setERC721(erc721)
+      if(!erc721) {
+        setSelectedValue(0)
+      }
     }
   }, [collection, userCollections])
 
@@ -529,24 +532,27 @@ export default function CreateNft(props) {
                 </div>
               )}
             </div>
-            <select
-              value={collection}
-              onChange={(e) => setCollection(e.target.value)}
-              className="w-full p-3 text-white bg-brand-gray"
-              name="collection"
-              id="collection"
-              placeholder="Collection"
-            >
-              <option value={NAKSH_NFT_ADDRESS}>Generic</option>
-              {userCollections.length > 0 &&
-                userCollections.map((collection) => (
-                  <option value={collection.nftAddress}>
-                    {collection.name.length > 32
-                      ? collection.name.substring(0, 32) + "..."
-                      : collection.name}
-                  </option>
-                ))}
-              <option
+            <div className="w-full flex flex-col justify-center items-end space-y-3">
+              <select
+                value={collection}
+                onChange={(e) => setCollection(e.target.value)}
+                className="w-full p-3 text-white bg-brand-gray"
+                name="collection"
+                id="collection"
+                placeholder="Collection"
+              >
+                <option value={NAKSH_NFT_ADDRESS}>Marketplace</option>
+                {userCollections.length > 0 &&
+                  userCollections.map((collection) => (
+                    <option value={collection.nftAddress}>
+                      {collection.name.length > 32
+                        ? collection.name.substring(0, 32) + "..."
+                        : collection.name}
+                    </option>
+                  ))}
+              </select>
+              <div
+                className="p-2 bg-brand-gray cursor-pointer"
                 onClick={() => {
                   const a = document.createElement("a");
                   a.setAttribute(
@@ -556,11 +562,10 @@ export default function CreateNft(props) {
                   a.setAttribute("target", "_blank");
                   a.click();
                 }}
-                className=""
               >
-                + Create New
-              </option>
-            </select>
+                + Create New Collection
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -593,7 +598,7 @@ export default function CreateNft(props) {
             </svg>
             <span className="text-xl">Fixed Price</span>
           </div>
-          {erc721 && 
+          {erc721 && (
             <div
               onClick={() => setSelectedValue(1)}
               className={
@@ -613,9 +618,11 @@ export default function CreateNft(props) {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-md md:text-lg lg:text-xl">Timed Auction</span>
+              <span className="text-md md:text-lg lg:text-xl">
+                Timed Auction
+              </span>
             </div>
-          }
+          )}
         </div>
       </div>
       <div className={(listModal ? "filter blur-2xl " : "") + " space-y-4 "}>

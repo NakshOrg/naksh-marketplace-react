@@ -56,6 +56,7 @@ export default function Browse() {
   const [allEVMNfts, setAllEVMNfts] = useState([]);
   const [evmTrendingNfts, setEVMTrendingNfts] = useState([]);
   const [currentTab, setCurrentTab] = useState(tabContents[0])
+  const [recentlyEVMNFTs, setRecentlyEVMNFTs] = useState([])
 
   const isWalletSignedIn = useSelector(
     (state) => state.nearReducer.isWalletSignedIn
@@ -255,10 +256,18 @@ export default function Browse() {
       const copiedChainFilter = [...filterParams.chainFilter]
       copiedChainFilter[1].noOfNfts = nfts.length
 
+      const copiedFilterEVMArr = nfts.slice().sort(function (a, b) {
+        return new Date(Number(b.timestamp)) - new Date(Number(a.timestamp));
+      });
+
+      console.log(copiedFilterEVMArr, "tmiestamp")
+
+      setRecentlyEVMNFTs(copiedFilterEVMArr)
+
       setFilterParams((state) => ({
         ...state,
         priceRange: copiedPriceRanges,
-        chainFilter: copiedChainFilter
+        chainFilter: copiedChainFilter,
       }));
 
       setAllEVMNfts(totalNfts.slice(0, filterParams.limit));
@@ -294,7 +303,7 @@ export default function Browse() {
         let copyArray = []
 
         for(let i = 0; i < 5; i++) {
-          copyArray.push(trendingNfts[i % trendingNfts.length])
+          if(trendingNfts[i % trendingNfts.length]) copyArray.push(trendingNfts[i % trendingNfts.length])
         }
 
         setEVMTrendingNfts(copyArray)
@@ -665,7 +674,7 @@ export default function Browse() {
       </div>
       <SuggestionNfts
         topCollections={topCollections}
-        recentlyEVMAdded={totalEVMNfts}
+        recentlyEVMAdded={recentlyEVMNFTs}
         nearWallet={walletInfo}
         recentlyAdded={recently}
         trendingNfts={trendingNfts}

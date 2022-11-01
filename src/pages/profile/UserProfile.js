@@ -40,8 +40,8 @@ const mainText = {
 };
 
 const btnText = {
-  minted: "Mint NFTs",
-  collections: "Create Collection",
+  minted: "MINT NFTs",
+  collections: "CREATE COLLECTION",
   owned: "EXPLORE MARKETPLACE",
   saved: "EXPLORE MARKETPLACE",
 };
@@ -91,9 +91,7 @@ export default function UserProfile(props) {
         owner: ethers.utils.getAddress(evmWalletData.address),
       }).then(({ data: { artist, owner } }) => {
         const savedNft = artist?.savedNft;
-        console.log(savedNft, "Dsa");
         const queryData = savedNft.map((nft) => [`${nft.address}-${nft.token}`, `${evmWalletData.address}-${nft.address}-${nft.token}`]).flat();
-        console.log(queryData, "queryData")
         getManyNFTs(queryData).then((res) => {
           console.log(res, "daswerwr");
           setSavedNFTs(res);

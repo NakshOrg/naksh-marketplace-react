@@ -23,7 +23,7 @@ export default function ListNftModal({ mint, listAndMint, setIsOpen, image, setI
       onClick={(e) => {
         e.stopPropagation();
       }}
-      className="bg-brand-gray w-[491px] h-full rounded-xl m-10 p-5 flex flex-col justify-center items-center text-center space-y-4"
+      className="bg-brand-gray w-3/4 md:w-[491px] h-full rounded-xl md:m-10 p-5 flex flex-col justify-center items-center text-center space-y-4"
     >
       <h1 className="text-4xl font-bold">
         This NFT will be listed in the marketplace
@@ -70,10 +70,11 @@ export default function ListNftModal({ mint, listAndMint, setIsOpen, image, setI
           </div>
         </div>
       )}
-      <div className="w-full flex justify-center items-center space-x-4">
+      <div className="w-full flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
         <OutlineBtn
           style={{
             cursor: isVideo ? (image ? "default" : "not-allowed") : "default",
+            width: '100%'
           }}
           onClick={() => (isVideo ? (image ? mint() : {}) : mint())}
           text="ENLIST LATER"
@@ -88,7 +89,7 @@ export default function ListNftModal({ mint, listAndMint, setIsOpen, image, setI
             backgroundColor: "#fff",
             color: "#000",
             padding: "10px",
-            width: "50%",
+            width: "100%",
           }}
         />
       </div>

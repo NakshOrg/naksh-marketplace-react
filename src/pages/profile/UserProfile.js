@@ -486,7 +486,7 @@ export default function UserProfile(props) {
         </>
       )}
       {evmWalletData && (
-        <div className="w-full space-y-10 min-h-screen md:mt-[105px] sm:mt-0">
+        <div className="w-full space-y-0 md:space-y-10 min-h-screen md:mt-[105px] sm:mt-0">
           {/* <div className="w-full h-96" style={!collection.cover.isGradient ? { backgroundImage:`url("${collection.cover.uri}")`} : { background: collection.cover.uri }}></div> */}
           <div
             className="w-full h-96"
@@ -497,8 +497,8 @@ export default function UserProfile(props) {
                   : `url("${artist.coverImage}")`,
             }}
           ></div>
-          <div className="w-full h-full flex flex-col md:flex-row justify-start items-start">
-            <div className="-mt-40 w-full md:w-1/4 h-full mx-20 bg-black/75 backdrop-blur-lg rounded-xl p-10 flex flex-col justify-start items-center space-y-5">
+          <div className="w-full h-full flex flex-col md:flex-row justify-start items-center md:items-start">
+            <div className="-mt-40 w-11/12 md:w-1/4 h-full md:mx-20 bg-black/75 backdrop-blur-lg rounded-xl p-10 flex flex-col justify-start items-center space-y-5">
               <img
                 src={artist ? artist.image : profileSvg}
                 className="rounded-full bg-white w-40 h-40"
@@ -596,7 +596,7 @@ export default function UserProfile(props) {
                 <>
                   {mintedNfts.length <= 0 ? (
                     <div className="w-full h-80 flex flex-col justify-center items-center space-y-5">
-                      <h1 className="font-bold text-xl">
+                      <h1 className="font-bold text-center text-xl">
                         {mainText[activeTab]}
                       </h1>
                       <div
@@ -689,7 +689,7 @@ export default function UserProfile(props) {
                     </Row>
                   ) : (
                     <div className="w-full h-80 flex flex-col justify-center items-center space-y-5">
-                      <h1 className="font-bold text-xl">
+                      <h1 className="text-center font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
                       <div
@@ -753,7 +753,7 @@ export default function UserProfile(props) {
                     </Row>
                   ) : (
                     <div className="w-full h-80 flex flex-col justify-center items-center space-y-5">
-                      <h1 className="font-bold text-xl">
+                      <h1 className="text-center font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
                       <div
@@ -811,7 +811,7 @@ export default function UserProfile(props) {
                     </Row>
                   ) : (
                     <div className="w-full h-80 flex flex-col justify-center items-center space-y-5">
-                      <h1 className="font-bold text-xl">
+                      <h1 className="text-center font-bold text-xl">
                         {mainText[activeTab]}
                       </h1>
                       <div

@@ -46,23 +46,23 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft, erc721 }) => {
 	};
 
 	return (
-    <div className="bg-[#12192B] space-y-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-1/2 lg:w-1/3 h-11/12 rounded-xl p-3 flex flex-col justify-center items-center">
+    <div className="bg-[#12192B] mt-20 md:mt-0 space-y-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-1/2 lg:w-1/3 h-11/12 rounded-xl p-3 flex flex-col justify-center items-center">
       <h1
-        className="text-5xl font-bold p-4"
+        className="text-5xl font-bold p-4 text-center"
         style={{
           fontFamily: "Athelas-Bold",
         }}
       >
         NFT Listing
       </h1>
-      <div className="font-inter w-full h-36 space-x-3 p-3 flex justify-center items-center">
-        <div className="w-1/3 h-full flex justify-start items-center font-bold text-xl font-inter">
+      <div className="font-inter w-full h-full md:h-36 space-y-4 md:space-y-0 md:space-x-3 p-3 flex flex-col md:flex-row justify-center items-center">
+        <div className="w-full md:w-1/3 h-full flex justify-start items-center font-bold text-xl font-inter">
           Pricing Type
         </div>
         <div
           onClick={() => setSelectedValue(0)}
           className={
-            "relative cursor-pointer w-1/3 h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
+            "relative cursor-pointer w-full md:w-1/3 h-24 md:h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
             (selectedValue === 0 ? " gradient" : "")
           }
         >
@@ -82,11 +82,11 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft, erc721 }) => {
             Fixed Price
           </span>
         </div>
-        {erc721 && 
+        {erc721 && (
           <div
             onClick={() => setSelectedValue(1)}
             className={
-              "cursor-pointer w-1/3 h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
+              "cursor-pointer w-full md:w-1/3 h-24 md:h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
               (selectedValue === 1 ? " gradient" : "")
             }
           >
@@ -106,7 +106,7 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft, erc721 }) => {
               Timed Auction
             </span>
           </div>
-        }
+        )}
       </div>
       <div className="w-full flex flex-col justify-center items-center p-3 space-y-4">
         <div className="p-4 rounded-xl space-y-4 bg-[#24293C] w-full h-fit flex flex-col justify-around items-around">
@@ -180,16 +180,16 @@ const SaleNFTModal = ({ isOpen, setIsOpen, nft, erc721 }) => {
           </div>
         )}
       </div>
-      <div className="p-4 rounded-xl space-x-4 w-full h-fit flex justify-center items-center">
+      <div className="p-4 rounded-xl space-y-3 md:space-y-0 md:space-x-4 w-full h-fit flex flex-col md:flex-row justify-center items-center">
         <div
           onClick={() => setIsOpen(false)}
-          className="tracking-widest font-semibold cursor-pointer w-1/2 h-full p-3 text-center text-xl border-2 border-white rounded-xl"
+          className="tracking-widest font-semibold cursor-pointer w-full md:w-1/2 h-full p-3 text-center text-xl border-2 border-white rounded-xl"
         >
           CANCEL
         </div>
         <div
           onClick={() => listNft()}
-          className="tracking-widest font-semibold cursor-pointer w-1/2 h-full p-3 text-center text-xl bg-white text-black text-bold rounded-xl"
+          className="tracking-widest font-semibold cursor-pointer w-full md:w-1/2 h-full p-3 text-center text-xl bg-white text-black text-bold rounded-xl"
         >
           SUBMIT
         </div>

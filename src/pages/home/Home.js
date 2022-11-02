@@ -70,7 +70,7 @@ export default function Home() {
                 An NFT marketplace fuelled by art communities from all over
                 India
               </h1>
-              <div className="w-full h-full flex justify-start items-end space-x-5">
+              <div className="w-full h-full flex flex-col md:flex-row justify-start items-end md:space-x-5">
                 <div
                   id={classes.btnContainer}
                   onClick={() => history.push("/browse")}
@@ -87,7 +87,7 @@ export default function Home() {
                 <div
                   id={classes.btnContainer}
                   onClick={() => history.push("/create/nft")}
-                  className="create-nft"
+                  className="create-nft mt-3 "
                   style={{ zIndex: 100, textAlign: "center" }}
                 >
                   <div

@@ -429,8 +429,34 @@ export default function CreateNft(props) {
           " w-full flex justify-around items-center"
         }
       >
-        <div className="w-1/2 flex justify-start items-center space-x-4">
-          <span onClick={() => history.goBack()} className="cursor-pointer text-xl font-bold">
+        <div className="w-full flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0">
+          <div className="w-full md:w-1/2 flex justify-start items-center space-x-4">
+            <span
+              onClick={() => history.goBack()}
+              className="cursor-pointer text-xl font-bold"
+            >
+              &larr;
+            </span>
+            <h1 className="text-xl md:text-3xl font-bold">Create NFT</h1>
+          </div>
+          <div className="w-full md:w-1/2 flex justify-center md:justify-end items-center space-x-4">
+            <GradientBtn
+              onClick={() => {
+                if (image.type.startsWith("video")) {
+                  // setCoverModal(true)
+                }
+                setListModal(true);
+              }}
+              content="SAVE CHANGES"
+              style={{ width: "187px" }}
+            />
+          </div>
+        </div>
+        {/* <div className="w-1/2 flex justify-start items-center space-x-4">
+          <span
+            onClick={() => history.goBack()}
+            className="cursor-pointer text-xl font-bold"
+          >
             &larr;
           </span>
           <h1 className="text-3xl font-bold">Create NFT</h1>
@@ -446,7 +472,7 @@ export default function CreateNft(props) {
             content="MINT NFT"
             style={{ width: "187px" }}
           />
-        </div>
+        </div> */}
       </div>
       <p className={listModal ? "filter blur-2xl " : ""}>NFT DETAILS</p>
       <div
@@ -510,7 +536,7 @@ export default function CreateNft(props) {
             ></textarea>
             <p>{description.length}/300</p>
           </div>
-          <div className="w-full space-x-4 flex justify-around items-start">
+          <div className="w-full space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row justify-around md:items-start">
             <div className="w-full flex flex-col justify-center items-center space-y-4">
               <input
                 onKeyDown={(e) => {
@@ -578,11 +604,11 @@ export default function CreateNft(props) {
         }
       >
         <h1 className="text-lg font-bold">PRICING TYPE</h1>
-        <div className="w-full flex justify-start space-x-4 items-center">
+        <div className="w-full flex flex-col md:flex-row justify-start space-y-4 md:space-y-0 md:space-x-4 items-start md:items-center">
           <div
             onClick={() => setSelectedValue(0)}
             className={
-              "p-5 cursor-pointer h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
+              "w-full md:w-fit p-5 cursor-pointer h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
               (selectedValue === 0 ? " bg-white text-black" : "")
             }
           >
@@ -604,7 +630,7 @@ export default function CreateNft(props) {
             <div
               onClick={() => setSelectedValue(1)}
               className={
-                "p-5 cursor-pointer h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
+                "w-full md:w-fit p-5 cursor-pointer h-full text-bold border-2 border-white rounded-xl flex flex-col justify-center items-center" +
                 (selectedValue === 1 ? " bg-white text-black" : "")
               }
             >
@@ -695,7 +721,7 @@ export default function CreateNft(props) {
       <div
         className={
           (!listModal ? "hidden" : "") +
-          " filter-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          " w-full filter-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center"
         }
       >
         <ListNftModal
@@ -710,7 +736,7 @@ export default function CreateNft(props) {
       <div
         className={
           (!coverModal ? "hidden" : "") +
-          " w-full filter-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          " w-full filter-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center"
         }
       >
         <UploadCoverImageNFTModal

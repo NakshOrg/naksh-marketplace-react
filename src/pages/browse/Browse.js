@@ -664,8 +664,8 @@ export default function Browse() {
   return (
     <Container fluid className={classes.container}>
       <div className={classes.exploreGradientBlue} />
-      <div className="w-full flex justify-center items-center">
-        <div className={classes.sectionTitle}>Discover extraordinary NFTs</div>
+      <div className="w-full flex justify-center text-center items-center">
+        <div className={classes.sectionTitle + ''}>Discover extraordinary NFTs</div>
         {/* <div className={classes.sectionTitle2}>
                     Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
                 </div> */}

@@ -292,8 +292,8 @@ export default function CreateCollection(props) {
 
   return (
     <div className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10">
-      <div className="w-full flex justify-around items-center">
-        <div className="w-1/2 flex justify-start items-center space-x-4">
+      <div className="w-full flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0">
+        <div className="w-full md:w-1/2 flex justify-start items-center space-x-4">
           <span
             onClick={() => history.goBack()}
             className="cursor-pointer text-xl font-bold"
@@ -302,7 +302,7 @@ export default function CreateCollection(props) {
           </span>
           <h1 className="text-xl md:text-3xl font-bold">Create Collection</h1>
         </div>
-        <div className="w-1/2 flex justify-end items-center space-x-4">
+        <div className="w-full md:w-1/2 flex justify-end items-center space-x-4">
           <select
             value={erc721 ? "ERC721" : "ERC1155"}
             onChange={(e) => {
@@ -492,9 +492,9 @@ export default function CreateCollection(props) {
             .map((i, idx) => (
               <div
                 key={idx}
-                className="w-full h-full space-x-3 flex justify-around items-center"
+                className="w-full h-full space-y-3 md:space-y-0 md:space-x-3 flex flex-col md:flex-row justify-around items-center"
               >
-                <div className="w-2/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
+                <div className="w-full md:w-2/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
                   <input
                     value={royalties[idx].wallet}
                     onChange={(e) =>
@@ -513,7 +513,7 @@ export default function CreateCollection(props) {
                       />
                     )}
                 </div>
-                <div className="w-1/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
+                <div className="w-full md:w-1/3 py-3 px-3 flex justify-center items-center bg-brand-gray">
                   <input
                     value={royalties[idx].percentage}
                     onChange={(e) => {
@@ -535,7 +535,7 @@ export default function CreateCollection(props) {
       </div>
       <div className="w-full h-full flex flex-col justify-center items-start space-y-4">
         <h1 className="font-bold">SOCIAL MEDIA</h1>
-        <div className="w-full h-full flex justify-center items-center space-x-4">
+        <div className="w-full h-full flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
           <input
             value={instagram}
             onChange={(e) => setInstagram(e.target.value)}
@@ -552,7 +552,7 @@ export default function CreateCollection(props) {
           />
         </div>
 
-        <div className="w-full h-full flex justify-center items-center space-x-4">
+        <div className="w-full h-full flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
           <input
             value={facebook}
             onChange={(e) => setFacebook(e.target.value)}

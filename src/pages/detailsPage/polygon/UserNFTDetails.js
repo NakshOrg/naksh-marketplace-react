@@ -936,29 +936,6 @@ export default function UserPolygonNftDetails(props) {
                 />
               </div>
             )}
-            {!purchasable.owner && purchasable.auctionEnded && (
-              <div>
-                <GradientBtn
-                  style={{
-                    marginTop: 30,
-                    cursor: purchasable ? "pointer" : "no-drop",
-                    opacity: purchasable ? 1 : 0.6,
-                  }}
-                  content={<div>AUCTION ENDED</div>}
-                />
-              </div>
-            )}
-            {purchasable.owner &&
-              purchasable.auctionEnded &&
-              auctionData &&
-              auctionData.highestBidder &&
-              auctionData.highestBidder.toLowerCase() ===
-                evmWalletData.addrses.toLowerCase() && (
-                <div className={classes.ownedBtn}>
-                  <img style={{ height: 30 }} src={party} alt="party" />
-                  &nbsp;&nbsp; AUCTION ENDED!
-                </div>
-              )}
             {purchasable.owner && purchasable.auctionEnded && price <= 0 && (
               <GradientBtn
                 style={{

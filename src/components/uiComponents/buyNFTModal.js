@@ -172,6 +172,7 @@ const BuyNFTModal = ({ isOpen, setIsOpen, nft, price, saleData, erc721 }) => {
           marginBottom: "20px",
           color: "#eee",
         }}
+        className="flex-col md:flex-row"
       >
         <div
           onClick={() => setIsOpen(false)}

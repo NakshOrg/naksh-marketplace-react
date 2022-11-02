@@ -718,7 +718,7 @@ export default function PolygonNftDetails(props) {
             nearFee={number}
             artistName={nft?.nft.artistName?.substring(0, 8) + "..."}
             artistImage={
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+              nft?.nft.artistImg ?? profileSvg
             }
             near={false}
           />

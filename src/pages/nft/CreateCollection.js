@@ -294,15 +294,20 @@ export default function CreateCollection(props) {
     <div className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10">
       <div className="w-full flex justify-around items-center">
         <div className="w-1/2 flex justify-start items-center space-x-4">
-          <span className="text-xl font-bold">&larr;</span>
+          <span
+            onClick={() => history.goBack()}
+            className="cursor-pointer text-xl font-bold"
+          >
+            &larr;
+          </span>
           <h1 className="text-xl md:text-3xl font-bold">Create Collection</h1>
         </div>
         <div className="w-1/2 flex justify-end items-center space-x-4">
           <select
             value={erc721 ? "ERC721" : "ERC1155"}
-            onChange={(e) =>{
-              console.log(e.target.value, e.target.value === "ERC721", "value")
-              setERC721(e.target.value === "ERC721")
+            onChange={(e) => {
+              console.log(e.target.value, e.target.value === "ERC721", "value");
+              setERC721(e.target.value === "ERC721");
             }}
             className="p-3 text-white bg-brand-gray"
             name="collectionType"

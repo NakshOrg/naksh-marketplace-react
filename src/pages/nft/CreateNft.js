@@ -430,7 +430,9 @@ export default function CreateNft(props) {
         }
       >
         <div className="w-1/2 flex justify-start items-center space-x-4">
-          <span className="text-xl font-bold">&larr;</span>
+          <span onClick={() => history.goBack()} className="cursor-pointer text-xl font-bold">
+            &larr;
+          </span>
           <h1 className="text-3xl font-bold">Create NFT</h1>
         </div>
         <div className="w-1/2 flex justify-end items-center space-x-4">

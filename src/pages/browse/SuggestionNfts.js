@@ -288,15 +288,17 @@ function SuggestionNfts({
                         history.push(`/collection/${collection.id}`)
                       }
                       image={
-                        collection.logo.startsWith("ipfs")
+                        collection?.logo && collection.logo.startsWith("ipfs")
                           ? `https://${collection.logo.substring(
                               7
                             )}.ipfs.nftstorage.link`
                           : collection.logo
                       }
-                      title={collection.name}
-                      artistName={collection.artistName}
-                      artistImg={collection.artistImg}
+                      title={collection?.name && collection.name}
+                      artistName={
+                        collection?.artistName && collection.artistName
+                      }
+                      artistImg={collection?.artistImg && collection.artistImg}
                     />
                   </div>
                 );

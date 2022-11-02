@@ -260,8 +260,6 @@ export default function Browse() {
         return new Date(Number(b.timestamp)) - new Date(Number(a.timestamp));
       });
 
-      console.log(copiedFilterEVMArr, "tmiestamp")
-
       setRecentlyEVMNFTs(copiedFilterEVMArr)
 
       setFilterParams((state) => ({

@@ -23,7 +23,7 @@ const useCollection = () => {
           address,
           nftAbi,
           await ethers.getDefaultProvider(
-            "https://polygon-mumbai.g.alchemy.com/v2/Tv9MYE2mD4zn3ziBLd6S94HvLLjTocju"
+            "https://polygon-mainnet.g.alchemy.com/v2/oD--2OO92oeHck5VCVI4hKEnYNCQ8F1d"
           )
         );
         const data = await contract.getRoyalties();

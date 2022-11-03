@@ -16,7 +16,7 @@ import { FiX } from "react-icons/fi";
 import { _getAllArtists } from "../../services/axios/api";
 import UploadCoverImageNFTModal from "../../components/uiComponents/uploadVideoCover";
 
-const NAKSH_NFT_ADDRESS = "0xC5d1b758528933fe8567bfb99d44e8Fe73909FFE";
+const NAKSH_NFT_ADDRESS = "0xc58c79a1f5A5097e4619c3F6d4051C215978198b";
 const NAKSH_NFT_ADDRESS_1155 = "0x5A45F2cB5B794E19AC2Ac26fc8d1D3266420f6Dd";
 
 export default function CreateNft(props) {

@@ -59,15 +59,15 @@ export default function AppWrapper() {
   const [nakshContract, setNakshContract] = useState();
   const [factoryContract, setFactoryContract] = useState();
   const [isEVMWalletSignedIn, setIsEVMWalletSignedIn] = useState(false);
-  const NAKSH_ADDRESS = "0x7f629EbfFEF82E56b88158Ef890C82F4Dd7b35e2";
-  const NAKSH_FACTORY_ADDRESS = "0x2c7e8aF0C3606D95801755C7C2078c49D5A28D3e";
-  const NAKSH_ADDRESS_1155 = "0xeD96FBd91FD7D942Bb8635B44Bf5aE5DFfdE3519";
+  const NAKSH_ADDRESS = "0x53c588d80207dDD5e16c9a5CF7E2943b230935c0";
+  const NAKSH_FACTORY_ADDRESS = "0xfE4de797611F0C162aC3E6dB79fc71e852E9dEF2";
+  const NAKSH_ADDRESS_1155 = "0x95c67cDB351172Ddc7e8ad8dd8f9EAe2b029C172";
   const NAKSH_FACTORY_ADDRESS_1155 =
-    "0x6817b377fdF9d5691755A6222F1Ec39C9b7bDA6c";
+    "0xF89D87320c82ffC7a31562fCDA8c2259898C47F0";
 
   useEffect(() => {
     const provider = new ethers.providers.JsonRpcProvider(
-      "https://polygon-mumbai.g.alchemy.com/v2/Tv9MYE2mD4zn3ziBLd6S94HvLLjTocju"
+      "https://polygon-mainnet.g.alchemy.com/v2/oD--2OO92oeHck5VCVI4hKEnYNCQ8F1d"
     );
     const contract1 = new ethers.Contract(NAKSH_ADDRESS, nakshAbi, provider);
     setNakshContract(contract1);

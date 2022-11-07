@@ -519,7 +519,13 @@ function Header() {
                   <div
                     onClick={walletSignIn}
                     className="connect-near"
-                    style={{ margin: 0, padding: "10px 0" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: 0,
+                      padding: "10px 0",
+                    }}
                   >
                     {isWalletSignedIn ? (
                       "Logout"

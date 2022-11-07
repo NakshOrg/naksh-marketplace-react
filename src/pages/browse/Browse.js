@@ -394,6 +394,7 @@ export default function Browse() {
   };
 
   const handleFilterChange = (value, type) => {
+    console.log(value, type)
     if (type === "sort") {
       setFilterParams((state) => ({
         ...state,
@@ -500,49 +501,14 @@ export default function Browse() {
   const resetFilters = () => {
     setFilterParams((state) => ({
       ...state,
-      sort: staticValues.sortFilter[0].name,
-      priceRange: [
-        {
-          label: "Under 10 NEAR",
-          value: "Under 10 NEAR",
-          noOfNfts: 0,
-          checked: false,
-          min: 0,
-          max: 9,
-        },
-        {
-          label: "10 - 49 NEAR",
-          value: "10 - 49 NEAR",
-          noOfNfts: 0,
-          checked: false,
-          min: 10,
-          max: 49,
-        },
-        {
-          label: "50 - 100 NEAR",
-          value: "50 - 100 NEAR",
-          noOfNfts: 0,
-          checked: false,
-          min: 50,
-          max: 99,
-        },
-        {
-          label: "100 - 200 NEAR",
-          value: "100 - 200 NEAR",
-          noOfNfts: 0,
-          checked: false,
-          min: 100,
-          max: 200,
-        },
-        {
-          label: "200 - 300 NEAR",
-          value: "200 - 300 NEAR",
-          noOfNfts: 0,
-          checked: false,
-          min: 200,
-          max: 300,
-        },
-      ],
+    sort: staticValues.sortFilter[0].name,
+    priceRange: isEVMWalletSignedIn
+      ? evmFilter
+      : isWalletSignedIn
+      ? nearFilter
+      : evmFilter,
+    limit: 8,
+    chainFilter: chainFilter
     }));
   };
 
@@ -760,7 +726,7 @@ export default function Browse() {
                   <div>{item.label}</div>
                   <div
                     style={{ marginLeft: 5, cursor: "pointer" }}
-                    onClick={() => handleFilterChange(index)}
+                    onClick={() => handleFilterChange(item, "price")}
                   >
                     <FiX color="#fff" size={20} />
                   </div>
@@ -840,7 +806,7 @@ export default function Browse() {
                 }}
               />
               <div className={classes.pillsContainer}>
-                {staticValues.sortFilter.map((item) => {
+                {staticValues.sortFilter.map((item, index) => {
                   return (
                     <div
                       key={uuid()}
@@ -874,7 +840,7 @@ export default function Browse() {
                   return (
                     <div
                       key={uuid()}
-                      onClick={() => handleFilterChange(index)}
+                      onClick={(val) => handleFilterChange(index, "price")}
                       className={`${classes.pill} ${
                         item.checked ? classes.pillActive : ""
                       }`}

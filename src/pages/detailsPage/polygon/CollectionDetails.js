@@ -141,7 +141,7 @@ const CollectionDetails = () => {
                   className="w-full h-full rounded-full"
                 />
               </div>
-              <h1 className="font-bold text-3xl">{collection.name}</h1>
+              <h1 className="font-bold text-center text-3xl">{collection.name}</h1>
               <p className="text-gray-400">
                 Created by {collection.creator?.substring(0, 7)}...
               </p>

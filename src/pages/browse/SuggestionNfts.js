@@ -267,13 +267,13 @@ function SuggestionNfts({
                     <NftCard
                       onClick={() =>
                         history.push(
-                          nft?.nft.erc721
+                          nft?.erc721
                             ? `/polygon/nftdetails/${
-                                nft.nft.nftAddress
-                              }/${nft.nft.tokenId.toString()}`
-                            : `/polygon/${nft.nft.owner}/${
-                                nft.nft.nftAddress
-                              }/${nft.nft.tokenId.toString()}`
+                                nft.nftAddress
+                              }/${nft.tokenId.toString()}`
+                            : `/polygon/${nft.owner}/${
+                                nft.nftAddress
+                              }/${nft.tokenId.toString()}`
                         )
                       }
                       image={

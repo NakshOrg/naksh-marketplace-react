@@ -209,11 +209,11 @@ function Header() {
                   <FiChevronDown size={15} color="#fff" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={menuStyle} id="dropdown-basic-content">
-                  <Dropdown.Item onClick={() => history.push("/aboutnaksh")}>
+                  <Dropdown.Item onClick={() => navigateItem("/aboutnaksh")}>
                     About Naksh
                   </Dropdown.Item>
-                  {/* <Dropdown.Item onClick={() => history.push("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
-                            <Dropdown.Item onClick={() => history.push("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item> */}
+                  {/* <Dropdown.Item onClick={() => navigateItem("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
+                            <Dropdown.Item onClick={() => navigateItem("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item> */}
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown>
@@ -235,11 +235,11 @@ function Header() {
                   style={{ ...menuStyle, width: 230 }}
                   id="dropdown-basic-content"
                 >
-                  <Dropdown.Item onClick={() => history.push("/blogs")}>
+                  <Dropdown.Item onClick={() => navigateItem("/blogs")}>
                     Blogs
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => history.push("/helpcenter")}
+                    onClick={() => navigateItem("/helpcenter")}
                     style={{ marginTop: 15 }}
                   >
                     Help Center
@@ -325,11 +325,11 @@ function Header() {
                   style={{ ...menuStyle, width: 230 }}
                   id="dropdown-basic-content"
                 >
-                  <Dropdown.Item onClick={() => history.push("/create/nft")}>
+                  <Dropdown.Item onClick={() => navigateItem("/create/nft")}>
                     Create NFT
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => history.push("/create/collection")}
+                    onClick={() => navigateItem("/create/collection")}
                     style={{ marginTop: 15 }}
                   >
                     Create Collection
@@ -369,7 +369,7 @@ function Header() {
                 >
                   <Dropdown.Item
                     onClick={() =>
-                      history.push("/userprofile", {
+                      navigateItem("/userprofile", {
                         ownerAccountId: walletInfo?.getAccountId(),
                       })
                     }
@@ -437,7 +437,7 @@ function Header() {
               {(isWalletSignedIn || isEVMWalletSignedIn) && (
                 <div
                   onClick={() =>
-                    history.push("/userprofile", {
+                    navigateItem("/userprofile", {
                       ownerAccountId: walletInfo?.getAccountId(),
                     })
                   }

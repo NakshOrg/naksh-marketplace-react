@@ -559,6 +559,18 @@
   margin-left:50px;
 }
 
+.connect-wallet {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: bold;
+  margin-left: 50px;
+}
+
 .profile-icon {
   /* margin-left:195px; */
 }
@@ -646,6 +658,9 @@
   .connect-near {
     margin-left:30px;
   }
+  .connect-wallet {
+    margin-left: 30px;
+  }
   .desktop-carousel {
     height: 90%;
   }
@@ -665,6 +680,11 @@
   }
   .connect-near > img {
     height: 12px;
+  }
+  .connect-wallet {
+    margin-left: 15px;
+    font-size: 12px;
+    padding: 6px 9px;
   }
   .header-item {
     font-size: 10px;

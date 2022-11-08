@@ -386,13 +386,7 @@ function Header() {
               </Dropdown>
             ) : (
               <div
-                className="px-4 py-3 border border-white rounded-md text-inter font-semibold"
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "7%",
-                  fontSize: "12px",
-                }}
+                className="connect-wallet"
                 onClick={() => setIsModalOpen(true)}
               >
                 CONNECT WALLET

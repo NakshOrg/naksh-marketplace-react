@@ -53,30 +53,6 @@ export default function UnlistedDetailPage(props) {
         }
     }, [walletInfo, location.pathname]);
 
-    // const getOneNft = () => {
-
-    //     const paramsId = localStorage.getItem("paramsId");
-    //     const primaryParamsId = localStorage.getItem("primaryParamsId");
-    //     const functions = new NearHelperFunctions(contextValue, (paramsId ? paramsId : primaryParamsId ? primaryParamsId : match.params.id)); 
-
-    //     functions.getOneNft()
-    //     .then(res => {
-    //         res.price = res.price !== "NIL" ? utils.format.formatNearAmount(res.price) : "NIL";
-    //         setNftPrice(res.price);
-    //         setNftDetails(res);
-    //         if(paramsId) {
-    //             return functions.nearListing(res);
-    //         }
-    //         setLoading(false);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         alert.error("something went wrong!", {timeout:2000});
-    //         setLoading(false);
-    //     });
-
-    // }
-
     const fetchNft = () => {
 
         const paramsId = localStorage.getItem("paramsId");

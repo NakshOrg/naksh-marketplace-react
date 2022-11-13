@@ -240,6 +240,20 @@ export default function NearHelperFunctions(wallet, paramsId) {
 
   }
 
+  this.getSalesNft = async () => {
+    const res = await wallet.account()
+    .viewFunction(
+      configs.nakshMarketWallet, 
+      'get_sales_by_nft_contract_id', 
+      { 
+        nft_contract_id: configs.nakshContractWallet,
+        from_index: "0", 
+        limit: 1000 
+      }
+    )
+    return res
+  }
+
   this.nearListing = async (nftDetails) => {
 
     const msg = JSON.stringify({

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import uuid from "react-uuid";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import crossBtn from "../../assets/svgs/header-cross.svg";
+
 import "react-spring-bottom-sheet/dist/style.css";
 import { useHistory } from "react-router-dom";
 import { FiX } from "react-icons/fi";
@@ -198,10 +199,44 @@ export default function Browse() {
     if (evmWalletData) {
       getEVMTrendingNfts();
       if(allEVMNfts.length <= 0) fetchEVMNft();
+      
     }
   }, [evmWalletData]);
+  
+    useEffect(() => {
+        if(walletInfo) {
+            getTrendingNfts();
+            fetchNfts();
+        }
+    }, [walletInfo]);
 
-  useEffect(() => {
+    useEffect(() => {
+        if(totalNfts.length !== 0) {
+            applyFilters();
+        }
+    }, [filterParams]);
+
+    const checkForBlockedNfts = async (allNfts) => {
+        const { data: { nfts } } = await _getBlockedNfts();
+        if (nfts.length) {
+            const resultArr = [];
+            allNfts.map(allNft => {
+                if (nfts.find(nft => allNft.token_id !== nft.token_id)) {
+                    resultArr.push(allNft);
+                }
+            });
+            return resultArr;
+        }
+        return allNfts;
+    }
+
+    const getTrendingArtists = () => {
+        _getAllArtists({ sortBy:"trending", sort:1 })
+        .then(({ data: { artists } }) => {
+            setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
+        });
+
+ useEffect(() => {
     if(evmWalletData) {
       getCollections()
         .then(res => {
@@ -222,12 +257,12 @@ export default function Browse() {
     }
   }, [filterParams]);
 
-  const getTrendingArtists = () => {
+  //const getTrendingArtists = () => {
     // _getAllArtists({ sortBy:"trending", sort:1 })
     // .then(({ data: { artists } }) => {
     //     setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
     // });
-  };
+  //};
 
   const fetchEVMNft = async () => {
     try {
@@ -279,14 +314,48 @@ export default function Browse() {
   };
 
   const getTrendingNfts = () => {
-    const functions = new NearHelperFunctions(walletInfo);
+        const functions = new NearHelperFunctions(walletInfo);
+        
+        functions.getAllNfts()
+        .then(async res => {
 
-    functions.getAllNfts().then((res) => {
-      _getTrendingNft({ blockchain: 0 }).then(({ data: { nfts } }) => {
-        const trendingArr = [];
-        nfts.map((n) => {
-          const r = res.find((r) => r.token_id === n.token);
-          if (r) trendingArr.push(r);
+            // filtering blocked nfts
+            const nfts = await checkForBlockedNfts(res);
+
+            const result = nfts.sort(function(a, b) {
+                return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+            });
+            const totalNfts = result;
+            const firstSetOfData = totalNfts.slice(0, filterParams.limit);
+            const copiedPriceRanges = [...filterParams.priceRange];
+            // to add nft count in filter
+            totalNfts.map(item => {
+                const price = Number(item.price);
+                if (price >= 1 && price < 10) {
+                    copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
+                } else if (price >= 10 && price <= 49) {
+                    copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
+                } else if (price >= 50 && price < 100) {
+                    copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
+                } else if (price >= 100 && price < 200) {
+                    copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
+                } else if (price >= 200 && price <= 300) {
+                    copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
+                }
+            });
+            setFilterParams(state => ({
+                ...state,
+                priceRange: copiedPriceRanges
+            }));
+            setRecently(firstSetOfData);
+            setAllNfts(firstSetOfData);
+            setTotalNfts(totalNfts);
+            setLoading(false);
+        })
+        .catch(err => {
+            // console.log(err);
+            alert("something went wrong!");
+            setLoading(false);
         });
         setTrendingNfts([...trendingArr, ...trendingArr]);
       });

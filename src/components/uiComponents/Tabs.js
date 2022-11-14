@@ -5,7 +5,7 @@ import uuid from 'react-uuid';
 import classes from '../../pages/browse/browse.module.css';
 import globalStyles from '../../globalStyles';
 
-function Tabs({ tabContents, currentTab }) {
+function Tabs({ tabContents, currentTab, setCurrentTab }) {
 
     const [activeTab, setActiveTab] = useState(tabContents[0]);
 
@@ -15,7 +15,7 @@ function Tabs({ tabContents, currentTab }) {
     }
 
     function active(item) {
-        currentTab(item);
+        setCurrentTab(item);
         setActiveTab(item);
     }
 

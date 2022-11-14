@@ -195,6 +195,64 @@
   border-radius: 5px;
 }
 
+.create-nft {
+  height: 50px;
+  border: none;
+  outline: none;
+  color: #000;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  font-weight: bold;
+  letter-spacing: 2.5px;
+  font-size: 12px;
+  border-radius: 5px;
+  margin-top: 30px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  justify-content: space-between;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.create-nft:before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left:-2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing 20s linear infinite;
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+  border-radius: 5px;
+  
+}
+
+.create-nft:hover:before {
+  opacity: 1;
+}
+
+.create-nft:after {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 5px;
+}
+
 @keyframes glowing {
   0% { background-position: 0 0; }
   50% { background-position: 400% 0; }
@@ -501,6 +559,18 @@
   margin-left:50px;
 }
 
+.connect-wallet {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: bold;
+  margin-left: 50px;
+}
+
 .profile-icon {
   /* margin-left:195px; */
 }
@@ -588,6 +658,9 @@
   .connect-near {
     margin-left:30px;
   }
+  .connect-wallet {
+    margin-left: 30px;
+  }
   .desktop-carousel {
     height: 90%;
   }
@@ -607,6 +680,11 @@
   }
   .connect-near > img {
     height: 12px;
+  }
+  .connect-wallet {
+    margin-left: 15px;
+    font-size: 12px;
+    padding: 6px 9px;
   }
   .header-item {
     font-size: 10px;
@@ -674,6 +752,9 @@
     height: 40px;
     width: 210px;
   }
+  .create-nft {
+    height: 40px;
+  }
   .search-list-image {
     height: 55px;
     width: 55px;
@@ -699,4 +780,71 @@
   .near-description {
     font-size:14px;
   }
+}
+
+.walletCard {
+  font-family:'Athelas-Bold';
+  border-radius: 20px;
+  z-index: 10000;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #12192B;
+}
+
+.walletCardFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+}
+
+.walletCardImg {
+  background-color: #000;
+  width: 184px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 3rem;
+  background: #000;
+}
+
+@media only screen and (max-width: 860px) {
+  .walletCard {
+    width: 80%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .walletCardFlex {
+    flex-direction: column;
+    width: 80%;
+    height: 20%;
+    margin-top: 20px;
+  }
+
+  .walletCardImg {
+    margin-left: 0;
+    margin-top: 1rem;
+    width: 104px;
+    height: 30px;
+    padding: 5px;
+    background: #fff;
+  }
+}
+
+.gradient {
+  background: linear-gradient(to right top, rgba(30, 58, 138, 0.5), rgba(190, 24, 93, 0.5), rgba(30, 58, 138, 0.5));
+  border-width: 2px;
+  border-style: solid;
 }

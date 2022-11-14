@@ -1,5 +1,7 @@
 /* default css presets  */
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @font-face {
     font-family: 'Athelas-Bold';
     src: local('Athelas-Bold'), url(./assets/fonts/Athelas-Bold.ttf) format('opentype');
@@ -8,7 +10,11 @@
 @font-face {
     font-family: 'Athelas-Regular';
     src: local('Athelas-Regular'), url(./assets/fonts/Athelas-Regular.ttf) format('opentype');
-} 
+}
+
+.font-inter {
+    font-family: 'Inter';
+}
 
 * {
     box-sizing: border-box;

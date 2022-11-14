@@ -275,9 +275,9 @@ export default function Browse() {
             <div className={classes.exploreGradientBlue}/>
             <div style={{...globalStyles.flexRowSpace}}>
                 <div className={classes.sectionTitle}>Discover extraordinary NFTs</div>
-                <div className={classes.sectionTitle2}>
+                {/* <div className={classes.sectionTitle2}>
                     Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
-                </div>
+                </div> */}
             </div>
             <SuggestionNfts
                 recentlyAdded={recently}

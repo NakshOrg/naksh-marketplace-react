@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 import "./output.css";
 import Header from "./components/uiComponents/Header";
 import Routes from "./routes";
-import reducer from "./redux";
+import store from "./redux";
 import { establishWalletConnection } from "./redux/actions/actions";
 import "./App.css";
 import { useEVMWallet } from "./hooks";
@@ -51,7 +51,6 @@ function App() {
 }
 
 export default function AppWrapper() {
-  const store = createStore(reducer, applyMiddleware(thunk));
 
   const [evmWallet, setEVMWallet] = useState();
   const [evmWalletData, setEVMWalletData] = useState();

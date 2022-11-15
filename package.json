@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.6.1",
+    "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -23,7 +24,7 @@
     "react-icons": "^4.3.1",
     "react-lazyload": "^3.2.0",
     "react-optimized-image": "^0.4.1",
-    "react-redux": "^7.2.6",
+    "react-redux": "^8.0.5",
     "react-responsive-masonry": "^2.1.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -35,14 +36,16 @@
     "react-spring-bottom-sheet": "^3.4.0",
     "react-stacked-carousel": "^1.1.4",
     "react-uuid": "^1.0.2",
-    "redux": "^4.1.2",
-    "redux-thunk": "^2.4.1",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.2",
     "slick-carousel": "^1.8.1",
     "swiper": "^8.0.0",
     "wagmi": "^0.6.7",
     "web-vitals": "^1.1.2"
   },
-  "watchOptions": { "ignored": "/node_modules/" },
+  "watchOptions": {
+    "ignored": "/node_modules/"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

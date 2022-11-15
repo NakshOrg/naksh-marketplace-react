@@ -60,7 +60,7 @@ export default function EditProfile(props) {
   const [profileAlreadyCreated, setProfileAlreadyCreated] = useState("false");
 
   useEffect(() => {
-    if (walletInfo) {
+    if (isWalletSignedIn) {
       getArtist(false);
     } else if (evmWalletData) {
       getArtist(true);

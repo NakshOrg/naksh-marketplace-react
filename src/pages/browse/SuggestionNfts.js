@@ -173,7 +173,7 @@ function SuggestionNfts({
                   color: "#fff",
                 }}
               >
-                {artistName.substring(0, 8)}...
+                {artistName && artistName.substring(0, 8)}...
               </div>
             </div>
           </div>
@@ -257,6 +257,7 @@ function SuggestionNfts({
                         nearFee={item?.price}
                         artistName={item?.artist?.name}
                         artistImage={item?.artist?.image}
+                        near={true}
                       />
                     </div>
                   );
@@ -287,6 +288,7 @@ function SuggestionNfts({
                       nearFee={ethers.utils.formatEther(nft?.salePrice)}
                       artistName={nft?.artistName}
                       artistImage={nft?.artistImg}
+                      near={false}
                     />
                   </div>
                 ))
@@ -301,6 +303,7 @@ function SuggestionNfts({
                       name={artist.name}
                       artform={artist?.artform?.name ?? "-----"}
                       place={artist.state ?? "-----"}
+                      near={true}
                     />
                   </div>
                 );

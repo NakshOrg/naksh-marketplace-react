@@ -74,12 +74,12 @@ export default function Browse() {
   const chainFilter = [
     {
       label: "Near",
-      checked: false,
+      checked: isWalletSignedIn,
       noOfNfts: 0,
     },
     {
       label: "Polygon",
-      checked: true,
+      checked: evmWalletData ? true : false,
       noOfNfts: 0,
     },
   ];
@@ -541,6 +541,7 @@ export default function Browse() {
               nearFee={nft?.price}
               artistName={nft?.artist?.name}
               artistImage={nft?.artist?.image}
+              near={isWalletSignedIn}
             />
           </Col>
         );
@@ -581,6 +582,7 @@ export default function Browse() {
               nearFee={ethers.utils.formatEther(nft.salePrice)}
               artistName={nft?.nft.artistName.substring(0, 8)}
               artistImage={nft?.nft.artistImg}
+              near={isWalletSignedIn}
             />
           </Col>
         );
@@ -641,7 +643,7 @@ export default function Browse() {
       <SuggestionNfts
         topCollections={topCollections}
         recentlyEVMAdded={recentlyEVMNFTs}
-        nearWallet={walletInfo}
+        nearWallet={isWalletSignedIn}
         recentlyAdded={recently}
         trendingNfts={trendingNfts}
         trendingArtists={trendingArtists}

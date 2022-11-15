@@ -76,8 +76,12 @@ export default function UserProfile(props) {
   const [userCollections, setUserCollections] = useState([]);
   const [savedNFTs, setSavedNFTs] = useState([]);
 
+  const [nearOwnedNfts, setNearOwnedNfts] = useState([]);
+  const [nearMintedNfts, setNearMintedNfts] = useState([]);
+
   useEffect(() => {
-    if (walletInfo) {
+    if (isWalletSignedIn) {
+      console.log("accountId")
       getArtist(false);
     } else if (evmWalletData) {
       getArtist(true);
@@ -131,6 +135,58 @@ export default function UserProfile(props) {
     }
   }, [evmProvider]);
 
+  useEffect(() => {
+    setLoading(true);
+    setArtist([]);
+    setNearOwnedNfts([]);
+    setNearMintedNfts([]);
+    if (walletInfo) {
+      getArtist();
+    }
+  }, [accountId]);
+
+  const EmptyState = () => {
+    return (
+      <div
+        style={{
+          ...globalStyles.flexRow,
+          flexDirection: "column",
+          marginTop: 50,
+          marginBottom: 30,
+        }}
+      >
+        <div style={{ fontSize: 16, opacity: 0.7 }}>
+          Buy NFTs to create a collection here!
+        </div>
+        <div
+          onClick={() => history.push("/browse")}
+          className="glow-on-hover"
+          type="button"
+          style={{ zIndex: 100 }}
+        >
+          <div className={classes.glowBtnText} style={{ marginLeft: 1 }}>
+            EXPLORE MARKETPLACE
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const getNearMintedNfts = () => {
+    const functions = new NearHelperFunctions(walletInfo);
+    functions
+      .getMintedNft()
+      .then((res) => {
+        setMintedNfts(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        // console.log(err);
+        alert("something went wrong!");
+        setLoading(false);
+      });
+  };
+
   const getOwnedNfts = () => {
     const functions = new NearHelperFunctions(walletInfo);
     functions
@@ -153,8 +209,18 @@ export default function UserProfile(props) {
       sort: -1,
     })
       .then(({ data }) => {
-        setArtist(data.artists[0]);
-        if (!evm) getOwnedNfts();
+        if(!evm) {
+          if (data.artists[0]) {
+            setArtist(data.artists[0]);
+            getNearMintedNfts();
+            getOwnedNfts();
+          } else {
+            setLoading(false);
+            setNoUserFound(true);
+          }
+        } else {
+          if(data.artists[0]) setArtist(data.artists[0])
+        }
       })
       .catch((err) => {
         if (
@@ -319,28 +385,85 @@ export default function UserProfile(props) {
   };
 
   const renderNfts = () => {
-    return ownedNfts.map((nft) => {
-      return (
-        <Col
-          key={uuid()}
-          style={{ marginBottom: 25 }}
-          lg={4}
-          md={6}
-          sm={6}
-          xs={12}
+    if (ownedNfts.length) {
+      return ownedNfts.map((nft) => {
+        return (
+          <Col
+            key={uuid()}
+            style={{ marginBottom: 25 }}
+            lg={4}
+            md={6}
+            sm={6}
+            xs={12}
+          >
+            <NftCard
+              onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
+              image={nft.metadata.media}
+              title={nft.metadata.title}
+              nearFee={nft.price}
+              price={"$121,000,000"}
+              artistName={nft?.artist?.name}
+              artistImage={nft?.artist?.image}
+            />
+          </Col>
+        );
+      });
+    }
+
+    return <EmptyState />;
+  };
+
+  const renderMintedNfts = () => {
+    if (mintedNfts.length) {
+      return mintedNfts.map((nft) => {
+        return (
+          <Col
+            key={uuid()}
+            style={{ marginBottom: 25 }}
+            lg={4}
+            md={6}
+            sm={6}
+            xs={12}
+          >
+            <NftCard
+              onClick={() => history.push(`/unlisted/${nft.token_id}`)}
+              image={nft.metadata.media}
+              title={nft.metadata.title}
+              nearFee={nft.price}
+              price={"$121,000,000"}
+              artistName={nft?.artist?.name}
+              artistImage={nft?.artist?.image}
+              unlisted={true}
+            />
+          </Col>
+        );
+      });
+    }
+
+    return (
+      <div
+        style={{
+          ...globalStyles.flexRow,
+          flexDirection: "column",
+          marginTop: 50,
+          marginBottom: 30,
+        }}
+      >
+        <div style={{ fontSize: 16, opacity: 0.7 }}>
+          Create NFT and mint it now to get forever royalties!
+        </div>
+        <div
+          onClick={() => history.push("/createnft")}
+          className="glow-on-hover"
+          type="button"
+          style={{ zIndex: 100 }}
         >
-          <NftCard
-            onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
-            image={nft.metadata.media}
-            title={nft.metadata.title}
-            nearFee={nft.price}
-            price={"$121,000,000"}
-            artistName={nft?.artist?.name}
-            artistImage={nft?.artist?.image}
-          />
-        </Col>
-      );
-    });
+          <div className={classes.glowBtnText} style={{ paddingLeft: 47 }}>
+            MINTED NFTS
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderEVMNfts = () => {
@@ -449,36 +572,52 @@ export default function UserProfile(props) {
                       justifyContent: "center",
                     }}
                   >
-                    <div>
-                      <div
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 12,
-                          letterSpacing: 1.5,
-                        }}
-                      >
-                        NFTS OWNED
-                      </div>
-                      {/* <div style={{height:3, background:"#fff", width:8, borderRadius:100, margin:"2.5px auto"}}/> */}
+                    <div
+                      onClick={() => setActiveTab("minted")}
+                      style={{
+                        fontWeight: activeTab == "minted" ? "bold" : "400",
+                        opacity: activeTab == "minted" ? 1 : 0.7,
+                        fontSize: 12,
+                        letterSpacing: 1.5,
+                        cursor: "pointer",
+                      }}
+                    >
+                      MINTED
                     </div>
-                    {/* <div onClick={() => this.setState({activeTab:"saved"})} style={{fontWeight: activeTab == "saved" ? "bold" : "400", opacity: activeTab == "saved" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
-                                            SAVED
-                                        </div>
-                                        <div onClick={() => this.setState({activeTab:"sold"})} style={{fontWeight: activeTab == "sold" ? "bold" : "400", opacity: activeTab == "sold" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
-                                            SOLD
-                                        </div> */}
+                    <div
+                      onClick={() => setActiveTab("owned")}
+                      style={{
+                        fontWeight: activeTab == "owned" ? "bold" : "400",
+                        opacity: activeTab == "owned" ? 1 : 0.7,
+                        fontSize: 12,
+                        marginLeft: 30,
+                        cursor: "pointer",
+                        letterSpacing: 1.5,
+                      }}
+                    >
+                      NFTS OWNED
+                    </div>
+                    {/* <div onClick={() => this.setState({activeTab:"sold"})} style={{fontWeight: activeTab == "sold" ? "bold" : "400", opacity: activeTab == "sold" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
+                                    SOLD
+                                </div> */}
                   </div>
                   {/* bottom indicator */}
-                  {/* <motion.div 
-                                        animate={{ 
-                                            x: 430
-                                        }}
-                                        transition={{ duration: 0.5 }}
-                                        style={{height:3, background:"#fff", width:8, borderRadius:100, marginTop:2}}
-                                    />  */}
+                  <motion.div
+                    animate={{
+                      x: activeTab === "minted" ? 400 : 500,
+                    }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                      height: 3,
+                      background: "#fff",
+                      width: 8,
+                      borderRadius: 100,
+                      marginTop: 2,
+                    }}
+                  />
                 </div>
                 <Row>
-                  {ownedNfts.length !== 0 ? <>{renderNfts()}</> : emptyState()}
+                  {activeTab === "minted" ? renderMintedNfts() : renderNfts()}
                 </Row>
               </Col>
             </Row>
@@ -504,7 +643,7 @@ export default function UserProfile(props) {
                 className="rounded-full bg-white w-40 h-40"
               />
               <h1 className="font-bold text-3xl">
-                {artist
+                {artist.name
                   ? artist.name.substring(0, 15)
                   : evmWalletData.address.substring(0, 6) + "..."}
               </h1>
@@ -647,7 +786,7 @@ export default function UserProfile(props) {
                                     .toString()
                                 : 0
                             }
-                            artistName={artist.name.substring(0, 15)}
+                            artistName={artist.name && artist.name.substring(0, 15)}
                             artistImage={artist.image}
                           />
                         </Col>

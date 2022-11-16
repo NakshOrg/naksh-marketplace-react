@@ -2,7 +2,7 @@ name: Development Deploy
 
 on:
   push:
-    branches: [ near-polygon ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd dev/naksh-marketplace-react
-            git checkout near-polygon
+            git checkout develop
             git pull
             cd
             sudo systemctl restart nginx

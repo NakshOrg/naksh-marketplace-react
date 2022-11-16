@@ -2,7 +2,7 @@ name: Development Deploy
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ near-polygon ]
 
 jobs:
   build:

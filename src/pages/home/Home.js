@@ -12,6 +12,7 @@ import Footer from "../../components/uiComponents/Footer";
 import { OutlineBtn } from "../../components/uiComponents/Buttons";
 import { useSigner } from "wagmi";
 import { useAppContext } from "../../context/wallet";
+import { _getAllArtists, _postArtist } from "../../services/axios/api";
 
 export default function Home() {
   const { setEVMProvider, setEVMWalletData } = useAppContext();
@@ -31,21 +32,24 @@ export default function Home() {
     }
   }, [walletInfo]);
 
-  function getAllNfts() {
-    const functions = new NearHelperFunctions(walletInfo);
-
-    functions
-      .getAllNfts()
-      .then((res) => {
-        // // console.log(res, "res");
-        dispatch({ type: actionTypes.ALL_NFTS, payload: res });
-      })
-      .catch((err) => {
-        // // console.log(err);
-      });
-  }
-
   const { data: signer, isError, isLoading } = useSigner();
+
+  useEffect(() => {
+
+    if (walletInfo) {
+      isArtistCreated()
+      .then(isUserFound => {
+        if (!isUserFound) {
+            const data = {
+              wallet: walletInfo.getAccountId(),
+              createdBy: 1
+            };
+            createArtist(data);
+        }
+      })
+    }
+
+  }, [walletInfo]);
 
   useEffect(() => {
     (async () => {
@@ -59,6 +63,46 @@ export default function Home() {
       }
     })();
   }, [signer]);
+
+  const isArtistCreated = async () => {
+
+    const { data } = await _getAllArtists({
+      wallet: walletInfo.getAccountId(),
+      sortBy: "createdAt",
+      sort: -1
+    });
+    
+    if (data.artists.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+
+  };
+
+  const createArtist = (data) => {
+    _postArtist(data)
+      .then((res) => {
+        console.log(res, 'create artist');
+      })
+      .catch((err) => {
+        console.log(err.response.data.error);
+      });
+  };
+
+  function getAllNfts() {
+    const functions = new NearHelperFunctions(walletInfo);
+
+    functions
+      .getAllNfts()
+      .then((res) => {
+        // // console.log(res, "res");
+        dispatch({ type: actionTypes.ALL_NFTS, payload: res });
+      })
+      .catch((err) => {
+        // // console.log(err);
+      });
+  }
 
   return (
     <Container fluid style={{ height: "100vh" }}>

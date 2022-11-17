@@ -4,6 +4,50 @@ import configs from "../../configs";
 import { _getAllArtists, _getOneArtist } from "../axios/api";
 
 export default function NearHelperFunctions(wallet) {
+
+  this.getMintedNft = async () => {
+
+    const allNfts = await wallet.account()
+    .viewFunction(
+      configs.nakshContractWallet, 
+      'nft_tokens', 
+      { 
+        from_index: "0", 
+        limit: 1000 
+      }
+    );
+
+    const contractNfts = await wallet.account()
+    .viewFunction(
+      configs.nakshMarketWallet, 
+      'get_sales_by_nft_contract_id', 
+      { 
+        nft_contract_id: configs.nakshContractWallet,
+        from_index: "0", 
+        limit: 1000 
+      }
+    );
+
+    const { data: { artists } } = await _getAllArtists({ sortBy: 'createdAt', sort: -1 });
+
+    const contractNftIds = contractNfts.map(item => item.token_id);
+    const unlistedNfts = allNfts.filter(nft => !contractNftIds.includes(nft.token_id)); 
+
+    const mintedNfts = unlistedNfts.filter(nft => {
+
+      if (nft.owner_id === wallet.getAccountId()) {
+        const artist = artists.find(artist => artist._id === nft?.metadata?.extra?.artistId);
+        if (artist) nft['artist'] = artist;
+        nft.metadata['extra'] = JSON.parse(nft.metadata.extra);
+        return nft;
+      }
+
+    });
+    
+    return mintedNfts;
+
+  }
+
   this.getAllListedNfts = async (allNfts, getAllNft) => {
     const res = await wallet
       .account()
@@ -135,4 +179,5 @@ export default function NearHelperFunctions(wallet) {
 
     const data = await wallet.account().functionCall(FunctionCallOptions);
   };
+  
 }

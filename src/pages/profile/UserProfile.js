@@ -173,21 +173,25 @@ export default function UserProfile(props) {
   };
 
   const getNearMintedNfts = () => {
+    console.log("getNearMintedNfts called");
+
     const functions = new NearHelperFunctions(walletInfo);
     functions
       .getMintedNft()
       .then((res) => {
+        console.log(res, 'get nearr minte');
         setMintedNfts(res);
         setLoading(false);
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         alert("something went wrong!");
         setLoading(false);
       });
   };
 
   const getOwnedNfts = () => {
+    console.log("owned called");
     const functions = new NearHelperFunctions(walletInfo);
     functions
       .getOwnedNfts(accountId)
@@ -203,12 +207,14 @@ export default function UserProfile(props) {
   };
 
   const getArtist = (evm = false) => {
+    console.log("get artist");
     _getAllArtists({
       wallet: evm ? evmWalletData.address : accountId,
       sortBy: "createdAt",
       sort: -1,
     })
       .then(({ data }) => {
+        console.log(evm, data, 'data from userprofile');
         if(!evm) {
           if (data.artists[0]) {
             setArtist(data.artists[0]);

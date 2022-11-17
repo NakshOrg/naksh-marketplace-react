@@ -212,8 +212,12 @@ function Header() {
                   <Dropdown.Item onClick={() => navigateItem("/aboutnaksh")}>
                     About Naksh
                   </Dropdown.Item>
-                  {/* <Dropdown.Item onClick={() => navigateItem("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
-                            <Dropdown.Item onClick={() => navigateItem("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item> */}
+                  {(isWalletSignedIn || !evmWalletData) && 
+                  <>
+                    <Dropdown.Item onClick={() => navigateItem("/ourartists")} style={{marginTop:15}}>Our Artists</Dropdown.Item>
+                    <Dropdown.Item onClick={() => navigateItem("/nearprotocol")} style={{marginTop:15}}>NEAR Protocol</Dropdown.Item>
+                  </>
+                  }
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown>

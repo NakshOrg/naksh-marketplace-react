@@ -136,6 +136,10 @@ export default function NftDetails(props) {
         functions.updateNft(nft, nftPrice);    
     }
 
+    const handleSaveNft = () => {
+        
+    }
+
     const overview = () => {
 
         return <>
@@ -254,9 +258,9 @@ export default function NftDetails(props) {
                     <div style={globalStyles.flexRowSpace}>
                         <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize", lineHeight:"40px", marginRight:10}}>{nft?.metadata?.title}</div>
                         <div style={{display:'flex'}}>
-                            {/* <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
+                            <span onClick={handleSaveNft} style={{backgroundColor:"#fff", borderRadius:100, padding:6}}>
                                 <FiBookmark size={22} color="#130F26"/>
-                            </span> */}
+                            </span>
                             <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, cursor:"pointer"}}>
                                 <FiFlag size={22} color="#130F26"/>
                             </span>

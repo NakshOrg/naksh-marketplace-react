@@ -74,7 +74,7 @@ export default function Browse() {
   const chainFilter = [
     {
       label: "Near",
-      checked: isWalletSignedIn,
+      checked: isWalletSignedIn || !evmWalletData,
       noOfNfts: 0,
     },
     {
@@ -195,19 +195,15 @@ export default function Browse() {
   }, [walletInfo]);
 
   useEffect(() => {
-    if (evmWalletData) {
-      getEVMTrendingNfts();
-      if (allEVMNfts.length <= 0) fetchEVMNft();
-    }
-  }, [evmWalletData]);
+    getEVMTrendingNfts();
+    if (allEVMNfts.length <= 0) fetchEVMNft();
+  }, []);
 
   useEffect(() => {
-    if (evmWalletData) {
-      getCollections().then((res) => {
-        setCollections(res);
-      });
-    }
-  }, [evmWalletData]);
+    getCollections().then((res) => {
+      setCollections(res);
+    });
+  }, []);
 
   useEffect(() => {
     if (evmTrendingNfts && evmTrendingNfts.length > 0) {
@@ -378,9 +374,14 @@ export default function Browse() {
             copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
           }
         });
+        
+        const copiedChainFilter = [...filterParams.chainFilter];
+        copiedChainFilter[0].noOfNfts = totalNfts.length;
+
         setFilterParams((state) => ({
           ...state,
           priceRange: copiedPriceRanges,
+          chainFilter: copiedChainFilter
         }));
         setRecently(firstSetOfData);
         setAllNfts(firstSetOfData);
@@ -541,7 +542,7 @@ export default function Browse() {
               nearFee={nft?.price}
               artistName={nft?.artist?.name}
               artistImage={nft?.artist?.image}
-              near={isWalletSignedIn}
+              near={true}
             />
           </Col>
         );
@@ -582,7 +583,7 @@ export default function Browse() {
               nearFee={ethers.utils.formatEther(nft.salePrice)}
               artistName={nft?.nft.artistName.substring(0, 8)}
               artistImage={nft?.nft.artistImg}
-              near={isWalletSignedIn}
+              near={false}
             />
           </Col>
         );
@@ -746,7 +747,12 @@ export default function Browse() {
         <>
           <div className={classes.nftContainer}>
             <Row>
-              {allNfts.length === 0 && allEVMNfts.length === 0 ? (
+              {allNfts.length > 0 || allEVMNfts.length > 0 ? (
+                <>
+                  {filterParams.chainFilter[0].checked && renderNfts()}
+                  {filterParams.chainFilter[1].checked && renderEVMNfts()}
+                </>
+              ) : (
                 <div
                   style={{
                     margin: "125px 0",
@@ -757,11 +763,6 @@ export default function Browse() {
                 >
                   No results found!
                 </div>
-              ) : (
-                <>
-                  {filterParams.chainFilter[0].checked && renderNfts()}
-                  {filterParams.chainFilter[1].checked && renderEVMNfts()}
-                </>
               )}
             </Row>
             <div style={{ marginBottom: 50 }} />

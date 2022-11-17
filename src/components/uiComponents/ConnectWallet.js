@@ -42,7 +42,6 @@ const ConnectWallet = ({ isOpen, setIsOpen }) => {
   const { openConnectModal } = useConnectModal();
 
   const connectNear = async () => {
-    const toastId = toast.loading("Connecting to Near");
     try {
       // console.log(walletInfo, "dsa")
       if (walletInfo) {
@@ -51,14 +50,8 @@ const ConnectWallet = ({ isOpen, setIsOpen }) => {
           failureUrl: `${configs.appUrl}/404`,
         });
       }
-      toast.success("Successfully connected to Near", {
-        id: toastId,
-      });
       setIsOpen(false);
     } catch (e) {
-      toast.error("Cannot connect to Near", {
-        id: toastId,
-      });
     }
   };
 

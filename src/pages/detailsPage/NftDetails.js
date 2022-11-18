@@ -16,7 +16,7 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import { _getAllArtists, _getNftArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
+import { _getAllArtists, _getNftArtists, _saveNft, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
 import ListModal from '../../components/uiComponents/ListModal';
@@ -30,6 +30,7 @@ export default function NftDetails(props) {
     const history = useHistory();
     const location = useLocation();
     const [loading, setLoading] = useState(true);
+    const [saveLoading, setSaveLoading] = useState(true);
     const [nft, setNft] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
     const [moreNfts, setMoreNfts] = useState([]);
@@ -70,14 +71,13 @@ export default function NftDetails(props) {
             .then(nfts => {
 
                 const isListed = saleNfts.find(item => item.token_id === params.id);
-                console.log(isListed, !isListed);
+
                 if (!isListed) {
-                    console.log('mel');
                     setIsListed(false);
                 }
 
                 const nft = nfts.find(item => item.token_id === params.id);
-
+                console.log(nft, 'nft')
                 if(paramsId) {
                     return functions.nearListing(nft);
                 }
@@ -137,7 +137,23 @@ export default function NftDetails(props) {
     }
 
     const handleSaveNft = () => {
-        
+
+        if (walletInfo.isSignedIn()) {
+            const data = {
+                "blockchain": 0,
+                "token": nft.token_id
+            }
+            _saveNft(nft.artist._id, data)
+            .then(res => {
+                console.log(res, 'saved');
+            })
+            .catch(err => {
+                console.log(err.response);
+            })
+        } else {
+            toast.error("Connect wallet to save NFT");
+        }
+
     }
 
     const overview = () => {
@@ -258,7 +274,7 @@ export default function NftDetails(props) {
                     <div style={globalStyles.flexRowSpace}>
                         <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize", lineHeight:"40px", marginRight:10}}>{nft?.metadata?.title}</div>
                         <div style={{display:'flex'}}>
-                            <span onClick={handleSaveNft} style={{backgroundColor:"#fff", borderRadius:100, padding:6}}>
+                            <span onClick={handleSaveNft} style={{backgroundColor:"#fff", borderRadius:100, padding:6, cursor:"pointer"}}>
                                 <FiBookmark size={22} color="#130F26"/>
                             </span>
                             <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, cursor:"pointer"}}>

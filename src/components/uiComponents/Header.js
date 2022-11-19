@@ -310,36 +310,38 @@ function Header() {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown>
-                <Dropdown.Toggle
-                  className="header-item"
-                  style={{
-                    display: "flex",
-                    letterSpacing: 1.5,
-                    backgroundColor: "transparent",
-                    outline: "none",
-                    border: "none",
-                  }}
-                  id="dropdown-autoclose-true"
-                >
-                  CREATE
-                  <FiChevronDown size={15} color="#fff" />
-                </Dropdown.Toggle>
-                <Dropdown.Menu
-                  style={{ ...menuStyle, width: 230 }}
-                  id="dropdown-basic-content"
-                >
-                  <Dropdown.Item onClick={() => navigateItem("/create/nft")}>
-                    Create NFT
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => navigateItem("/create/collection")}
-                    style={{ marginTop: 15 }}
+              {!isWalletSignedIn && 
+                <Dropdown>
+                  <Dropdown.Toggle
+                    className="header-item"
+                    style={{
+                      display: "flex",
+                      letterSpacing: 1.5,
+                      backgroundColor: "transparent",
+                      outline: "none",
+                      border: "none",
+                    }}
+                    id="dropdown-autoclose-true"
                   >
-                    Create Collection
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                    CREATE
+                    <FiChevronDown size={15} color="#fff" />
+                  </Dropdown.Toggle>
+                    <Dropdown.Menu
+                      style={{ ...menuStyle, width: 230 }}
+                      id="dropdown-basic-content"
+                    >
+                      <Dropdown.Item onClick={() => navigateItem("/create/nft")}>
+                        Create NFT
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => navigateItem("/create/collection")}
+                        style={{ marginTop: 15 }}
+                      >
+                        Create Collection
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+              }
             </div>
             {isWalletSignedIn || isEVMWalletSignedIn ? (
               <Dropdown style={{ position: "absolute", right: "7%" }}>
@@ -482,16 +484,20 @@ function Header() {
                   HELP CENTER
                 </motion.div>
               </div>
-              <div onClick={() => navigateItem("/create/nft")}>
-                <motion.div initial="hidden" animate="visible" variants={item}>
-                  CREATE NFT
-                </motion.div>
-              </div>
-              <div onClick={() => navigateItem("/create/collection")}>
-                <motion.div initial="hidden" animate="visible" variants={item}>
-                  CREATE COLLECTION
-                </motion.div>
-              </div>
+              {!isWalletSignedIn && 
+              <>
+                <div onClick={() => navigateItem("/create/nft")}>
+                  <motion.div initial="hidden" animate="visible" variants={item}>
+                    CREATE NFT
+                  </motion.div>
+                </div>
+                <div onClick={() => navigateItem("/create/collection")}>
+                  <motion.div initial="hidden" animate="visible" variants={item}>
+                    CREATE COLLECTION
+                  </motion.div>
+                </div>
+              </>
+              }
               <div
                 className="icons-container"
                 style={{ ...globalStyles.flexRow }}

@@ -18,6 +18,9 @@ export default function Home() {
   const { setEVMProvider, setEVMWalletData } = useAppContext();
 
   const walletInfo = useSelector((state) => state.nearReducer.walletInfo);
+  const isWalletSignedIn = useSelector(
+    (state) => state.nearReducer.isWalletSignedIn
+  );
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -128,23 +131,25 @@ export default function Home() {
                     EXPLORE MARKETPLACE
                   </div>
                 </div>
-                <div
-                  id={classes.btnContainer}
-                  onClick={() => history.push("/create/nft")}
-                  className="create-nft mt-3 "
-                  style={{ zIndex: 100, textAlign: "center" }}
-                >
+                {!isWalletSignedIn && 
                   <div
-                    style={{
-                      paddingHorizontal: "15px",
-                      textAlign: "center",
-                      marginLeft: 1,
-                    }}
-                    className="px-1 md:p-2"
+                    id={classes.btnContainer}
+                    onClick={() => history.push("/create/nft")}
+                    className="create-nft mt-3 "
+                    style={{ zIndex: 100, textAlign: "center" }}
                   >
-                    CREATE NFT
+                    <div
+                      style={{
+                        paddingHorizontal: "15px",
+                        textAlign: "center",
+                        marginLeft: 1,
+                      }}
+                      className="px-1 md:p-2"
+                    >
+                      CREATE NFT
+                    </div>
                   </div>
-                </div>
+                }
               </div>
             </div>
             <div className={classes.artworkGradientOverlay} />

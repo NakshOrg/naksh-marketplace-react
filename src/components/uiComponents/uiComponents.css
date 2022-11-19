@@ -562,13 +562,15 @@
 .connect-wallet {
   border: 1px solid #fff;
   border-radius: 4px;
-  padding: 9px 12px;
+  padding: 12px 15px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
   white-space: nowrap;
-  font-weight: bold;
+  font-weight: 700;
   margin-left: 50px;
+  letter-spacing: 1.5px;
+  font-family: 'Inter';
 }
 
 .profile-icon {

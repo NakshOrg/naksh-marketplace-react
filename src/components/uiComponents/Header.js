@@ -87,7 +87,7 @@ function Header() {
     }, [keyword]);
 
     useEffect(() => {
-        if(evmWalletData) {
+        if(evmWalletData && evmWalletData.address) {
             _getNftArtists({
               artist: ethers.utils.getAddress(evmWalletData.address),
               owner: ethers.utils.getAddress(evmWalletData.address),

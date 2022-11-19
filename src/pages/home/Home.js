@@ -66,17 +66,17 @@ export default function Home() {
 
   const isArtistCreated = async () => {
 
-    const { data } = await _getAllArtists({
-      wallet: walletInfo.getAccountId(),
-      sortBy: "createdAt",
-      sort: -1
-    });
+    // const { data } = await _getAllArtists({
+    //   wallet: walletInfo.getAccountId(),
+    //   sortBy: "createdAt",
+    //   sort: -1
+    // });
     
-    if (data.artists.length !== 0) {
-      return true;
-    } else {
-      return false;
-    }
+    // if (data.artists.length !== 0) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
 
   };
 

@@ -188,22 +188,26 @@ export default function Browse() {
   }, []);
 
   useEffect(() => {
-    if (walletInfo) {
+    if (walletInfo && isWalletSignedIn) {
       getTrendingNfts();
       fetchNfts();
     }
   }, [walletInfo]);
 
   useEffect(() => {
-    getEVMTrendingNfts();
-    if (allEVMNfts.length <= 0) fetchEVMNft();
-  }, []);
+    if(evmWalletData) {
+      getEVMTrendingNfts();
+      if (allEVMNfts.length <= 0) fetchEVMNft();
+    }
+  }, [evmWalletData]);
 
   useEffect(() => {
-    getCollections().then((res) => {
-      setCollections(res);
-    });
-  }, []);
+    if (evmWalletData) {
+      getCollections().then((res) => {
+        setCollections(res);
+      });
+    }
+  }, [evmWalletData]);
 
   useEffect(() => {
     if (evmTrendingNfts && evmTrendingNfts.length > 0) {

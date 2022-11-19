@@ -310,38 +310,36 @@ function Header() {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              {!isWalletSignedIn && 
-                <Dropdown>
-                  <Dropdown.Toggle
-                    className="header-item"
-                    style={{
-                      display: "flex",
-                      letterSpacing: 1.5,
-                      backgroundColor: "transparent",
-                      outline: "none",
-                      border: "none",
-                    }}
-                    id="dropdown-autoclose-true"
+              {isEVMWalletSignedIn && <Dropdown>
+                <Dropdown.Toggle
+                  className="header-item"
+                  style={{
+                    display: "flex",
+                    letterSpacing: 1.5,
+                    backgroundColor: "transparent",
+                    outline: "none",
+                    border: "none",
+                  }}
+                  id="dropdown-autoclose-true"
+                >
+                  CREATE
+                  <FiChevronDown size={15} color="#fff" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  style={{ ...menuStyle, width: 230 }}
+                  id="dropdown-basic-content"
+                >
+                  <Dropdown.Item onClick={() => navigateItem("/create/nft")}>
+                    Create NFT
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigateItem("/create/collection")}
+                    style={{ marginTop: 15 }}
                   >
-                    CREATE
-                    <FiChevronDown size={15} color="#fff" />
-                  </Dropdown.Toggle>
-                    <Dropdown.Menu
-                      style={{ ...menuStyle, width: 230 }}
-                      id="dropdown-basic-content"
-                    >
-                      <Dropdown.Item onClick={() => navigateItem("/create/nft")}>
-                        Create NFT
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => navigateItem("/create/collection")}
-                        style={{ marginTop: 15 }}
-                      >
-                        Create Collection
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-              }
+                    Create Collection
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>}
             </div>
             {isWalletSignedIn || isEVMWalletSignedIn ? (
               <Dropdown style={{ position: "absolute", right: "7%" }}>

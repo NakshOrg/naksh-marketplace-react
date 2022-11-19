@@ -310,7 +310,7 @@ function Header() {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown>
+              {isEVMWalletSignedIn && <Dropdown>
                 <Dropdown.Toggle
                   className="header-item"
                   style={{
@@ -339,7 +339,7 @@ function Header() {
                     Create Collection
                   </Dropdown.Item>
                 </Dropdown.Menu>
-              </Dropdown>
+              </Dropdown>}
             </div>
             {isWalletSignedIn || isEVMWalletSignedIn ? (
               <Dropdown style={{ position: "absolute", right: "7%" }}>

@@ -15,7 +15,7 @@ import { useAppContext } from "../../context/wallet";
 import { _getAllArtists, _postArtist } from "../../services/axios/api";
 
 export default function Home() {
-  const { setEVMProvider, setEVMWalletData } = useAppContext();
+  const { isEVMWalletSignedIn, setEVMProvider, setEVMWalletData } = useAppContext();
 
   const walletInfo = useSelector((state) => state.nearReducer.walletInfo);
   const dispatch = useDispatch();
@@ -128,7 +128,7 @@ export default function Home() {
                     EXPLORE MARKETPLACE
                   </div>
                 </div>
-                <div
+                {isEVMWalletSignedIn && <div
                   id={classes.btnContainer}
                   onClick={() => history.push("/create/nft")}
                   className="create-nft mt-3 "
@@ -144,7 +144,7 @@ export default function Home() {
                   >
                     CREATE NFT
                   </div>
-                </div>
+                </div>}
               </div>
             </div>
             <div className={classes.artworkGradientOverlay} />

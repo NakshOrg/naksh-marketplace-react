@@ -164,7 +164,7 @@ function Header() {
           <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
             <NavLink style={{ color: "#fff", position: "relative" }} to="/">
               <img className="logo" src={logo} alt="logo" />
-              <div className="beta">beta 2.1</div>
+              <div className="beta">beta 2.0</div>
             </NavLink>
             <Search
               keyword={keyword}
@@ -402,7 +402,7 @@ function Header() {
           <div style={{ ...globalStyles.flexRowSpace, width: "100%" }}>
             <NavLink style={{ color: "#fff", position: "relative" }} to="/">
               <img className="logo" src={logo} alt="logo" />
-              <div className="beta">beta 2.1</div>
+              <div className="beta">beta 2.0</div>
             </NavLink>
             {!showHeaderContents && !isSearchPage && (
               <div onClick={() => setShowHeaderContents(true)}>

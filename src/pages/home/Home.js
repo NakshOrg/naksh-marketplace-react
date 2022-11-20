@@ -137,12 +137,6 @@ export default function Home() {
                   className="create-nft mt-3 "
                   style={{ zIndex: 100, textAlign: "center" }}
                 >
-                  <div
-                    id={classes.btnContainer}
-                    onClick={() => history.push("/create/nft")}
-                    className="create-nft mt-3 "
-                    style={{ zIndex: 100, textAlign: "center" }}
-                  >
                     <div
                       style={{
                         paddingHorizontal: "15px",
@@ -153,7 +147,6 @@ export default function Home() {
                     >
                       CREATE NFT
                     </div>
-                  </div>
                 </div>}
               </div>
             </div>

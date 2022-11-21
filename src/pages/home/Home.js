@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,10 +12,12 @@ import Footer from "../../components/uiComponents/Footer";
 import { OutlineBtn } from "../../components/uiComponents/Buttons";
 import { useSigner } from "wagmi";
 import { useAppContext } from "../../context/wallet";
-import { _getAllArtists, _postArtist } from "../../services/axios/api";
+import { _getAllArtists, _getNftArtists, _postArtist } from "../../services/axios/api";
+import toast from "react-hot-toast";
+import { ethers } from "ethers";
 
 export default function Home() {
-  const { isEVMWalletSignedIn, setEVMProvider, setEVMWalletData } = useAppContext();
+  const { isEVMWalletSignedIn, setEVMProvider, setEVMWalletData, evmWalletData } = useAppContext();
 
   const walletInfo = useSelector((state) => state.nearReducer.walletInfo);
   const isWalletSignedIn = useSelector(
@@ -106,6 +108,39 @@ export default function Home() {
         // // console.log(err);
       });
   }
+  const [shown, setShown] = useState(false)
+
+  useEffect(() => {
+    
+      if (evmWalletData && evmWalletData.address) {
+        _getNftArtists({
+          artist: ethers.utils.getAddress(evmWalletData.address),
+          owner: ethers.utils.getAddress(evmWalletData.address),
+        }).then(({ data: { artist, owner } }) => {
+          console.log(artist, "dsa");
+          if (!artist) {
+            _postArtist({
+              name: evmWalletData.address,
+              wallet: evmWalletData.address,
+              coverStatus: 0,
+              coverGradient:
+                "linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)",
+              image:
+                "https://bafkreib5pxtx3sxcksxpthu4u2kl7vpvaduirbnt6ax6v6hp5l3enod4hy.ipfs.nftstorage.link/",
+              createdBy: 1,
+            });
+          }
+          if (
+            !artist.name ||
+            (artist &&
+              artist.name.toLowerCase() === evmWalletData.address.toLowerCase())
+          ) {
+            setShown(true)
+            if(!shown) toast.error("Update profile");
+          }
+        });
+      }
+  }, [evmWalletData]);
 
   return (
     <Container fluid style={{ height: "100vh" }}>

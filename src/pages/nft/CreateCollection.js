@@ -291,7 +291,13 @@ export default function CreateCollection(props) {
   }, [logo]);
 
   return (
-    <div className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10">
+    <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10"
+    >
       <div className="w-full flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0">
         <div className="w-full md:w-1/2 flex justify-start items-center space-x-4">
           <span
@@ -327,7 +333,14 @@ export default function CreateCollection(props) {
       <div className="w-full h-full flex flex-col justify-center items-start space-y-4">
         <h1>Upload Picture</h1>
         <div className="w-full h-full flex flex-col md:flex-row justify-center md:justify-start items-center space-y-5 md:space-y-0 md:space-x-5">
-          <div className="w-[150px] h-[150px] rounded-full bg-brand-gray flex justify-center items-center">
+          <div
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setLogo(e.dataTransfer.files[0]);
+            }}
+            className="w-[150px] h-[150px] rounded-full bg-brand-gray flex justify-center items-center"
+          >
             {!logoPreview && <HiOutlineCamera className="text-5xl" />}
             {logoPreview && (
               <img src={logoPreview} className="w-full h-full rounded-full" />
@@ -367,6 +380,11 @@ export default function CreateCollection(props) {
       <div className="w-full h-full flex flex-col justify-center items-start space-y-4">
         <h1 className="font-bold">COVER PICTURE</h1>
         <div
+          onDrop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setCover(e.dataTransfer.files[0]);
+          }}
           style={{ backgroundImage: `url("${coverPreview}")` }}
           className="relative w-full h-full p-5 flex bg-auto flex-col justify-center items-center text-center space-y-4 bg-brand-gray rounded-xl"
         >

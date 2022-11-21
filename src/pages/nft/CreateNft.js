@@ -420,6 +420,10 @@ export default function CreateNft(props) {
 
   return (
     <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       onClick={() => (listModal ? setListModal(false) : {})}
       className="w-full space-y-10 h-full md:mt-[105px] sm:mt-0 mt-20 md:px-[8%] sm:px-0 mb-20 px-10"
     >
@@ -489,6 +493,11 @@ export default function CreateNft(props) {
             type="file"
           />
           <div
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setImage(e.dataTransfer.files[0]);
+            }}
             onClick={(e) => uploadFile(e)}
             className="cursor-pointer w-full h-full flex flex-col justify-center items-center p-5 bg-brand-gray"
           >

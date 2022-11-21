@@ -28,6 +28,7 @@ import { useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import UpdateProfileModal from './UpdateProfileModal';
 import { ethers } from 'ethers';
+import toast from 'react-hot-toast';
 
 function Header() {
     
@@ -85,33 +86,6 @@ function Header() {
         }
 
     }, [keyword]);
-
-    useEffect(() => {
-        if(evmWalletData && evmWalletData.address) {
-            _getNftArtists({
-              artist: ethers.utils.getAddress(evmWalletData.address),
-              owner: ethers.utils.getAddress(evmWalletData.address),
-            }).then(({ data: { artist, owner } }) => {
-              console.log(artist, "dsa")
-                if(!artist) {
-                _postArtist({
-                  name: evmWalletData.address,
-                  wallet: evmWalletData.address,
-                  coverStatus: 0,
-                  coverGradient:
-                    "linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)",
-                  image:
-                    "https://bafkreib5pxtx3sxcksxpthu4u2kl7vpvaduirbnt6ax6v6hp5l3enod4hy.ipfs.nftstorage.link/",
-                  createdBy: 1,
-                });
-              }
-              if(!artist.name || (artist && artist.name.toLowerCase() === evmWalletData.address.toLowerCase())) {
-                setUpdateProfileModal(true)
-              }
-            });
-
-        }
-    }, [evmWalletData])
 
     useEffect(() => {console.log(updateProfileModal);}, [updateProfileModal]);
 
@@ -571,9 +545,6 @@ function Header() {
         </div>
         {isModalOpen && (
           <ConnectWallet isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
-        )}
-        {updateProfileModal && (
-          <UpdateProfileModal setIsOpen={setUpdateProfileModal} />
         )}
       </>
     );

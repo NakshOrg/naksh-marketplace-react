@@ -191,7 +191,6 @@ export default function EditProfile(props) {
     if (!selectedGradient && coverImage) errorList.push("Gradient or Cover Image");
     if (!image) errorList.push("Logo");
     // if (!twitter) errorList.push("Twitter")
-    if(!description) errorList.push("Description")
 
     let validateList = [];
     if (!helpers.validateLink(twitter)) validateList.push("Twitter");

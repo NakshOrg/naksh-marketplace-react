@@ -77,9 +77,9 @@ export default function CreateCollection(props) {
     })
 
     let validateList = []
-    if (!helpers.validateLink(twitter)) validateList.push("Twitter");
-    if (instagram && !helpers.validateLink(instagram)
-     ) validateList.push("Instagram");
+    // if (!helpers.validateLink(twitter)) validateList.push("Twitter");
+    // if (instagram && !helpers.validateLink(instagram)
+    //  ) validateList.push("Instagram");
     if (facebook && !helpers.validateLink(facebook))
       validateList.push("Facebook");
     if (website && !helpers.validateLink(website)) validateList.push("Website");
@@ -102,6 +102,8 @@ export default function CreateCollection(props) {
     }
     
     const toastId = toast.loading("Uploading Images")
+    const twitterURL = `https://twitter.com/${twitter}`;
+    const instagramURL = `https://instagram.com/${instagram}`
 
     const logoUri = await uploadMedia(logo);
 
@@ -122,7 +124,7 @@ export default function CreateCollection(props) {
         const tx = await createCollection(
           name,
           symbol,
-          { instagram, facebook, twitter, website },
+          { instagramURL, facebook, twitterURL, website },
           `https://${coverUri}.ipfs.nftstorage.link/`,
           isGradient,
           description,
@@ -144,7 +146,7 @@ export default function CreateCollection(props) {
         const tx = await createCollection(
           name,
           symbol,
-          { instagram, facebook, twitter, website },
+          { instagramURL, facebook, twitterURL, website },
           selectedGradient,
           isGradient,
           description,
@@ -559,14 +561,14 @@ export default function CreateCollection(props) {
             onChange={(e) => setInstagram(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Instagram"
+            placeholder="Instagram Username"
           />
           <input
             value={twitter}
             onChange={(e) => setTwitter(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Twitter*"
+            placeholder="Twitter Username*"
           />
         </div>
 
@@ -576,14 +578,14 @@ export default function CreateCollection(props) {
             onChange={(e) => setFacebook(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Facebook"
+            placeholder="Facebook Link"
           />
           <input
             value={website}
             onChange={(e) => setWebsite(e.target.value)}
             type="text"
             className="w-full p-3 text-white bg-brand-gray"
-            placeholder="Website"
+            placeholder="Website Link"
           />
         </div>
       </div>

@@ -91,7 +91,7 @@ export default function EditProfile(props) {
           artists[0].facebook && setFacebook(artists[0].facebook);
           artists[0].website && setWebsite(artists[0].website);
           artists[0].instagram && setInstagram(artists[0].instagram);
-          artists[0].twitter && setTwitter(artists[0].twitter);
+          artists[0].twitter && setTwitter(artists[0].twitter.split("/").pop());
         }
         setLoading(false);
       })
@@ -190,10 +190,10 @@ export default function EditProfile(props) {
     // if (!coverStatus) errorList.push("Cover");
     if (!selectedGradient && coverImage) errorList.push("Gradient or Cover Image");
     if (!image) errorList.push("Logo");
-    // if (!twitter) errorList.push("Twitter")
+    if (!twitter) errorList.push("Twitter username")
 
     let validateList = [];
-    if (!helpers.validateLink(twitter)) validateList.push("Twitter");
+    // if (!helpers.validateLink(twitter)) validateList.push("Twitter");
     if (instagram && !helpers.validateLink(instagram))
       validateList.push("Instagram");
     if (facebook && !helpers.validateLink(facebook))
@@ -226,7 +226,7 @@ export default function EditProfile(props) {
       website: website,
       facebook: facebook,
       instagram: instagram,
-      twitter: twitter,
+      twitter: `https://twitter.com/${twitter}`,
       description: description,
     };
     const stateEntries = Object.entries(stateObj);
@@ -356,7 +356,7 @@ export default function EditProfile(props) {
               hidden
               type="file"
               name="Pick an Image"
-              accept="image/x-png,image/gif,image/jpeg"
+              accept="image/x-png,image/gif,image/jpeg,image/png"
             />
             <OutlineBtn text="UPLOAD FILE" />
           </label>
@@ -498,7 +498,7 @@ export default function EditProfile(props) {
         </Col> */}
         <Col lg={6}>
           <MaterialInput
-            label="Twitter"
+            label="Twitter username"
             onChange={(e) => setTwitter(e.target.value)}
             value={twitter}
           />

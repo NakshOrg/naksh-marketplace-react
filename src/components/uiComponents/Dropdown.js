@@ -55,7 +55,7 @@ export function PriceDropdown({ title, content, onChange, priceRanges }) {
                         <Form.Group onChange={() => onChange(index)} className="mb-3" controlId={item.label}>
                             <Form.Check checked={item.checked} type="checkbox" label={item.label} />
                         </Form.Group>
-                        <div>{`(${item.noOfNfts})`}</div>
+                        {/* <div>{`(${item.noOfNfts})`}</div> */}
                     </div>
                 })}
                 {/* {content.map((item, i) => 

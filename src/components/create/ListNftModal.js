@@ -20,6 +20,10 @@ export default function ListNftModal({ mint, listAndMint, setIsOpen, image, setI
   
   return (
     <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -34,7 +38,14 @@ export default function ListNftModal({ mint, listAndMint, setIsOpen, image, setI
       )}
       {isVideo && (
         <div className="font-inter w-full h-full space-x-3 px-3 flex justify-center items-center">
-          <div className="relative w-full h-full flex flex-col justify-center items-start">
+          <div
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setImage(e.dataTransfer.files[0]);
+            }}
+            className="relative w-full h-full flex flex-col justify-center items-start"
+          >
             <input
               ref={ref}
               onChange={(e) => setImage(e.target.files[0])}
@@ -74,7 +85,7 @@ export default function ListNftModal({ mint, listAndMint, setIsOpen, image, setI
         <OutlineBtn
           style={{
             cursor: isVideo ? (image ? "default" : "not-allowed") : "default",
-            width: '100%'
+            width: "100%",
           }}
           onClick={() => (isVideo ? (image ? mint() : {}) : mint())}
           text="ENLIST LATER"

@@ -172,14 +172,28 @@ export default function Browse() {
 
   const [filterParams, setFilterParams] = useState({
     sort: staticValues.sortFilter[0].name,
-    priceRange: isEVMWalletSignedIn
-      ? evmFilter
-      : isWalletSignedIn
-      ? nearFilter
-      : evmFilter,
+    priceRange: isEVMWalletSignedIn ? evmFilter : nearFilter,
     limit: 8,
     chainFilter: chainFilter,
   });
+
+  useEffect(() => {
+    if(filterParams) {
+      setFilterParams({
+        ...filterParams,
+        priceRange: isWalletSignedIn ? nearFilter : evmFilter
+      })
+    }
+  }, [isWalletSignedIn])
+
+  useEffect(() => {
+    if (filterParams) {
+      setFilterParams({
+        ...filterParams,
+        priceRange: isEVMWalletSignedIn ? evmFilter : nearFilter,
+      });
+    }
+  }, [isEVMWalletSignedIn])
 
   const [open, setOpen] = useState(false);
 
@@ -223,6 +237,81 @@ export default function Browse() {
     //     setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
     // });
   };
+
+  // useEffect(() => {
+  //   if(filterParams) {
+  //     const copiedPriceRanges = [...filterParams.priceRange]
+      
+  //     if(filterParams.chainFilter[0].checked && totalNfts && totalNfts.length > 0) {
+  //       totalNfts.map((item) => {
+  //         const price = Number(item.price);
+  //         if (price >= 1 && price < 10) {
+  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
+  //         } else if (price >= 10 && price <= 49) {
+  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
+  //         } else if (price >= 50 && price < 100) {
+  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
+  //         } else if (price >= 100 && price < 200) {
+  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
+  //         } else if (price >= 200 && price <= 300) {
+  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
+  //         }
+  //       });
+  //     } else if (!filterParams.chainFilter[0].checked && totalNfts && totalNfts.length > 0) {
+  //       totalNfts.map((item) => {
+  //         const price = Number(item.price);
+  //         if (price >= 1 && price < 10) {
+  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts - 1;
+  //         } else if (price >= 10 && price <= 49) {
+  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts - 1;
+  //         } else if (price >= 50 && price < 100) {
+  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts - 1;
+  //         } else if (price >= 100 && price < 200) {
+  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts - 1;
+  //         } else if (price >= 200 && price <= 300) {
+  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts - 1;
+  //         }
+  //       });
+  //     }
+
+  //     if(filterParams.chainFilter[1].checked && totalEVMNfts && totalEVMNfts.length > 0) {
+  //       totalEVMNfts.map((nft) => {
+  //         const price = Number(ethers.utils.formatEther(nft.salePrice));
+  //         if (price < 10) {
+  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
+  //         } else if (price >= 10 && price <= 49) {
+  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
+  //         } else if (price >= 50 && price < 100) {
+  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
+  //         } else if (price >= 100 && price < 200) {
+  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
+  //         } else if (price >= 200 && price <= 300) {
+  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
+  //         }
+  //       });
+  //     } else if (!filterParams.chainFilter[1].checked && totalEVMNfts && totalEVMNfts.length > 0) {
+  //       totalEVMNfts.map((nft) => {
+  //         const price = Number(ethers.utils.formatEther(nft.salePrice));
+  //         if (price < 10) {
+  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts - 1;
+  //         } else if (price >= 10 && price <= 49) {
+  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts - 1;
+  //         } else if (price >= 50 && price < 100) {
+  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts - 1;
+  //         } else if (price >= 100 && price < 200) {
+  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts - 1;
+  //         } else if (price >= 200 && price <= 300) {
+  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts - 1;
+  //         }
+  //       });
+  //     }
+
+  //     setFilterParams({
+  //       ...filterParams,
+  //       priceRanges: copiedPriceRanges
+  //     })
+  //   }
+  // }, [filterParams.chainFilter])
 
   const fetchEVMNft = async () => {
     try {

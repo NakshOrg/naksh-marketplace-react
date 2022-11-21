@@ -16,6 +16,7 @@ import { Col, Row } from "react-bootstrap";
 import classes from "../../browse/browse.module.css";
 import { ethers } from "ethers";
 import helpers from "../../../constants/helpers"
+import toast from "react-hot-toast";
 
 const CollectionDetails = () => {
   const { evmWalletData, evmProvider, NAKSH_ADDRESS_1155 } = useAppContext();
@@ -52,6 +53,10 @@ const CollectionDetails = () => {
       alert("something went wrong, please refresh the page")
     }
   };
+
+  useEffect(() => {
+    toast.success("Make sure to connect polygon wallet before viewing collection");
+  }, []);
 
   const calculateVolume = async () => {
     const soldNfts = await getSoldNFTs(params.address.toLowerCase());

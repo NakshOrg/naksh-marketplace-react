@@ -273,6 +273,7 @@ export default function ArtistDetails() {
                       price={"$121,000,000"}
                       artistName={nft?.artist?.name}
                       artistImage={nft?.artist?.image}
+                      near={true}
                     />
                   </Col>
                 );
@@ -316,6 +317,7 @@ export default function ArtistDetails() {
                       price={"$121,000,000"}
                       artistName={nft?.artistName}
                       artistImage={nft?.artistImg}
+                      near={false}
                     />
                   </Col>
                 );

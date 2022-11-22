@@ -136,8 +136,11 @@ input {
 }
   
 .carousel-btns {
-    text-align: center;
-    margin-left: -2.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* text-align: center; */
+    /* margin-left: -2.5%; */
 }
 
 body::-webkit-scrollbar {

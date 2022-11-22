@@ -24,6 +24,7 @@ export default function NearProtocol() {
         _getLandingPageData()
         .then(res => res.json())
         .then(res => {
+            setSlideData(res);
             setLoading(false);
         })
         .catch(err => {

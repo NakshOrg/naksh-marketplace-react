@@ -87,8 +87,11 @@ export default function ArtistDetails() {
         _getOneArtist(params.id)
           .then(async ({ data }) => {
             console.log(data, "data")
+            const dup1 = "0x21782405D56E072d3Dc3cD95c4E0ff3fF3569893-0x85cd60611be8de244c8f1799b4f1f5e3cea00d56-1";
+            const dup2 =  "0x21782405D56E072d3Dc3cD95c4E0ff3fF3569893-0xf487709d665412fdc2c54a1645436bac44e1152f-1";
             const nfts = await getMintedNFTs(data.artist.wallet);
-            setEVMArtworks(nfts);
+            const removeDuplicates = nfts.filter(nft => !(nft.id === dup1 || nft.id === dup2)); // temporary fix for duplicates
+            setEVMArtworks(removeDuplicates);
             setArtistDetails(data.artist);
             setLoading(false);
           })

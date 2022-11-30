@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useEffect, useState } from 'react';
-import { Col, Row, Container, Form } from 'react-bootstrap';
+import { Col, Row, Spinner, Form } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiFlag } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
@@ -9,14 +9,13 @@ import toast from 'react-hot-toast';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
-import Spinner from '../../components/uiComponents/Spinner';
 import nearIcon from "../../assets/svgs/near-icon.svg"; 
 import party from "../../assets/svgs/party.svg"; 
 import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import { _getAllArtists, _getNftArtists, _saveNft, _updateTrendingNftOrArtist } from '../../services/axios/api';
+import { _getAllArtists, _getNftArtists, _saveNft, _unSaveNft, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
 import ListModal from '../../components/uiComponents/ListModal';
@@ -30,9 +29,10 @@ export default function NftDetails(props) {
     const history = useHistory();
     const location = useLocation();
     const [loading, setLoading] = useState(true);
-    const [saveLoading, setSaveLoading] = useState(true);
+    const [saveLoading, setSaveLoading] = useState(false);
     const [nft, setNft] = useState(null);
     const [ownerData, setOwnerData] = useState(null);
+    const [artistData, setMyArtistData] = useState(null);
     const [moreNfts, setMoreNfts] = useState([]);
     const [isOverviewActive, setIsOverviewActive] = useState(true);
     const [show, setShow] = useState(false); 
@@ -66,7 +66,7 @@ export default function NftDetails(props) {
 
         functions.getSalesNft()
         .then(saleNfts => {
-            console.log(saleNfts, 'sales')
+            
             functions.getNftDetails()
             .then(nfts => {
 
@@ -77,13 +77,18 @@ export default function NftDetails(props) {
                 }
 
                 const nft = nfts.find(item => item.token_id === params.id);
-                console.log(nft, 'nft')
+
                 if(paramsId) {
                     return functions.nearListing(nft);
                 }
 
                 const moreNfts = nfts.filter(item => item.token_id !== params.id);
-                _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
+                _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
+                .then(({ data }) => {
+                    setMyArtistData(data.artists[0]);
+                    const savedNfts = data.artists[0].savedNft.map(item => item.token);
+                    nft['saved'] = savedNfts.length ? savedNfts.includes(nft.token_id) : false;
+                    _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
                     .then(({ data: { artist, owner }}) => {
                         updateTrendings({view:1}, nft.token_id, artist._id);
                         setNft(nft);
@@ -112,6 +117,7 @@ export default function NftDetails(props) {
                     setLoading(false);
                 });
             })
+        })
     } 
     
     const handleBuyNft = async () => {
@@ -136,19 +142,26 @@ export default function NftDetails(props) {
         functions.updateNft(nft, nftPrice);    
     }
 
-    const handleSaveNft = () => {
+    const handleSaveUnSaveNft = () => {
 
+        setSaveLoading(true);
+        const data = {
+            "blockchain": 0,
+            "token": nft.token_id
+        }
+        const copiedNft = {...nft};
         if (walletInfo.isSignedIn()) {
-            const data = {
-                "blockchain": 0,
-                "token": nft.token_id
-            }
-            _saveNft(nft.artist._id, data)
-            .then(res => {
-                console.log(res, 'saved');
+            (nft.saved ? _unSaveNft(artistData._id, data) : _saveNft(artistData._id, data))
+            .then(({ data: { artist } }) => {
+                setSaveLoading(false);
+                const savedNfts = artist.savedNft.map(item => item.token);
+                copiedNft['saved'] = savedNfts.length ? savedNfts.includes(copiedNft.token_id) : false;
+                toast.success(copiedNft.saved ? "NFT saved" : "NFT unsaved");
+                setNft(copiedNft);
             })
             .catch(err => {
-                console.log(err.response);
+                setSaveLoading(false);
+                toast.error(err.response.data.error);
             })
         } else {
             toast.error("Connect wallet to save NFT");
@@ -203,7 +216,7 @@ export default function NftDetails(props) {
             </div>
         </> 
     }
-
+    
     const otherDetails = () => {
 
         return <>
@@ -274,9 +287,11 @@ export default function NftDetails(props) {
                     <div style={globalStyles.flexRowSpace}>
                         <div style={{fontFamily:"Athelas-Bold", fontSize:36, textTransform:"capitalize", lineHeight:"40px", marginRight:10}}>{nft?.metadata?.title}</div>
                         <div style={{display:'flex'}}>
-                            <span onClick={handleSaveNft} style={{backgroundColor:"#fff", borderRadius:100, padding:6, cursor:"pointer"}}>
-                                <FiBookmark size={22} color="#130F26"/>
-                            </span>
+                            { !saveLoading ?
+                            <span onClick={handleSaveUnSaveNft} style={{backgroundColor:"#fff", borderRadius:100, padding:6, cursor:"pointer"}}>
+                                <FiBookmark fill={nft.saved ? 'black' : 'white'} size={22} color="#130F26"/>
+                            </span> :
+                            <Spinner style={{marginTop:2}} color='#fff' animation="border"/> }
                             <span onClick={() => helpers.openInNewTab(googleForm)} style={{backgroundColor:"#fff", marginLeft:15, borderRadius:100, padding:6, cursor:"pointer"}}>
                                 <FiFlag size={22} color="#130F26"/>
                             </span>

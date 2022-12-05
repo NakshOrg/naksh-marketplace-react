@@ -16,6 +16,8 @@ import OurArtists from '../pages/about/OurArtists';
 import NearProtocol from '../pages/about/NearProtocol';
 import CreateNft from '../pages/createnft/CreateNft';
 import UnlistedDetailPage from '../pages/detailsPage/UnlistedDetailPage';
+import Collection from '../pages/collection/Collection';
+import ViewCollection from '../pages/collection/ViewCollection';
 
 export default function Navigation() {
 
@@ -34,6 +36,8 @@ export default function Navigation() {
             <Route path="/ourartists" component={OurArtists}/>
             <Route path="/nearprotocol" component={NearProtocol}/>
             <Route path="/createnft" component={CreateNft}/>
+            <Route path="/collection" component={Collection}/>
+            <Route path="/viewcollection/:id" component={ViewCollection}/>
             <Route path="/unlisted/:id" component={UnlistedDetailPage}/>
             <Route path="/404" component={NotFound}/>
             <Redirect from='*' to='/404' exact/>

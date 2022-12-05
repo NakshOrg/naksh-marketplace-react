@@ -1,5 +1,4 @@
 import { utils } from 'near-api-js';
-import uuid from 'react-uuid';
 
 import configs from '../../configs';
 import { _getAllArtists, _getOneArtist } from '../axios/api';
@@ -319,7 +318,7 @@ export default function NearHelperFunctions(wallet, paramsId) {
   // 6 perpetual_royalties
   // 20% total percentage
 
-  this.mintNft = async (metadata, royalties) => {
+  this.mintNft = async (metadata, royalties, uid) => {
 
     const gas = 200000000000000;
     const attachedDeposit = utils.format.parseNearAmount("0.1");
@@ -332,7 +331,7 @@ export default function NearHelperFunctions(wallet, paramsId) {
         contractId: configs.nakshContractWallet,
         methodName: 'nft_mint',
         args: {
-          token_id: uuid(),
+          token_id: uid,
           metadata,
           perpetual_royalties
         },

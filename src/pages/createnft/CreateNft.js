@@ -5,6 +5,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import uuid from 'react-uuid';
 
 import cameraIcon from '../../assets/svgs/camera.svg'
 import { GradientBtn, OutlineBtn } from '../../components/uiComponents/Buttons';
@@ -14,7 +15,7 @@ import Dropdown from '../../components/uiComponents/Dropdown';
 import { helpers, staticValues } from '../../constants';
 import globalStyles from '../../globalStyles';
 import * as actionTypes from '../../redux/actions/actionTypes';
-import { _getAllArtforms, _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws, _uploadNft } from '../../services/axios/api';
+import { _addNftToCollection, _getAllArtforms, _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws, _uploadNft } from '../../services/axios/api';
 import classes from '../profile/profile.module.css';
 import { AddWalletIcon, EditIcon, UploadNftPlaceholder } from '../../components/svgComponents';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
@@ -39,6 +40,7 @@ export default function CreateNft(props) {
     const [royaltyError, setRoyaltyError] = useState("");
     const [artforms, setArtforms] = useState([]);
     const [artist, setArtist] = useState("");
+    const [collection, setCollection] = useState("");
     const [selectedArtform, setSelectedArtform] = useState({name:"Artform", _id:"dummy"});
     const [royalties, setRoyalties] = useState([{walletAddress:"", percentage:null}]);
 
@@ -48,7 +50,7 @@ export default function CreateNft(props) {
             setWalletAddress(walletInfo.getAccountId())
             getArtforms();
             getArtist();
-        }
+        } 
     }, [walletInfo]);
 
     useEffect(() => {
@@ -69,7 +71,26 @@ export default function CreateNft(props) {
         _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
         .then(({ data: { artists } }) => {
             setArtist(artists[0]);
-            setLoading(false);
+            const query = new URLSearchParams(location.search); 
+            if (query.get("transactionHashes") && localStorage.getItem("uid")) {
+                _addNftToCollection("638df7940f2c5fa766ef2b22", {
+                    "tokens": localStorage.getItem("uid"),
+                    "owners": artists[0]._id
+                })
+                .then(res => {
+                    localStorage.removeItem("uid");
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    setLoading(false);
+                })
+            } else if (query.get("errorCode") || query.get("errorMessage")) {
+                localStorage.removeItem("uid");
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
         })
         .catch(err => {
             setLoading(false);
@@ -165,8 +186,10 @@ export default function CreateNft(props) {
                     description: description,
                     extra: JSON.stringify(extraData)
                 };
+                const uid = uuid();
+                localStorage.setItem("uid", uid);
                 const functions = new NearHelperFunctions(walletInfo);
-                functions.mintNft(metadata, perpetualRoyalties);  
+                functions.mintNft(metadata, perpetualRoyalties, uid);  
                
             } else {
                 this.setState({loading:false});
@@ -255,6 +278,21 @@ export default function CreateNft(props) {
                                 onChange={(val) => setSelectedArtform(val)}
                             />
                         </Col>
+                        {/* <Col lg={6}>
+                            <Dropdown
+                                style={{paddingTop:100}}
+                                title={selectedArtform.name}
+                                content={artforms}
+                                onChange={(val) => setSelectedArtform(val)}
+                            />
+                        </Col> */}
+                        <Col lg={6}>
+                            <MaterialInput
+                                label="Collection*"
+                                onChange={(e) => setCollection(e.target.value)}
+                                value={collection}
+                            />
+                        </Col>
                     </Row>
                 </Col>
             </Row>
@@ -269,62 +307,32 @@ export default function CreateNft(props) {
                     <AddWalletIcon/>
                 </div>
             </div>
-
             <Row>
                 {royaltyError && <div style={{color:"red", marginTop:-30, fontSize:18}}>{royaltyError}</div>}
-            {
-                royalties.map((item, index) => {
-                        return <>
-                        <Col lg={8}>
-                            <MaterialInput 
-                                label="Wallet Address"
-                                onChange={(e) => handleRoyalties("edit", index, e.target.value, "walletAddress")}
-                                value={item.walletAddress}
-                                showIcon={true}
-                                handleDelete={() => handleRoyalties("delete", index)}
-                            />
-                        </Col>
-                        <Col lg={4}>
-                            <MaterialInput
-                                type="number"
-                                label="Percentage"
-                                onChange={(e) => handleRoyalties("edit", index, e.target.value, "percentage")}
-                                value={item.percentage}
-                            />
-                        </Col>
-                    </>
-                })
-            }
-        </Row>
-
+                {
+                    royalties.map((item, index) => {
+                            return <React.Fragment key={index}>
+                            <Col lg={8}>
+                                <MaterialInput 
+                                    label="Wallet Address"
+                                    onChange={(e) => handleRoyalties("edit", index, e.target.value, "walletAddress")}
+                                    value={item.walletAddress}
+                                    showIcon={true}
+                                    handleDelete={() => handleRoyalties("delete", index)}
+                                />
+                            </Col>
+                            <Col lg={4}>
+                                <MaterialInput
+                                    type="number"
+                                    label="Percentage"
+                                    onChange={(e) => handleRoyalties("edit", index, e.target.value, "percentage")}
+                                    value={item.percentage}
+                                />
+                            </Col>
+                        </React.Fragment>
+                    })
+                }
+            </Row>
         </Container>
     )
-
 }
-
-
-// class EditProfile extends Component {
-
-
- 
-
- 
-
-        
-//     }
-// }
-
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         updateUserData: (payload) => dispatch({type: actionTypes.USER_DATA, payload}),
-//     }
-// };
-
-// const mapStateToProps = state => {
-//     return {
-//         walletInfo: state.nearReducer.walletInfo,
-//         isWalletSignedIn: state.nearReducer.isWalletSignedIn
-//     }
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

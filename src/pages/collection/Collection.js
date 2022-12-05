@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
-import React, { Component, Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import { FiArrowLeft } from 'react-icons/fi';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import cameraIcon from '../../assets/svgs/camera.svg'
@@ -12,11 +12,11 @@ import Spinner from '../../components/uiComponents/Spinner';
 import { helpers, staticValues } from '../../constants';
 import globalStyles from '../../globalStyles';
 import * as actionTypes from '../../redux/actions/actionTypes';
-import { _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws } from '../../services/axios/api';
-import classes from './profile.module.css';
+import { _addCollection, _getAllArtists, _getOneCollection, _getPresignedUrl, _updateArtist, _updateCollection, _uploadFileAws } from '../../services/axios/api';
+import classes from '../profile/profile.module.css';
 
 
-export default function EditProfile(props) {
+export default function Collection(props) {
     
     const dispatch = useDispatch();
     const walletInfo = useSelector(state => state.nearReducer.walletInfo); 
@@ -26,11 +26,11 @@ export default function EditProfile(props) {
     const history = useHistory();
     const location = useLocation();
     
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
     const [value, setValue] = useState("owned");
     const [selectedGradient, setSelectedGradient] = useState(staticValues.gradients[0]);
-    const [showModal, setShowModal] = useState(false);
+    const [collection, setCollection] = useState(null);
     const [artistId, setArtistId] = useState("");
     const [image, setImage] = useState(null);
     const [imageRaw, setImageRaw] = useState(null); 
@@ -40,14 +40,14 @@ export default function EditProfile(props) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [wallet, setWallet] = useState("");
-    const [email, setEmail] = useState("");
     const [website, setWebsite] = useState("");
     const [facebook, setFacebook] = useState("");
     const [instagram, setInstagram] = useState("");
     const [twitter, setTwitter] = useState("");
-    const [profileAlreadyCreated, setProfileAlreadyCreated] = useState("false");
+    const [profileAlreadyCreated, setProfileAlreadyCreated] = useState(false);
 
-
+    const collectionId = location.state?.collectionId;
+    
     useEffect(() => {
         if(walletInfo) {
             getArtist();
@@ -57,28 +57,32 @@ export default function EditProfile(props) {
     const getArtist = () => {
         _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
         .then(({ data: { artists } }) => {
-            
-            if(artists.length !== 0) {
-                // console.log(artists[0]);
-                setProfileAlreadyCreated(true);
-                setArtistId(artists[0]._id);
-                setName(artists[0].name);
-                setEmail(artists[0].email);
-                setWallet(artists[0].wallet);
-                setDescription(artists[0].description);
-                setImage(artists[0].image);
-                if(artists[0].coverStatus === 1) {
-                    setCoverImage(artists[0].coverImage);
-                } else {
-                    setSelectedGradient(artists[0].coverGradient);
-                }
-                artists[0].facebook &&  setFacebook(artists[0].facebook);
-                artists[0].website &&  setWebsite(artists[0].website);
-                artists[0].instagram && setInstagram(artists[0].instagram);
-                artists[0].twitter && setTwitter(artists[0].twitter);
- 
+            setArtistId(artists[0]._id);
+            if (collectionId) {
+                _getOneCollection(collectionId)
+                .then(({ data: { collection } }) => {
+                    console.log(collection, 'res');
+                    // console.log(artists[0]);
+                    setName(collection.name);
+                    setDescription(collection.description);
+                    setImage(collection.image);
+                    if(collection.coverStatus === 1) {
+                        setCoverImage(collection.coverImage);
+                    } else {
+                        setSelectedGradient(collection.coverGradient);
+                    }
+                    collection.facebook &&  setFacebook(collection.facebook);
+                    collection.website &&  setWebsite(collection.website);
+                    collection.instagram && setInstagram(collection.instagram);
+                    collection.twitter && setTwitter(collection.twitter);
+                    setCollection(collection);
+                    setLoading(false);})
+                .catch(err => {
+                    console.log(err.response.error, 'erro')
+                    setLoading(false);})
+            } else {
+                setLoading(false);
             }
-            setLoading(false);
         })
         .catch(err => {
             setLoading(false);
@@ -144,13 +148,13 @@ export default function EditProfile(props) {
         </div>
     } 
 
-    const saveProfile = async () => {
+    const saveChanges = async () => {
 
         setLoading(true);
 
         let data = {
             name: name,
-            wallet: walletInfo.getAccountId(),
+            artist: artistId,
             coverStatus
         }
 
@@ -158,7 +162,7 @@ export default function EditProfile(props) {
             data['coverGradient'] = selectedGradient;
         }
         
-        const stateObj = {email:email, website:website, facebook:facebook, instagram:instagram, twitter:twitter, description:description};
+        const stateObj = {website:website, facebook:facebook, instagram:instagram, twitter:twitter, description:description};
         const stateEntries =  Object.entries(stateObj);
 
         stateEntries.map(entry => {
@@ -185,23 +189,21 @@ export default function EditProfile(props) {
             }
         }
 
-        if(profileAlreadyCreated) {
-            updateArtist(data);
+        if(collectionId) {
+            updateCollection(data);
         } else {
-            addArtist(data);
+            addCollection(data);
         }
 
     }
 
-    const addArtist = (data) => {
+    const addCollection = (data) => {
         
-        data['createdBy'] = 1;
-        
-        _postArtist(data)
-        .then(res => {
+        _addCollection(data)
+        .then(({ data }) => {
             setLoading(false);
-            history.goBack();
-            // this.props.alert.success('Artist added successfully!', {timeout:2000});
+            history.push(`/viewCollection/${data.collection._id}`);
+            toast.success('Collection created successfully!');
         })
         .catch(err => {
             alert(err.response.data.error);
@@ -209,17 +211,15 @@ export default function EditProfile(props) {
         })
     }
 
-    const updateArtist = (data) => {
-        _updateArtist(artistId, data)
-        .then(({ data: { artist }}) => {
-            dispatch({type: actionTypes.USER_DATA, payload:artist});
+    const updateCollection = (data) => {
+        _updateCollection(collectionId, data)
+        .then(({ data: { collection } }) => {
             setLoading(false);
-            history.goBack();
-            // this.props.alert.success('Artist updated successfully!', {timeout:2000});
+            toast.success('Collection updated successfully!');
+            history.push(`/viewCollection/${collection._id}`);
         })
         .catch(err => {
-            // console.log(err.response.data, 'err');
-            // this.props.alert.error(err.response.data.error, {timeout:5000});
+            console.log(err.response)
             setLoading(false);
         })
     }
@@ -233,11 +233,11 @@ export default function EditProfile(props) {
                     <span className={classes.arrowIcon} onClick={() => history.goBack()}>
                         <FiArrowLeft style={{marginTop:-14, marginRight:10}} size={25} color='#fff'/>
                     </span>
-                    <span className={classes.sectionTitle}>Edit Profile</span>
+                    <span className={classes.sectionTitle}>{`${collectionId ? "Edit Collection" : "Create Collection"}`}</span>
                 </div>
                 <div className={classes.saveBtnDesktop}>
                     <GradientBtn
-                        onClick={saveProfile}
+                        onClick={saveChanges}
                         style={{width:200, padding:'0 37px', height:45}}
                         content={
                             <div>SAVE CHANGES</div>
@@ -246,7 +246,7 @@ export default function EditProfile(props) {
                 </div>
             </div>
             <div className={classes.label}>
-                PROFILE PICTURE
+                UPLOAD PICTURE
             </div>
             <div style={{...globalStyles.flexRow}}>
                 {image ?
@@ -274,7 +274,7 @@ export default function EditProfile(props) {
                 buildCoverImgTag() :
                 <div className={classes.uploadCover}>
                     <div style={{fontSize:14, opacity:0.66, letterSpacing:0.5, fontWeight:100, width:"40%", marginBottom:15}}>
-                        Lorem ipsum dolor sit amet, aliquam consectetur. (.jpeg, .jpg, .png, .gif supported)
+                    Upload an optional cover picture for your profile here. <br/>Your picture will be public.
                     </div>
                     <label htmlFor="addCoverImg" style={{position:'relative', cursor:'pointer'}}>
                         <input onChange={(e) => handleCoverImage(e)} id="addCoverImg" hidden type="file" name="Pick an Image" accept="image/x-png,image/gif,image/jpeg"/>
@@ -304,28 +304,22 @@ export default function EditProfile(props) {
                 </div>}
             </div>
             <div style={{marginBottom:5}} className={classes.label}>
-                ABOUT YOU
+                ABOUT COLLECTION
             </div>
             <Row>
-                <Col lg={6}>
+                <Col>
                     <MaterialInput 
                         label="Name*"
                         onChange={(e) => setName(e.target.value)}
                         value={name}
                     />
                 </Col>
-                <Col lg={6}>
-                    <MaterialInput 
-                        label="Email address"
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email}
-                    />
-                </Col>
             </Row>
             <Row>
                 <Col>
                     <MaterialInput 
-                        label="Tell us something about you!"
+                        label="Tell us something about the collection!"
+                        isTextArea={true}
                         onChange={(e) => setDescription(e.target.value)}
                         value={description}
                     />
@@ -366,7 +360,7 @@ export default function EditProfile(props) {
             </Row>
             <div className={classes.saveBtnMobile}>
                 <GradientBtn
-                    onClick={saveProfile}
+                    onClick={saveChanges}
                     style={{width:"100%", position:"fixed", bottom:0, left:0, borderRadius:0, height:45}}
                     content={
                         <div>SAVE CHANGES</div>
@@ -375,5 +369,4 @@ export default function EditProfile(props) {
             </div>
         </Container>
     )
-
 }

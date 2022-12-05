@@ -21,6 +21,9 @@ export const _getNftArtists = (params) => axiosNoAuth.get('/artist/nft', {params
 
 export const _getBlockedNfts = (params) => axiosNoAuth.get('/nft/block', {params});
 
+export const _getCollections = (params) => axiosNoAuth.get('/collection/all', {params});
+
+export const _getOneCollection = (id) => axiosNoAuth.get(`/collection/get?id=${id}`);
 
 // POST
 
@@ -29,6 +32,8 @@ export const _postArtist = (data) => axiosNoAuth.post('/artist/add', data);
 export const _postFeedback = (data) => axios.post(`${configs.clientBaseURL}/landing/feedback`, data);
 
 export const _uploadNft = (data) => axiosNoAuth.post('/nft/upload', data);
+
+export const _addCollection = (data) => axiosNoAuth.post('/collection/add', data);
 
 
 // PUT
@@ -48,4 +53,12 @@ export const _updateTrendingNftOrArtist = (body, params) => axiosNoAuth.patch(`/
 export const _saveNft = (id, data) => axiosNoAuth.patch(`/artist/saveNft?id=${id}`, data);
 
 export const _unSaveNft = (id, data) => axiosNoAuth.patch(`/artist/unsaveNft?id=${id}`, data);
+
+export const _updateCollection = (id, data) => axiosNoAuth.patch(`/collection/update?id=${id}`, data);
+
+export const _addNftToCollection = (id, data) => axiosNoAuth.patch(`/collection/nft?id=${id}`, data);
+
+export const _addActivityToCollection = (id, data) => axiosNoAuth.patch(`/collection/activity?id=${id}`, data);
+
+
 

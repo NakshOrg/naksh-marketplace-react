@@ -15,7 +15,7 @@ import Dropdown from '../../components/uiComponents/Dropdown';
 import { helpers, staticValues } from '../../constants';
 import globalStyles from '../../globalStyles';
 import * as actionTypes from '../../redux/actions/actionTypes';
-import { _addNftToCollection, _getAllArtforms, _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws, _uploadNft } from '../../services/axios/api';
+import { _addActivityToCollection, _addNftToCollection, _getAllArtforms, _getAllArtists, _getPresignedUrl, _postArtist, _updateArtist, _uploadFileAws, _uploadNft } from '../../services/axios/api';
 import classes from '../profile/profile.module.css';
 import { AddWalletIcon, EditIcon, UploadNftPlaceholder } from '../../components/svgComponents';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
@@ -40,10 +40,10 @@ export default function CreateNft(props) {
     const [royaltyError, setRoyaltyError] = useState("");
     const [artforms, setArtforms] = useState([]);
     const [artist, setArtist] = useState("");
-    const [collection, setCollection] = useState("");
     const [selectedArtform, setSelectedArtform] = useState({name:"Artform", _id:"dummy"});
     const [royalties, setRoyalties] = useState([{walletAddress:"", percentage:null}]);
 
+    const collection = location.state?.collection;
 
     useEffect(() => {
         if(walletInfo) {
@@ -286,13 +286,13 @@ export default function CreateNft(props) {
                                 onChange={(val) => setSelectedArtform(val)}
                             />
                         </Col> */}
-                        <Col lg={6}>
+                        {collection && <Col lg={6}>
                             <MaterialInput
                                 label="Collection*"
-                                onChange={(e) => setCollection(e.target.value)}
-                                value={collection}
+                                readOnly={true}
+                                value={collection.name}
                             />
-                        </Col>
+                        </Col>}
                     </Row>
                 </Col>
             </Row>

@@ -11,6 +11,7 @@ import globalStyles from '../../globalStyles';
 import classes from '../profile/profile.module.css';
 import { _getOneCollection } from '../../services/axios/api';
 import Spinner from '../../components/uiComponents/Spinner';
+import NearHelperFunctions from '../../services/nearHelperFunctions';
 
 
 export default function ViewCollection(props) {
@@ -21,7 +22,7 @@ export default function ViewCollection(props) {
     const [loading, setLoading] = useState(true);
     const [collection, setCollection] = useState(null);
     const [nfts, setNfts] = useState([]);
-    const [activity, setActivity] = useState([]);
+    const [mintedNfts, setMintedNfts] = useState([]);
     const [activeTab, setActiveTab] = useState("items");
     
     useEffect(() => {
@@ -33,7 +34,7 @@ export default function ViewCollection(props) {
     const EmptyState = () => {
         return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
             <div style={{fontSize:16, opacity:0.7}}>You have no minted NFTs in this collection.</div>
-            <div onClick={() => history.push("/createnft")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+            <div onClick={() => history.push("/createnft", {collection})} className="glow-on-hover" type="button" style={{zIndex:100}}>
                 <div className={classes.glowBtnText} >
                     <span style={{marginLeft:45, fontSize:12}}>CREATE NFT</span>
                 </div>
@@ -42,13 +43,32 @@ export default function ViewCollection(props) {
     }
 
     const getCollection = () => {
+        
         _getOneCollection(params.id)
-        .then(({ data: { collection } }) => {
+        .then(async ({ data: { collection } }) => {
+
+            const functions = new NearHelperFunctions(walletInfo); 
+            const mintedNfts = await functions.getMintedNft();
+            const allNfts = await functions.getAllNfts();
+            const minted = [];
+            collection.tokens.map(token => {
+                const item = mintedNfts.find(nft => nft.token_id === token);
+                if (item) {
+                    minted.push(item);
+                } else {
+                    const item = allNfts.find(nft => nft.token_id === token);
+                    if (item) {
+                        minted.push(item);
+                    }
+                }
+            });
+            setMintedNfts(minted);
             setCollection(collection);
             setLoading(false);
         })
         .catch(err => {
-            console.log(err.response);
+            // console.log(err);
+            alert("something went wrong!");
             setLoading(false);
         });
     }
@@ -67,54 +87,63 @@ export default function ViewCollection(props) {
             <div style={{opacity:0.9, fontSize:15, color:"#fff", letterSpacing:1, marginTop:17}}>
                 {collection?.description}
             </div>
-            <div style={{fontSize:11}} onClick={() => history.push('/collection', { collectionId: collection._id })} className={classes.editBtn}>
-                EDIT COLLECTION
+            <div style={{padding:"0 30px", marginTop:50}}>
+                {mintedNfts.length && 
+                <div onClick={() => history.push("/createnft", {collection})} className="glow-on-hover" type="button" style={{zIndex:100, width:"100%", marginBottom:20}}>
+                    <div className={classes.glowBtnText} style={{paddingLeft:47}}>MINT NFT</div>
+                </div>}
+                <div style={{fontSize:11, margin:0, width:"100%"}} onClick={() => history.push('/collection', { collectionId: collection._id })} className={classes.editBtn}>
+                    EDIT COLLECTION
+                </div>
             </div>
         </div>
     }
 
-    const renderItems = () => {
+    const renderMintedNfts = () => {
 
-        if (nfts.length) {
-            return nfts.map(nft => {
+        if (mintedNfts.length) {
+            return mintedNfts.map(nft => {
                 return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
                     <NftCard
-                        onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
+                        onClick={() => history.push(`/unlisted/${nft.token_id}/${params.id}`)}
                         image={nft.metadata.media}
                         title={nft.metadata.title}
                         nearFee={nft.price}
                         price={"$121,000,000"}
                         artistName={nft?.artist?.name} 
                         artistImage={nft?.artist?.image}
+                        unlisted={nft.price ? false : true}
                     />
                 </Col>
             });
         }
-        
-        return <EmptyState/>
+
+        return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
+            <div style={{fontSize:16, opacity:0.7}}>Create NFT and mint it now to get forever royalties!</div>
+            <div onClick={() => history.push("/createnft", {collection})} className="glow-on-hover" type="button" style={{zIndex:100}}>
+                <div className={classes.glowBtnText} style={{paddingLeft:47}}>MINT NFT</div>
+            </div>
+        </div>
 
     }
 
     const renderActivity = () => {
 
-        if (activity.length) {
-            return activity.map(nft => {
-                return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
-                    <NftCard
-                        onClick={() => history.push(`/unlisted/${nft.token_id}`)}
-                        image={nft.metadata.media}
-                        title={nft.metadata.title}
-                        nearFee={nft.price}
-                        price={"$121,000,000"}
-                        artistName={nft?.artist?.name} 
-                        artistImage={nft?.artist?.image}
-                        unlisted={true}
-                    />
-                </Col>
+        if (collection.activity.length) {
+            return collection.activity.map(activity => {
+                return <div key={activity._id}>
+                    <div style={{padding:"15px 0", paddingRight:"15%"}} className='d-flex justify-content-between'>
+                        <div>{activity.message}</div>
+                        <div>{activity.amount}</div>
+                    </div>
+                    <div style={{height:1, background:"#fff", opacity:0.3, marginRight:"15%"}}/>
+                </div>
             });
         }
 
-        return <EmptyState/>
+        return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
+            <div style={{fontSize:16, opacity:0.7}}>No activities</div>
+        </div>
 
     }
 
@@ -162,7 +191,7 @@ export default function ViewCollection(props) {
                             {
                                 activeTab === "activity" ?
                                 renderActivity() :
-                                renderItems()
+                                renderMintedNfts()
                             }
                         </Row>
                     </Col>

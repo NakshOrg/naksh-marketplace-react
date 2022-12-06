@@ -16,7 +16,7 @@ import profileSvg from '../../assets/svgs/profile-icon-big.svg';
 import globalStyles from '../../globalStyles';
 import classes from './details.module.css';
 import { helpers } from '../../constants';
-import { _getAllArtists, _getNftArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
+import { _addActivityToCollection, _getAllArtists, _getNftArtists, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from '../../services/nearHelperFunctions';
 import Modal from '../../components/uiComponents/Modal';
 import ListModal from '../../components/uiComponents/ListModal';
@@ -39,14 +39,6 @@ export default function UnlistedDetailPage(props) {
     const [modalShow, setModalShow] = useState(false);
     
     useEffect(() => {
-        const query = new URLSearchParams(location.search);
-        if(query.get("transactionHashes")) {
-            setListed(true);
-            toast.success('NFT listed successfully!');
-        }
-    }, []);
-
-    useEffect(() => {
         if(walletInfo) {
             setLoading(true);
             fetchNft();
@@ -64,6 +56,19 @@ export default function UnlistedDetailPage(props) {
             const nft = nfts.find(item => item.token_id === params.id);
             if(paramsId) {
                 return functions.nearListing(nft);
+            }
+            const query = new URLSearchParams(location.search);
+            if (params.collID && query.get("transactionHashes")) {
+                _addActivityToCollection(params.collID, {
+                    "message": `${walletInfo.getAccountId()} minted a nft`,
+                    "amount": nft.price
+                })
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => console.log(err.response))
+                setListed(true);
+                toast.success('NFT listed successfully!');   
             }
             _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
             .then(({ data: { artist, owner }}) => {

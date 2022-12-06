@@ -38,7 +38,7 @@ export default function Navigation() {
             <Route path="/createnft" component={CreateNft}/>
             <Route path="/collection" component={Collection}/>
             <Route path="/viewcollection/:id" component={ViewCollection}/>
-            <Route path="/unlisted/:id" component={UnlistedDetailPage}/>
+            <Route path="/unlisted/(id)?/:id?/(collID)?/:collID?" component={UnlistedDetailPage}/>
             <Route path="/404" component={NotFound}/>
             <Redirect from='*' to='/404' exact/>
         </Switch>

@@ -37,6 +37,9 @@ export default function UnlistedDetailPage(props) {
     const [show, setShow] = useState(false);
     const [listed, setListed] = useState(false);
     const [modalShow, setModalShow] = useState(false);
+    const [minimumBid, setMinimumBid] = useState("");
+    const [price, setPrice] = useState("");
+    const [pricingType, setPricingType] = useState("fixed");
     
     useEffect(() => {
         if(walletInfo) {
@@ -49,13 +52,14 @@ export default function UnlistedDetailPage(props) {
 
         const paramsId = localStorage.getItem("paramsId");
         const primaryParamsId = localStorage.getItem("primaryParamsId");
+        const pricingType = localStorage.getItem("pricingType");
         const functions = new NearHelperFunctions(walletInfo, (paramsId ? paramsId : primaryParamsId ? primaryParamsId : params.id));
 
         functions.getNftDetails()
         .then(nfts => {
             const nft = nfts.find(item => item.token_id === params.id);
             if(paramsId) {
-                return functions.nearListing(nft);
+                return functions.nearListing(nft, pricingType);
             }
             const query = new URLSearchParams(location.search);
             if (params.collID && query.get("transactionHashes")) {
@@ -92,7 +96,7 @@ export default function UnlistedDetailPage(props) {
     
     function listInMarketPlace() {
         const functions = new NearHelperFunctions(walletInfo, params.id);
-        functions.nearStorage(nftPrice);
+        functions.nearStorage(pricingType === "auction" ? minimumBid : nftPrice, pricingType);
     }
 
     const updateNft = async () => {
@@ -226,26 +230,18 @@ export default function UnlistedDetailPage(props) {
                 </Col>
             </Row>
             <ListModal
-                title={'List in Marketplace'} 
+                title='NFT listing'
                 show={modalShow}
-                body={
-                    <Col lg={12}>
-                        <Form.Label >
-                            Nft Price<span style={{color:'#FF4848'}}>*</span>
-                        </Form.Label>
-                        <Form.Control
-                            style={{caretColor:"black"}}
-                            type="number" 
-                            placeholder="Type here" 
-                            onChange={(e) => setNftPrice(e.target.value)} 
-                            value={nftPrice} 
-                        />
-                    </Col>
-                }
                 btnRight={"Submit"}
                 onHide={() => setModalShow(false)}
                 onSubmit={listInMarketPlace}
-                valid={nftPrice ? true : false}
+                valid={((pricingType === "auction" && minimumBid) || (pricingType === "fixed" && price)) ? true : false}
+                minimumBid={minimumBid}
+                setMinimumBid={setMinimumBid}
+                price={price}
+                setPrice={setPrice}
+                pricingType={pricingType}
+                setPricingType={setPricingType}
             />
             <Modal
                 show={show}

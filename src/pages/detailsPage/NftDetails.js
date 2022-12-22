@@ -40,6 +40,9 @@ export default function NftDetails(props) {
     const [shouldUpdateNft, setShouldUpdateNft] = useState(false);
     const [isListed, setIsListed] = useState(true);
     const [modalShow, setModalShow] = useState(false);
+    const [minimumBid, setMinimumBid] = useState("");
+    const [price, setPrice] = useState("");
+    const [pricingType, setPricingType] = useState("fixed");
     const googleForm = `https://docs.google.com/forms/d/e/1FAIpQLScaqPJC9CPhLWJfAYDbb3P5V98MMb9d3OrVqQOctS-Ynp-4Cw/viewform?usp=pp_url&entry.301861387=${window.location.href}`
 
     useEffect(() => {
@@ -62,6 +65,7 @@ export default function NftDetails(props) {
 
         const paramsId = localStorage.getItem("paramsId");
         const primaryParamsId = localStorage.getItem("primaryParamsId");
+        const pricingType = localStorage.getItem("pricingType");
         const functions = new NearHelperFunctions(walletInfo, (paramsId ? paramsId : primaryParamsId ? primaryParamsId : params.id));
 
         functions.getSalesNft()
@@ -79,7 +83,7 @@ export default function NftDetails(props) {
                 const nft = nfts.find(item => item.token_id === params.id);
 
                 if(paramsId) {
-                    return functions.nearListing(nft);
+                    return functions.nearListing(nft, pricingType);
                 }
 
                 const moreNfts = nfts.filter(item => item.token_id !== params.id);
@@ -134,12 +138,12 @@ export default function NftDetails(props) {
     function listInMarketPlace() {
         helpers.setIsNftListed();
         const functions = new NearHelperFunctions(walletInfo, params.id);
-        functions.nearStorage(nftPrice);
+        functions.nearStorage(pricingType === "auction" ? minimumBid : nftPrice, pricingType);
     }
 
     const updateNft = async () => {
         const functions = new NearHelperFunctions(walletInfo);
-        functions.updateNft(nft, nftPrice);    
+        functions.updateNft(nft, pricingType === "auction" ? minimumBid : nftPrice);    
     }
 
     const handleSaveUnSaveNft = () => {
@@ -366,27 +370,22 @@ export default function NftDetails(props) {
                 </Row>
             </div>
             <ListModal
-                title={'List in Marketplace'} 
+                title='NFT listing'
                 show={modalShow}
-                body={
-                    <Col lg={12}>
-                        <Form.Label >
-                            Nft Price<span style={{color:'#FF4848'}}>*</span>
-                        </Form.Label>
-                        <Form.Control
-                            style={{caretColor:"black"}}
-                            type="number" 
-                            placeholder="Type here" 
-                            onChange={(e) => setNftPrice(e.target.value)} 
-                            value={nftPrice} 
-                        />
-                    </Col>
-                }
                 btnRight={"Submit"}
                 onHide={() => setModalShow(false)}
                 onSubmit={shouldUpdateNft ? updateNft : listInMarketPlace}
-                valid={nftPrice ? true : false}
+                valid={((pricingType === "auction" && minimumBid) || (pricingType === "fixed" && price)) ? true : false}
+                minimumBid={minimumBid}
+                setMinimumBid={setMinimumBid}
+                price={price}
+                setPrice={setPrice}
+                pricingType={pricingType}
+                setPricingType={setPricingType}
             />
+            {/* <ListModal
+                valid={nftPrice ? true : false}
+            /> */}
             <Modal
                 show={show}
                 onHide={() => setShow(false)}

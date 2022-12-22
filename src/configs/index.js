@@ -30,6 +30,7 @@ export default {
     clientBaseURL: (isDevelopment || isStaging) ? keys.REACT_APP_CLIENT_BASEURL : keys.REACT_APP_CLIENT_BASEURL_PRODUCTION,
     nakshContractWallet: (isDevelopment || isStaging) ? keys.REACT_APP_NAKSH_CONTRACT_WALLET : keys.REACT_APP_NAKSH_CONTRACT_WALLET_PRODUCTION,
     nakshMarketWallet: (isDevelopment || isStaging) ? keys.REACT_APP_NAKSH_MARKET_WALLET : keys.REACT_APP_NAKSH_MARKET_WALLET_PRODUCTION,
+    auctionContractWallet : (isDevelopment || isStaging) ? keys.REACT_APP_AUCTION_WALLET : keys.REACT_APP_AUCTION_WALLET,
     appUrl: window.location.origin,
     walletConfig: (isDevelopment || isStaging) ? testnetConfig : mainnetConfig,
     isProduction,

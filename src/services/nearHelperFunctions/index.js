@@ -253,10 +253,10 @@ export default function NearHelperFunctions(wallet, paramsId) {
     return res
   }
 
-  this.nearListing = async (nftDetails) => {
+  this.nearListing = async (nftDetails, pricingType) => {
 
     const msg = JSON.stringify({
-        sale_conditions: utils.format.parseNearAmount(localStorage.getItem("nftPrice"))
+      sale_conditions: utils.format.parseNearAmount(localStorage.getItem("nftPrice"))
     });
     const gas = 200000000000000;
     const attachedDeposit = utils.format.parseNearAmount("0.1");
@@ -264,9 +264,9 @@ export default function NearHelperFunctions(wallet, paramsId) {
         contractId: configs.nakshContractWallet,
         methodName: 'nft_approve',
         args: {
-            account_id: configs.nakshMarketWallet,
-            token_id: nftDetails.token_id,
-            msg
+          account_id: pricingType === "auction" ? configs.auctionContractWallet : configs.nakshMarketWallet,
+          token_id: nftDetails.token_id,
+          msg
         },
         gas,
         attachedDeposit
@@ -274,16 +274,17 @@ export default function NearHelperFunctions(wallet, paramsId) {
     
     localStorage.removeItem("nftPrice");
     localStorage.removeItem("paramsId");
+    localStorage.removeItem("pricingType");
     
     wallet.account().functionCall(FunctionCallOptions); // near redirection
   }
 
-  this.nearStorage = async (nftPrice) => {
+  this.nearStorage = async (nftPrice, pricingType) => {
 
     const gas = 200000000000000;
     const attachedDeposit = utils.format.parseNearAmount("0.01");
     const FunctionCallOptions = {
-        contractId: configs.nakshMarketWallet,
+        contractId: pricingType === "auction" ? configs.auctionContractWallet : configs.nakshMarketWallet,
         methodName: 'storage_deposit',
         args: {},
         gas,
@@ -293,6 +294,8 @@ export default function NearHelperFunctions(wallet, paramsId) {
     localStorage.setItem("paramsId", paramsId);
     localStorage.setItem("primaryParamsId", paramsId);
     localStorage.setItem("nftPrice", nftPrice);
+    localStorage.setItem("pricingType", pricingType);
+
 
     wallet.account().functionCall(FunctionCallOptions); // near redirection 
   }
@@ -342,6 +345,63 @@ export default function NearHelperFunctions(wallet, paramsId) {
     wallet.account().functionCall(FunctionCallOptions); // near redirection
 
   }
+
+  this.getAllAuctionListedNfts = async (allNfts, getAllNft) => {
+    
+    const res = await wallet.account()
+    .viewFunction(
+      configs.auctionContractWallet, 
+      'get_sales_by_nft_contract_id', 
+      { 
+        nft_contract_id: configs.auctionContractWallet,
+        from_index: "0", 
+        limit: 1000 
+      }
+    )
+
+    const { data: { artists } } = await _getAllArtists({sortBy: 'createdAt', sort: -1});
+    const filteredNfts = [];
+
+    allNfts.map(nftItem => {
+      
+      nftItem.metadata['extra'] = JSON.parse(nftItem.metadata.extra);
+      const listedItem = res.find(t => t.token_id === nftItem.token_id);
+      const artist = artists.find(a => a._id === nftItem?.metadata?.extra?.artistId);
+      
+      if(artist) {
+        nftItem['artist'] = artist;
+      }
+
+      if(listedItem) {
+        nftItem["listed"] = true;
+        nftItem["price"] = utils.format.formatNearAmount(listedItem.sale_conditions);
+        filteredNfts.push(nftItem);
+      }
+
+    });
+
+    if(getAllNft) return allNfts;
+
+    return filteredNfts;
+  }
+
+  this.getAllAuctionNfts = async (getAllNft) => {
+
+    const res = await wallet.account()
+    .viewFunction(
+      configs.auctionContractWallet, 
+      'nft_tokens', 
+      { 
+        from_index: "0", 
+        limit: 1000 
+      }
+    );
+      // console.log(res,);
+    const nftsWithPrice = await this.getAllAuctionListedNfts(res, getAllNft); // to get nft price
+
+    return nftsWithPrice;
+
+  };
 
 }
   

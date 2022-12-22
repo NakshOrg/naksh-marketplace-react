@@ -93,4 +93,50 @@ export const AddWalletIcon = (props) => (
       </filter>
     </defs>
   </svg>
-  )
+)
+
+export const Pricing = (props) => (
+  <svg
+    width={27}
+    height={27}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="m23.164 15.086-8.067 8.066a2.25 2.25 0 0 1-3.183 0L2.25 13.5V2.25H13.5l9.664 9.664a2.25 2.25 0 0 1 0 3.172Z"
+      fill="#12192B"
+      stroke="#fff"
+      strokeWidth={2.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx={8.5} cy={8.5} r={1} fill="#fff" />
+  </svg>
+)
+
+export const Clock = (props) => (
+  <svg
+    width={27}
+    height={27}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M13.5 24.75c6.213 0 11.25-5.037 11.25-11.25S19.713 2.25 13.5 2.25 2.25 7.287 2.25 13.5 7.287 24.75 13.5 24.75Z"
+      fill="#fff"
+      stroke="#fff"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M12.5 8.75V14l3.5 1.75"
+      stroke="#000"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)

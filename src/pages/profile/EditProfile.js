@@ -210,6 +210,8 @@ export default function EditProfile(props) {
     }
 
     const updateArtist = (data) => {
+        delete data.wallet;
+        console.log(data, 'data');
         _updateArtist(artistId, data)
         .then(({ data: { artist }}) => {
             dispatch({type: actionTypes.USER_DATA, payload:artist});

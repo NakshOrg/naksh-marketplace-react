@@ -102,6 +102,9 @@ export default function Browse() {
 
         const functions = new NearHelperFunctions(walletInfo);
 
+        functions.getAllAuctionNfts()
+        .then(res => console.log(res, 'auc'))
+
         functions.getAllNfts()
         .then (allNfts => {
             _getTrendingNft({ blockchain: 0 })

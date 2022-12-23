@@ -318,8 +318,6 @@ export default function NearHelperFunctions(wallet, paramsId) {
 
     wallet.account().functionCall(FunctionCallOptions); // near redirection
   }
-  // 6 perpetual_royalties
-  // 20% total percentage
 
   this.mintNft = async (metadata, royalties, uid) => {
 
@@ -353,12 +351,12 @@ export default function NearHelperFunctions(wallet, paramsId) {
       configs.auctionContractWallet, 
       'get_sales_by_nft_contract_id', 
       { 
-        nft_contract_id: configs.auctionContractWallet,
+        nft_contract_id: configs.nakshContractWallet,
         from_index: "0", 
         limit: 1000 
       }
     )
-
+    
     const { data: { artists } } = await _getAllArtists({sortBy: 'createdAt', sort: -1});
     const filteredNfts = [];
 
@@ -389,14 +387,14 @@ export default function NearHelperFunctions(wallet, paramsId) {
 
     const res = await wallet.account()
     .viewFunction(
-      configs.auctionContractWallet, 
+      configs.nakshContractWallet, 
       'nft_tokens', 
       { 
         from_index: "0", 
         limit: 1000 
       }
     );
-      // console.log(res,);
+
     const nftsWithPrice = await this.getAllAuctionListedNfts(res, getAllNft); // to get nft price
 
     return nftsWithPrice;

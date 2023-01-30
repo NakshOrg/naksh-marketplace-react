@@ -44,7 +44,8 @@ export default function Browse() {
     const [loading, setLoading] = useState(true); 
     const [allNfts, setAllNfts] = useState([]); 
     const [recently, setRecently] = useState([]); 
-    const [totalNfts, setTotalNfts] = useState([]); 
+    const [totalNfts, setTotalNfts] = useState([]);
+    const [auctionNfts, setAuctionNfts] = useState([]);
     const [trendingNfts, setTrendingNfts] = useState([]);
     const [trendingArtists, setTrendingArtists] = useState([]);
     const [filterParams, setFilterParams] = useState({
@@ -56,7 +57,8 @@ export default function Browse() {
             {label:"100 - 200 NEAR", value:"100 - 200 NEAR", noOfNfts:0, checked:false, min:100, max:199},
             {label:"200 - 300 NEAR", value:"200 - 300 NEAR", noOfNfts:0, checked:false, min:200, max:300}
         ],
-        limit: 8
+        limit: 8,
+        nftType: staticValues.nftType[0].name
     });
     const [open, setOpen] = useState(false);
 
@@ -102,9 +104,6 @@ export default function Browse() {
 
         const functions = new NearHelperFunctions(walletInfo);
 
-        functions.getAllAuctionNfts()
-        .then(res => console.log(res, 'auc'))
-
         functions.getAllNfts()
         .then (allNfts => {
             _getTrendingNft({ blockchain: 0 })
@@ -122,9 +121,15 @@ export default function Browse() {
 
     }
 
-    const fetchNfts = () => {
+    const fetchNfts = async () => {
 
         const functions = new NearHelperFunctions(walletInfo);
+
+        const auctionNfts = await functions.getAllAuctionNfts();
+        const auctionNftsResult = auctionNfts.sort(function(a, b) {
+            return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+        });
+        setAuctionNfts(auctionNftsResult);
         
         functions.getAllNfts()
         .then(async res => {
@@ -177,6 +182,11 @@ export default function Browse() {
                 ...state,
                 sort: value.name
             }));
+        } else if (type === "nftType") {
+            setFilterParams(state => ({
+                ...state,
+                nftType: value.name
+            }));
         } else { 
             const copiedArr = [...filterParams.priceRange];
             copiedArr.map((item, i) => {
@@ -194,44 +204,91 @@ export default function Browse() {
 
     const applyFilters = (isMobile) => {
 
-        let firstSetOfData, copiedFilterArr = [...totalNfts];
+        if (filterParams.nftType === "Sale") {
+            // const firstSetOfData = totalNfts.slice(0, filterParams.limit);
+            // setAllNfts(firstSetOfData);
+            let firstSetOfData, copiedFilterArr = [...totalNfts];
 
-        const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
+            const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
 
-        if (filterParams.sort === "Newest first") {
-            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
-                return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
-            });
-        } else if (filterParams.sort === "Oldest first") {
-            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
-                return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
-            });
-        } else if (filterParams.sort === "Price - High to low") {
-            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
-                return b.price - a.price;
-            });
-        } else {
-            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
-                return a.price - b.price;
-            });
-        }
-
-        if(selectedPriceRanges.length !== 0) {
-            const resultArr = [];
-            selectedPriceRanges.map(selRange => {
-                copiedFilterArr.filter(item => {
-                    const price = Number(item.price);
-                    if (price >= selRange.min && price <= selRange.max) {
-                        resultArr.push(item);
-                    }
+            if (filterParams.sort === "Newest first") {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
                 });
-            });
-            copiedFilterArr = resultArr;
+            } else if (filterParams.sort === "Oldest first") {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
+                });
+            } else if (filterParams.sort === "Price - High to low") {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return b.price - a.price;
+                });
+            } else {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return a.price - b.price;
+                });
+            }
+
+            if(selectedPriceRanges.length !== 0) {
+                const resultArr = [];
+                selectedPriceRanges.map(selRange => {
+                    copiedFilterArr.filter(item => {
+                        const price = Number(item.price);
+                        if (price >= selRange.min && price <= selRange.max) {
+                            resultArr.push(item);
+                        }
+                    });
+                });
+                copiedFilterArr = resultArr;
+            }
+
+            firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
+
+            setAllNfts(firstSetOfData);
+
+        } else { 
+            
+            let firstSetOfData, copiedFilterArr = [...auctionNfts];
+
+            const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
+
+            if (filterParams.sort === "Newest first") {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+                });
+            } else if (filterParams.sort === "Oldest first") {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
+                });
+            } else if (filterParams.sort === "Price - High to low") {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return b.price - a.price;
+                });
+            } else {
+                copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                    return a.price - b.price;
+                });
+            }
+
+            if(selectedPriceRanges.length !== 0) {
+                const resultArr = [];
+                selectedPriceRanges.map(selRange => {
+                    copiedFilterArr.filter(item => {
+                        const price = Number(item.price);
+                        if (price >= selRange.min && price <= selRange.max) {
+                            resultArr.push(item);
+                        }
+                    });
+                });
+                copiedFilterArr = resultArr;
+            }
+
+            firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
+
+            setAllNfts(firstSetOfData);
         }
 
-        firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
-
-        setAllNfts(firstSetOfData);
+        
     }
 
     const resetFilters = () => {
@@ -306,6 +363,14 @@ export default function Browse() {
                             title={filterParams.sort}
                             content={staticValues.sortFilter}
                             onChange={(val) => handleFilterChange(val, "sort")}
+                        />
+                    </div>
+                    <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
+                        <div style={{marginLeft:13}}/>
+                        <Dropdown 
+                            title={filterParams.nftType}
+                            content={staticValues.nftType}
+                            onChange={(val) => handleFilterChange(val, "nftType")}
                         />
                     </div>
                 </div>

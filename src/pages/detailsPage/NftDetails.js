@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useEffect, useState } from 'react';
-import { Col, Row, Spinner, Form } from 'react-bootstrap';
+import { Col, Row, Form } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FiBookmark, FiExternalLink, FiFlag } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 import NftCard from '../../components/explore/NftCard';
 import { GradientBtn } from '../../components/uiComponents/Buttons';
+import Spinner from '../../components/uiComponents/Spinner';
 import nearIcon from "../../assets/svgs/near-icon.svg"; 
 import party from "../../assets/svgs/party.svg"; 
 import profileSvg from '../../assets/svgs/profile-icon-big.svg';

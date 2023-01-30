@@ -344,6 +344,8 @@ export default function NearHelperFunctions(wallet, paramsId) {
 
   }
 
+  // auction functions
+
   this.getAllAuctionListedNfts = async (allNfts, getAllNft) => {
     
     const res = await wallet.account()

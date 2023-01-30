@@ -1,5 +1,7 @@
 const sortFilter = [{name: "Newest first"}, {name: "Oldest first"}, {name: "Price - High to low"}, {name: "Price - Low to high"}];
 
+const nftType = [{name: "Sale"}, {name: "Auction"}];
+
 const gradients = [
     "linear-gradient(90.14deg, #49BEFF 0.11%, #6E3CFF 99.88%)",
     "linear-gradient(90.14deg, #FFC149 0.11%, #FF3C8E 99.88%)",
@@ -160,5 +162,6 @@ const states = [
 export default {
     sortFilter,
     states,
-    gradients
+    gradients,
+    nftType
 }

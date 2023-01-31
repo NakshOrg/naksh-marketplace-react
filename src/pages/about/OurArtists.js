@@ -16,6 +16,8 @@ import Dropdown from "../../components/uiComponents/Dropdown";
 import { staticValues } from "../../constants";
 import Footer from "../../components/uiComponents/Footer";
 import jsonData from "../../constants/states.json";
+import Collection from '../../pages/collection/Collection';
+import ViewCollection from '../../pages/collection/ViewCollection';
 
 const stateOptions = jsonData.states;
 

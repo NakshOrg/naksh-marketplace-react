@@ -293,6 +293,7 @@ export default function EditProfile(props) {
   };
 
   const updateArtist = (data) => {
+    delete data.wallet;
     _updateArtist(artistId, data)
       .then(({ data: { artist } }) => {
         dispatch({ type: actionTypes.USER_DATA, payload: artist });
@@ -535,23 +536,3 @@ export default function EditProfile(props) {
     </Container>
   );
 }
-
-// class EditProfile extends Component {
-
-//     }
-// }
-
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         updateUserData: (payload) => dispatch({type: actionTypes.USER_DATA, payload}),
-//     }
-// };
-
-// const mapStateToProps = state => {
-//     return {
-//         walletInfo: state.nearReducer.walletInfo,
-//         isWalletSignedIn: state.nearReducer.isWalletSignedIn
-//     }
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

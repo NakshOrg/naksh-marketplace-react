@@ -14,11 +14,7 @@ import NftCard from "../../components/explore/NftCard";
 import globalStyles from "../../globalStyles";
 import classes from "./profile.module.css";
 import { connect, useSelector } from "react-redux";
-import {
-  _getAllArtists,
-  _getNftArtists,
-  _getOneArtist,
-} from "../../services/axios/api";
+import { _getAllArtists, _getOneArtist, _getCollections, _getNftArtists } from '../../services/axios/api';
 import NearHelperFunctions from "../../services/nearHelperFunctions";
 import Spinner from "../../components/uiComponents/Spinner";
 import uuid from "react-uuid";
@@ -71,6 +67,7 @@ export default function UserProfile(props) {
   const [mintedNfts, setMintedNfts] = useState([])
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [savedNfts, setSavedNfts] = useState([]);
+  const [collections, setCollections] = useState([]);
   const [noUserFound, setNoUserFound] = useState(false);
   const [activeTab, setActiveTab] = useState("minted");
   const [userCollections, setUserCollections] = useState([]);
@@ -81,7 +78,6 @@ export default function UserProfile(props) {
 
   useEffect(() => {
     if (isWalletSignedIn) {
-      console.log("accountId")
       getArtist(false);
     } else if (evmWalletData) {
       getArtist(true);
@@ -138,8 +134,9 @@ export default function UserProfile(props) {
   useEffect(() => {
     setLoading(true);
     setArtist([]);
-    setNearOwnedNfts([]);
-    setNearMintedNfts([]);
+    setOwnedNfts([]);
+    setMintedNfts([]);
+    setSavedNfts([]);
     if (walletInfo) {
       getArtist();
     }
@@ -190,6 +187,29 @@ export default function UserProfile(props) {
       });
   };
 
+  const getSavedNfts = (savedNftIds) => {
+
+    const savedNfts = [];
+    const functions = new NearHelperFunctions(walletInfo); 
+    functions.getAllNfts()
+    .then(res => {
+        savedNftIds.map(token => {
+            const nft = res.find(item => item.token_id === token);
+            if (nft) {
+                savedNfts.push(nft);
+            }
+        });
+        setSavedNfts(savedNfts);
+        setLoading(false);
+    })
+    .catch(err => {
+        // console.log(err);
+        alert("something went wrong!");
+        setLoading(false);
+    });
+
+  }
+
   const getOwnedNfts = () => {
     console.log("owned called");
     const functions = new NearHelperFunctions(walletInfo);
@@ -206,8 +226,15 @@ export default function UserProfile(props) {
       });
   };
 
+  const getCollections = () => {
+    _getCollections({ sortBy:"createdAt", sort:1 })
+    .then(({ data: { collections } }) => {
+        setCollections(collections);
+        console.log(collections);
+    });
+  }
+
   const getArtist = (evm = false) => {
-    console.log("get artist");
     _getAllArtists({
       wallet: evm ? evmWalletData.address : accountId,
       sortBy: "createdAt",
@@ -220,6 +247,8 @@ export default function UserProfile(props) {
             setArtist(data.artists[0]);
             getNearMintedNfts();
             getOwnedNfts();
+            getCollections();
+            getSavedNfts(data.artists[0].savedNft.map(item => item.token));
           } else {
             setLoading(false);
             setNoUserFound(true);
@@ -419,6 +448,55 @@ export default function UserProfile(props) {
     return <EmptyState />;
   };
 
+  const renderSavedNfts = () => {
+
+    if (savedNfts.length) {
+        return savedNfts.map(nft => {
+            return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
+                <NftCard
+                    onClick={() => history.push(`/nftdetails/${nft.token_id}`)}
+                    image={nft.metadata.media}
+                    title={nft.metadata.title}
+                    nearFee={nft.price}
+                    price={"$121,000,000"}
+                    artistName={nft?.artist?.name} 
+                    artistImage={nft?.artist?.image}
+                />
+            </Col>
+        });
+    }
+
+    return <EmptyState/>
+
+  }
+
+  const renderCollections = () => {
+
+    if (collections.length) {
+        return collections.map(collection => {
+            return <Col key={uuid()} style={{marginBottom:25}} lg={4} md={6} sm={6} xs={12}>
+                <NftCard
+                    onClick={() => history.push(`/viewcollection/${collection._id}`)}
+                    image={collection.image}
+                    title={collection.name}
+                    // nearFee={"nft.price"}
+                    price={"$121,000,000"}
+                    artistName={collection?.artist?.name} 
+                    artistImage={collection?.artist?.image}
+                />
+            </Col>
+        });
+    }
+
+    return <div style={{...globalStyles.flexRow, flexDirection:"column", marginTop:50, marginBottom:30}}>
+        <div style={{fontSize:16, opacity:0.7}}>You haven't created any collections yet. Create one now!</div>
+        <div onClick={() => history.push("/collection")} className="glow-on-hover" type="button" style={{zIndex:100}}>
+            <div className={classes.glowBtnText} style={{paddingLeft:20}}>CREATE COLLECTION</div>
+        </div>
+    </div>
+
+}
+
   const renderMintedNfts = () => {
     if (mintedNfts.length) {
       return mintedNfts.map((nft) => {
@@ -465,7 +543,7 @@ export default function UserProfile(props) {
           style={{ zIndex: 100 }}
         >
           <div className={classes.glowBtnText} style={{ paddingLeft: 47 }}>
-            MINTED NFTS
+            MINT NFT
           </div>
         </div>
       </div>
@@ -578,37 +656,21 @@ export default function UserProfile(props) {
                       justifyContent: "center",
                     }}
                   >
-                    <div
-                      onClick={() => setActiveTab("minted")}
-                      style={{
-                        fontWeight: activeTab == "minted" ? "bold" : "400",
-                        opacity: activeTab == "minted" ? 1 : 0.7,
-                        fontSize: 12,
-                        letterSpacing: 1.5,
-                        cursor: "pointer",
-                      }}
-                    >
-                      MINTED
-                    </div>
-                    <div
-                      onClick={() => setActiveTab("owned")}
-                      style={{
-                        fontWeight: activeTab == "owned" ? "bold" : "400",
-                        opacity: activeTab == "owned" ? 1 : 0.7,
-                        fontSize: 12,
-                        marginLeft: 30,
-                        cursor: "pointer",
-                        letterSpacing: 1.5,
-                      }}
-                    >
-                      NFTS OWNED
-                    </div>
-                    {/* <div onClick={() => this.setState({activeTab:"sold"})} style={{fontWeight: activeTab == "sold" ? "bold" : "400", opacity: activeTab == "sold" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
-                                    SOLD
-                                </div> */}
+                     <div onClick={() => setActiveTab("minted")} style={{fontWeight: activeTab == "minted" ? "bold" : "400", opacity: activeTab === "minted" ? 1 : 0.7, fontSize:12, letterSpacing:1.5, cursor:"pointer"}}>
+                          MINTED
+                      </div>
+                      <div onClick={() => setActiveTab("collections")} style={{fontWeight: activeTab == "collections" ? "bold" : "400", opacity: activeTab === "collections" ? 1 : 0.7, fontSize:12, letterSpacing:1.5, cursor:"pointer", marginLeft:30}}>
+                          COLLECTIONS
+                      </div>
+                      <div onClick={() => setActiveTab("owned")} style={{fontWeight: activeTab == "owned" ? "bold" : "400", opacity: activeTab === "owned" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
+                          NFTS OWNED
+                      </div>
+                      <div onClick={() => setActiveTab("saved")} style={{fontWeight: activeTab == "saved" ? "bold" : "400", opacity: activeTab === "saved" ? 1 : 0.7, fontSize:12, marginLeft:30, cursor:'pointer', letterSpacing:1.5}}>
+                          SAVED
+                      </div>
                   </div>
                   {/* bottom indicator */}
-                  <motion.div
+                  {/* <motion.div
                     animate={{
                       x: activeTab === "minted" ? 400 : 500,
                     }}
@@ -620,10 +682,18 @@ export default function UserProfile(props) {
                       borderRadius: 100,
                       marginTop: 2,
                     }}
-                  />
+                  /> */}
                 </div>
                 <Row>
-                  {activeTab === "minted" ? renderMintedNfts() : renderNfts()}
+                  {
+                    activeTab === "minted" ?
+                    renderMintedNfts() :
+                    activeTab === "collections" ?
+                    renderCollections() :
+                    activeTab === "owned" ?
+                    renderNfts() :
+                    renderSavedNfts()
+                  }
                 </Row>
               </Col>
             </Row>

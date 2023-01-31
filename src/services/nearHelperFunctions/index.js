@@ -1,9 +1,10 @@
 import { utils } from "near-api-js";
+import uuid from "react-uuid";
 
 import configs from "../../configs";
 import { _getAllArtists, _getOneArtist } from "../axios/api";
 
-export default function NearHelperFunctions(wallet) {
+export default function NearHelperFunctions(wallet, paramsId) {
 
   this.getMintedNft = async () => {
 
@@ -179,5 +180,169 @@ export default function NearHelperFunctions(wallet) {
 
     const data = await wallet.account().functionCall(FunctionCallOptions);
   };
+
+  this.getSalesNft = async () => {
+    const res = await wallet.account()
+    .viewFunction(
+      configs.nakshMarketWallet, 
+      'get_sales_by_nft_contract_id', 
+      { 
+        nft_contract_id: configs.nakshContractWallet,
+        from_index: "0", 
+        limit: 1000 
+      }
+    )
+    return res
+  }
+
+  this.nearListing = async (nftDetails, pricingType) => {
+
+    const msg = JSON.stringify({
+        sale_conditions: utils.format.parseNearAmount(localStorage.getItem("nftPrice"))
+    });
+    const gas = 200000000000000;
+    const attachedDeposit = utils.format.parseNearAmount("0.1");
+    const FunctionCallOptions = {
+        contractId: configs.nakshContractWallet,
+        methodName: 'nft_approve',
+        args: {
+          account_id: pricingType === "auction" ? configs.auctionContractWallet : configs.nakshMarketWallet,
+          token_id: nftDetails.token_id,
+          msg
+        },
+        gas,
+        attachedDeposit
+    };
+    
+    localStorage.removeItem("nftPrice");
+    localStorage.removeItem("paramsId");
+    localStorage.removeItem("pricingType");
+    
+    wallet.account().functionCall(FunctionCallOptions); // near redirection
+  }
+
+  this.nearStorage = async (nftPrice, pricingType) => {
+
+    const gas = 200000000000000;
+    const attachedDeposit = utils.format.parseNearAmount("0.01");
+    const FunctionCallOptions = {
+      contractId: pricingType === "auction" ? configs.auctionContractWallet : configs.nakshMarketWallet,
+      methodName: 'storage_deposit',
+      args: {},
+      gas,
+      attachedDeposit
+    };
+    
+    localStorage.setItem("paramsId", paramsId);
+    localStorage.setItem("primaryParamsId", paramsId);
+    localStorage.setItem("nftPrice", nftPrice);
+    localStorage.setItem("pricingType", pricingType);
+
+    wallet.account().functionCall(FunctionCallOptions); // near redirection 
+  }
+
+  this.updateNft = async (nftDetails, nftPrice) => {
+
+    const gas = 200000000000000;
+    const attachedDeposit = "1";
+    const FunctionCallOptions = {
+        contractId: configs.nakshMarketWallet,
+        methodName: 'update_price',
+        args: {
+            nft_contract_id: configs.nakshContractWallet,
+            token_id: nftDetails.token_id,
+            price: utils.format.parseNearAmount(nftPrice)
+        },
+        gas,
+        attachedDeposit
+    };
+
+    wallet.account().functionCall(FunctionCallOptions); // near redirection
+  }
+  // 6 perpetual_royalties
+  // 20% total percentage
+
+  this.mintNft = async (metadata, royalties, uid) => {
+
+    const gas = 200000000000000;
+    const attachedDeposit = utils.format.parseNearAmount("0.1");
+    const perpetual_royalties = {
+      "naksh.near": 500,
+      ...royalties
+    };
+
+    const FunctionCallOptions = {
+        contractId: configs.nakshContractWallet,
+        methodName: 'nft_mint',
+        args: {
+          token_id: uid,
+          metadata,
+          perpetual_royalties
+        },
+        gas,
+        attachedDeposit
+    };
+
+    wallet.account().functionCall(FunctionCallOptions); // near redirection
+
+  }
   
+  // auction functions
+  
+  this.getAllAuctionListedNfts = async (allNfts, getAllNft) => {
+
+    const res = await wallet.account()
+    .viewFunction(
+      configs.auctionContractWallet, 
+      'get_sales_by_nft_contract_id', 
+      { 
+        nft_contract_id: configs.nakshContractWallet,
+        from_index: "0", 
+        limit: 1000 
+      }
+    )
+
+    const { data: { artists } } = await _getAllArtists({sortBy: 'createdAt', sort: -1});
+    const filteredNfts = [];
+
+    allNfts.map(nftItem => {
+
+      nftItem.metadata['extra'] = JSON.parse(nftItem.metadata.extra);
+      const listedItem = res.find(t => t.token_id === nftItem.token_id);
+      const artist = artists.find(a => a._id === nftItem?.metadata?.extra?.artistId);
+
+      if(artist) {
+        nftItem['artist'] = artist;
+      }
+
+      if(listedItem) {
+        nftItem["listed"] = true;
+        nftItem["price"] = utils.format.formatNearAmount(listedItem.sale_conditions);
+        filteredNfts.push(nftItem);
+      }
+
+    });
+
+    if(getAllNft) return allNfts;
+
+    return filteredNfts;
+  }
+
+  this.getAllAuctionNfts = async (getAllNft) => {
+
+    const res = await wallet.account()
+    .viewFunction(
+      configs.nakshContractWallet, 
+      'nft_tokens', 
+      { 
+        from_index: "0", 
+        limit: 1000 
+      }
+    );
+      // console.log(res,);
+    const nftsWithPrice = await this.getAllAuctionListedNfts(res, getAllNft); // to get nft price
+
+    return nftsWithPrice;
+
+  };
 }

@@ -20,7 +20,7 @@ import NearHelperFunctions from "../../services/nearHelperFunctions";
 import globalStyles from "../../globalStyles";
 import SuggestionNfts from "./SuggestionNfts";
 import Tabs from "../../components/uiComponents/Tabs";
-import { _getAllArtists, _getTrendingNft } from "../../services/axios/api";
+import { _getAllArtists, _getBlockedNfts, _getTrendingNft } from "../../services/axios/api";
 
 import { useNFTs } from "../../hooks";
 import { useAppContext } from "../../context/wallet";
@@ -66,6 +66,7 @@ export default function Browse() {
   const [allNfts, setAllNfts] = useState([]);
   const [recently, setRecently] = useState([]);
   const [totalNfts, setTotalNfts] = useState([]);
+  const [auctionNfts, setAuctionNfts] = useState([]);
   const [trendingNfts, setTrendingNfts] = useState([]);
   const [trendingArtists, setTrendingArtists] = useState([]);
   const [topCollections, setTopCollections] = useState([]);
@@ -175,6 +176,7 @@ export default function Browse() {
     priceRange: isEVMWalletSignedIn ? evmFilter : nearFilter,
     limit: 8,
     chainFilter: chainFilter,
+    nftType: staticValues.nftType[0].name
   });
 
   useEffect(() => {
@@ -232,86 +234,26 @@ export default function Browse() {
   }, [filterParams]);
 
   const getTrendingArtists = () => {
-    // _getAllArtists({ sortBy:"trending", sort:1 })
-    // .then(({ data: { artists } }) => {
-    //     setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
-    // });
+    _getAllArtists({ sortBy:"trending", sort:1 })
+    .then(({ data: { artists } }) => {
+        setTrendingArtists(artists);
+        // setTrendingArtists([...artists, ...artists, ...artists, ...artists, ...artists]);
+    });
   };
 
-  // useEffect(() => {
-  //   if(filterParams) {
-  //     const copiedPriceRanges = [...filterParams.priceRange]
-      
-  //     if(filterParams.chainFilter[0].checked && totalNfts && totalNfts.length > 0) {
-  //       totalNfts.map((item) => {
-  //         const price = Number(item.price);
-  //         if (price >= 1 && price < 10) {
-  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
-  //         } else if (price >= 10 && price <= 49) {
-  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
-  //         } else if (price >= 50 && price < 100) {
-  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
-  //         } else if (price >= 100 && price < 200) {
-  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
-  //         } else if (price >= 200 && price <= 300) {
-  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
-  //         }
-  //       });
-  //     } else if (!filterParams.chainFilter[0].checked && totalNfts && totalNfts.length > 0) {
-  //       totalNfts.map((item) => {
-  //         const price = Number(item.price);
-  //         if (price >= 1 && price < 10) {
-  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts - 1;
-  //         } else if (price >= 10 && price <= 49) {
-  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts - 1;
-  //         } else if (price >= 50 && price < 100) {
-  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts - 1;
-  //         } else if (price >= 100 && price < 200) {
-  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts - 1;
-  //         } else if (price >= 200 && price <= 300) {
-  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts - 1;
-  //         }
-  //       });
-  //     }
-
-  //     if(filterParams.chainFilter[1].checked && totalEVMNfts && totalEVMNfts.length > 0) {
-  //       totalEVMNfts.map((nft) => {
-  //         const price = Number(ethers.utils.formatEther(nft.salePrice));
-  //         if (price < 10) {
-  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts + 1;
-  //         } else if (price >= 10 && price <= 49) {
-  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts + 1;
-  //         } else if (price >= 50 && price < 100) {
-  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts + 1;
-  //         } else if (price >= 100 && price < 200) {
-  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts + 1;
-  //         } else if (price >= 200 && price <= 300) {
-  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts + 1;
-  //         }
-  //       });
-  //     } else if (!filterParams.chainFilter[1].checked && totalEVMNfts && totalEVMNfts.length > 0) {
-  //       totalEVMNfts.map((nft) => {
-  //         const price = Number(ethers.utils.formatEther(nft.salePrice));
-  //         if (price < 10) {
-  //           copiedPriceRanges[0].noOfNfts = copiedPriceRanges[0].noOfNfts - 1;
-  //         } else if (price >= 10 && price <= 49) {
-  //           copiedPriceRanges[1].noOfNfts = copiedPriceRanges[1].noOfNfts - 1;
-  //         } else if (price >= 50 && price < 100) {
-  //           copiedPriceRanges[2].noOfNfts = copiedPriceRanges[2].noOfNfts - 1;
-  //         } else if (price >= 100 && price < 200) {
-  //           copiedPriceRanges[3].noOfNfts = copiedPriceRanges[3].noOfNfts - 1;
-  //         } else if (price >= 200 && price <= 300) {
-  //           copiedPriceRanges[4].noOfNfts = copiedPriceRanges[4].noOfNfts - 1;
-  //         }
-  //       });
-  //     }
-
-  //     setFilterParams({
-  //       ...filterParams,
-  //       priceRanges: copiedPriceRanges
-  //     })
-  //   }
-  // }, [filterParams.chainFilter])
+  const checkForBlockedNfts = async (allNfts) => {
+    const { data: { nfts } } = await _getBlockedNfts();
+    if (nfts.length) {
+        const resultArr = [];
+        allNfts.map(allNft => {
+            if (nfts.find(nft => allNft.token_id === nft.token_id)) {
+                resultArr.push(allNft);
+            }
+        });
+        return resultArr;
+    }
+    return allNfts;
+}
 
   const fetchEVMNft = async () => {
     try {
@@ -363,19 +305,24 @@ export default function Browse() {
   };
 
   const getTrendingNfts = () => {
-    const functions = new NearHelperFunctions(walletInfo);
 
-    functions.getAllNfts().then((res) => {
-      _getTrendingNft({ blockchain: 0 }).then(({ data: { nfts } }) => {
-        const trendingArr = [];
-        nfts.map((n) => {
-          const r = res.find((r) => r.token_id === n.token);
-          if (r) trendingArr.push(r);
+    const functions = new NearHelperFunctions(walletInfo);
+    
+    functions.getAllNfts()
+    .then (allNfts => {
+        _getTrendingNft({ blockchain: 0 })
+        .then(async ({ data: { nfts }}) => {
+            const trendingArr = [];
+            nfts.map(n => {
+                const r = allNfts.find(r => r.token_id === n.token);
+                if (r) trendingArr.push(r);
+            });
+            // filtering blocked nfts
+            const result = await checkForBlockedNfts(trendingArr);
+            setTrendingNfts([...result, ...result]);
         });
-        setTrendingNfts([...trendingArr, ...trendingArr]);
-      });
-    });
-  };
+    })
+  }
 
   const getEVMTrendingNfts = async () => {
     try {
@@ -434,13 +381,23 @@ export default function Browse() {
     }
   };
 
-  const fetchNfts = () => {
+  const fetchNfts = async () => {
+
     const functions = new NearHelperFunctions(walletInfo);
+    const auctionNfts = await functions.getAllAuctionNfts();
+    const auctionNftsResult = auctionNfts.sort(function(a, b) {
+        return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+    });
+    setAuctionNfts(auctionNftsResult);
 
     functions
       .getAllNfts()
-      .then((res) => {
-        const result = res.sort(function (a, b) {
+      .then(async (res) => {
+
+        // filtering blocked nfts
+        const nfts = await checkForBlockedNfts(res);
+
+        const result = nfts.sort(function (a, b) {
           return (
             new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at)
           );
@@ -490,6 +447,11 @@ export default function Browse() {
         ...state,
         sort: value.name,
       }));
+    } else if (type === "nftType") {
+      setFilterParams(state => ({
+          ...state,
+          nftType: value.name
+      }));
     } else if (type === "price") {
       const copiedArr = [...filterParams.priceRange];
       copiedArr.map((item, i) => {
@@ -516,77 +478,116 @@ export default function Browse() {
   };
 
   const applyFilters = (isMobile) => {
-    let firstSetOfData,
-      copiedFilterArr = [...totalNfts];
-    let firstSetOfEVMData,
-      copiedFilterEVMArr = [...totalEVMNfts];
 
-    const selectedPriceRanges = filterParams.priceRange.filter(
-      (item) => item.checked
-    );
+    if (filterParams.nftType === "Sale") {
+        // const firstSetOfData = totalNfts.slice(0, filterParams.limit);
+        // setAllNfts(firstSetOfData);
+        let firstSetOfData, copiedFilterArr = [...totalNfts];
+        let firstSetOfEVMData, copiedFilterEVMArr = [...totalEVMNfts];
+        const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
 
-    if (filterParams.sort === "Newest first") {
-      copiedFilterArr = copiedFilterArr.sort(function (a, b) {
-        return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
-      });
-      copiedFilterEVMArr = copiedFilterEVMArr.sort(function (a, b) {
-        return new Date(Number(b.timestamp)) - new Date(Number(a.timestamp));
-      });
-    } else if (filterParams.sort === "Oldest first") {
-      copiedFilterArr = copiedFilterArr.sort(function (a, b) {
-        return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
-      });
-      copiedFilterEVMArr = copiedFilterEVMArr.sort(function (a, b) {
-        return new Date(Number(a.timestamp)) - new Date(Number(b.timestamp));
-      });
-    } else if (filterParams.sort === "Price - High to low") {
-      copiedFilterArr = copiedFilterArr.sort(function (a, b) {
-        return b.price - a.price;
-      });
-      copiedFilterEVMArr = copiedFilterEVMArr.sort(
-        (a, b) =>
-          Number(ethers.utils.formatEther(b.salePrice)) -
-          Number(ethers.utils.formatEther(a.salePrice))
-      );
+        if (filterParams.sort === "Newest first") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+              return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+            });
+            copiedFilterEVMArr = copiedFilterEVMArr.sort(function(a, b) {
+              return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+            });
+        } else if (filterParams.sort === "Oldest first") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
+            });
+            copiedFilterEVMArr = copiedFilterEVMArr.sort(function(a, b) {
+              return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
+          });
+        } else if (filterParams.sort === "Price - High to low") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return b.price - a.price;
+            });
+            copiedFilterEVMArr = copiedFilterEVMArr.sort(
+              (a, b) =>
+                Number(ethers.utils.formatEther(b.salePrice)) -
+                Number(ethers.utils.formatEther(a.salePrice))
+            );
+        } else {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return a.price - b.price;
+            });
+            copiedFilterEVMArr = copiedFilterEVMArr.sort(
+              (a, b) =>
+                Number(ethers.utils.formatEther(a.salePrice)) -
+                Number(ethers.utils.formatEther(b.salePrice))
+            );
+        }
+
+        if(selectedPriceRanges.length !== 0) {
+            const resultArr = [];
+            const resultEVMArr = [];
+            selectedPriceRanges.map(selRange => {
+                copiedFilterArr.filter(item => {
+                    const price = Number(item.price);
+                    if (price >= selRange.min && price <= selRange.max) {
+                        resultArr.push(item);
+                    }
+                });
+                copiedFilterEVMArr.filter((item) => {
+                  const price = Number(ethers.utils.formatEther(item.salePrice));
+                  if (price >= selRange.min && price <= selRange.max) {
+                    resultEVMArr.push(item);
+                  }
+                });
+            });
+            copiedFilterArr = resultArr;
+            copiedFilterEVMArr = resultEVMArr;
+        }
+
+        firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
+        firstSetOfEVMData = copiedFilterEVMArr.slice(0, filterParams.limit);
+
+        setAllNfts(firstSetOfData);
+        setAllEVMNfts(firstSetOfEVMData);
     } else {
-      copiedFilterArr = copiedFilterArr.sort(function (a, b) {
-        return a.price - b.price;
-      });
-      copiedFilterEVMArr = copiedFilterEVMArr.sort(
-        (a, b) =>
-          Number(ethers.utils.formatEther(a.salePrice)) -
-          Number(ethers.utils.formatEther(b.salePrice))
-      );
+
+        let firstSetOfData, copiedFilterArr = [...auctionNfts];
+
+        const selectedPriceRanges = filterParams.priceRange.filter(item => item.checked);
+
+        if (filterParams.sort === "Newest first") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return new Date(b.metadata.issued_at) - new Date(a.metadata.issued_at);
+            });
+        } else if (filterParams.sort === "Oldest first") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return new Date(a.metadata.issued_at) - new Date(b.metadata.issued_at);
+            });
+        } else if (filterParams.sort === "Price - High to low") {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return b.price - a.price;
+            });
+        } else {
+            copiedFilterArr = copiedFilterArr.sort(function(a, b) {
+                return a.price - b.price;
+            });
+        }
+
+        if(selectedPriceRanges.length !== 0) {
+            const resultArr = [];
+            selectedPriceRanges.map(selRange => {
+                copiedFilterArr.filter(item => {
+                    const price = Number(item.price);
+                    if (price >= selRange.min && price <= selRange.max) {
+                        resultArr.push(item);
+                    }
+                });
+            });
+            copiedFilterArr = resultArr;
+        }
+
+        firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
+
+        setAllNfts(firstSetOfData);
     }
-
-    if (selectedPriceRanges.length !== 0) {
-      const resultArr = [];
-      const resultEVMArr = [];
-      selectedPriceRanges.map((selRange) => {
-        copiedFilterArr.filter((item) => {
-          const price = Number(item.price);
-          if (price >= selRange.min && price <= selRange.max) {
-            resultArr.push(item);
-          }
-        });
-
-        copiedFilterEVMArr.filter((item) => {
-          const price = Number(ethers.utils.formatEther(item.salePrice));
-          if (price >= selRange.min && price <= selRange.max) {
-            resultEVMArr.push(item);
-          }
-        });
-      });
-      copiedFilterArr = resultArr;
-      copiedFilterEVMArr = resultEVMArr;
-    }
-
-    firstSetOfData = copiedFilterArr.slice(0, filterParams.limit);
-    firstSetOfEVMData = copiedFilterEVMArr.slice(0, filterParams.limit);
-
-    setAllNfts(firstSetOfData);
-    setAllEVMNfts(firstSetOfEVMData);
-  };
+  }
 
   const resetFilters = () => {
     setFilterParams((state) => ({
@@ -727,8 +728,8 @@ export default function Browse() {
           Discover extraordinary NFTs
         </div>
         {/* <div className={classes.sectionTitle2}>
-                    Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
-                </div> */}
+            Your guide to the world of an open financial system. Get started with the easiest and most secure platform to buy and trade cryptocurrency
+        </div> */}
       </div>
       <SuggestionNfts
         topCollections={topCollections}
@@ -779,6 +780,14 @@ export default function Browse() {
               title={filterParams.sort}
               content={staticValues.sortFilter}
               onChange={(val) => handleFilterChange(val, "sort")}
+            />
+          </div>
+          <div className={classes.desktopHeaderSection} style={{display:'flex', justifyContent:'space-between', alignItems:'center', width:190}}>
+            <div style={{marginLeft:13}}/>
+            <Dropdown 
+                title={filterParams.nftType}
+                content={staticValues.nftType}
+                onChange={(val) => handleFilterChange(val, "nftType")}
             />
           </div>
         </div>

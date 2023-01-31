@@ -6,6 +6,8 @@ const gradients = [
     "linear-gradient(90.14deg, #009F9F 0.11%, #8B00BC 99.88%)"
 ];
 
+const nftType = [{name: "Sale"}, {name: "Auction"}];
+
 const states = [
         {
             "label" :"Andaman and Nicobar Islands",
@@ -160,5 +162,6 @@ const states = [
 export default {
     sortFilter,
     states,
-    gradients
+    gradients,
+    nftType
 }

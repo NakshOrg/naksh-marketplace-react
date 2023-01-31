@@ -41,8 +41,44 @@ const validateLink = (text) => {
   return true;
 };
 
+const setIsNftPurchased = () => {
+    localStorage.setItem("isNftPurchased", true);
+}
+
+const clearIsNftPurchased = () => {
+    localStorage.removeItem("isNftPurchased")
+}
+
+const isNftPurchased = () => {
+    if (localStorage.getItem("isNftPurchased")) {
+        return true;
+    }
+    return false;
+}
+
+const isNftListed = () => {
+    if (localStorage.getItem("isNftListed")) {
+        return true;
+    }
+    return false;
+}
+
+const setIsNftListed = () => {
+    localStorage.setItem("isNftListed", true);
+}
+
+const clearIsNftListed = () => {
+    localStorage.removeItem("isNftListed")
+}
+
 export default {
     openInNewTab,
     readImage,
-    validateLink
+    validateLink,
+    isNftPurchased,
+    clearIsNftListed,
+    setIsNftListed,
+    isNftListed,
+    clearIsNftPurchased,
+    setIsNftPurchased
 }

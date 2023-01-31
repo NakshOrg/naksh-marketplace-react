@@ -17,8 +17,10 @@ import NearProtocol from '../pages/about/NearProtocol';
 import PolygonNftDetails from '../pages/detailsPage/polygon/NftDetails';
 import CollectionDetails from '../pages/detailsPage/polygon/CollectionDetails';
 import CreateNft from "../pages/nft/CreateNft"
+import CreateNftNear from "../pages/nft/CreateNft"
 import CreateCollection from "../pages/nft/CreateCollection"
 import UserPolygonNftDetails from '../pages/detailsPage/polygon/UserNFTDetails';
+import UnlistedDetailPage from '../pages/detailsPage/UnlistedDetailPage';
 
 export default function Navigation() {
     return (
@@ -42,6 +44,8 @@ export default function Navigation() {
           exact
         />
         <Route path="/create/nft" component={CreateNft} />
+        <Route path="/createnft" component={CreateNftNear}/>
+        <Route path="/unlisted/(id)?/:id?/(collID)?/:collID?" component={UnlistedDetailPage}/>
         <Route path="/create/collection" component={CreateCollection} />
         <Route path="/searchresults/:keyword" component={SearchResults} />
         <Route path="/userprofile" component={UserProfile} />

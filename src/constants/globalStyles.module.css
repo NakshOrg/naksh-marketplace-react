@@ -1,0 +1,140 @@
+/* default styles overriding */
+
+.primaryBtn:hover {
+    background: var(--naksh-blue) radial-gradient(circle, transparent 1%, var(--naksh-blue) 1%) center/15000%;
+  }
+  .primaryBtn:active {
+    background-color: #6eb9f7;
+    background-size: 100%;
+    transition: background 0s;
+  }
+  .primaryBtn {
+    background-color: var(--naksh-blue);
+    font-weight: 500;
+    background-position: center;
+    transition: background 0.8s;
+  }
+  .primaryBtn:focus,
+  .primaryBtn:active:focus,
+  .outlinePrimaryBtn:focus,
+  .outlinePrimaryBtn:active:focus {
+    outline: none !important;
+    box-shadow: none;
+  }
+  .outlinePrimaryBtn {
+    border-color: var(--naksh-blue);
+    font-weight: 500;
+    border: 2px solid;
+  }
+  .outlineDangerBtn {
+    border-color: var(--naksh-red);
+    font-weight: 500;
+    border: 2px solid;
+  }
+  .outlinePrimaryBtn:hover {
+    background-color: var(--naksh-blue);
+  }
+  textarea, 
+  textarea.form-control, 
+  input.form-control, 
+  input[type=text], 
+  input[type=password], 
+  input[type=email], 
+  input[type=number], 
+  [type=text].form-control, 
+  [type=password].form-control, 
+  [type=email].form-control, 
+  [type=tel].form-control, 
+  [contenteditable].form-control:focus {
+    border-radius: 5px !important;
+    border-width: 1px;
+    height: 45px;
+  }
+  textarea:focus, 
+  textarea.form-control:focus, 
+  input.form-control:focus, 
+  input[type=text]:focus, 
+  input[type=password]:focus, 
+  input[type=email]:focus, 
+  input[type=number]:focus, 
+  [type=text].form-control:focus, 
+  [type=password].form-control:focus, 
+  [type=email].form-control:focus, 
+  [type=tel].form-control:focus, 
+  [contenteditable].form-control:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 5px !important;
+    /* border-color: var(--naksh-blue); */
+  }
+  input[type="date"] { 
+    border: 1px solid #CCD1DB;
+    border-radius: 5px;
+    padding: 10px 12px;
+  }
+  ::-webkit-datetime-edit-text { text-transform: capitalize; opacity: 0.7; }
+  ::-webkit-datetime-edit-month-field { text-transform: uppercase; }
+  ::-webkit-datetime-edit-day-field { text-transform: uppercase; }
+  ::-webkit-datetime-edit-year-field { text-transform: uppercase; }
+  
+  
+  /* constant styles */
+  
+  .flexRowSpace {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .flexRow {
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  /* shared styles */
+  
+  .slideBarContainer {
+    background: rgb(222, 226, 234);
+    border-radius: 25px;
+    align-items: center;
+    display: flex;
+  }
+  .slideBar {
+    height: 6px;
+    background-color: var(--naksh-black);
+    border-radius: 15px;
+  }
+  .underline {
+    height: 0.1px;
+    background: #DFE0EB;
+    opacity: 0.2;
+  }
+  .dropdown {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 2px 3px rgb(0 0 0 / 9%);
+    cursor: pointer;
+  }
+  .containerCard {
+    background:white;
+    border:1px solid #DFE0EB;
+    border-radius:7px;
+    padding: 25px;
+  }
+  .label {
+    font-weight: 600;
+  }
+  .selectInput {
+    height:40;
+    color:rgba(0, 25, 76, 0.5);
+  }
+  .truncate {
+    overflow:hidden; 
+    white-space:nowrap; 
+    text-overflow: ellipsis;
+  }

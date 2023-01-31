@@ -28,24 +28,13 @@ const mainnetConfig = {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  baseURL:
-    isDevelopment || isStaging
-      ? keys.REACT_APP_BASEURL
-      : keys.REACT_APP_BASEURL_PRODUCTION,
-  clientBaseURL:
-    isDevelopment || isStaging
-      ? keys.REACT_APP_CLIENT_BASEURL
-      : keys.REACT_APP_CLIENT_BASEURL_PRODUCTION,
-  nakshContractWallet:
-    isDevelopment || isStaging
-      ? keys.REACT_APP_NAKSH_CONTRACT_WALLET
-      : keys.REACT_APP_NAKSH_CONTRACT_WALLET_PRODUCTION,
-  nakshMarketWallet:
-    isDevelopment || isStaging
-      ? keys.REACT_APP_NAKSH_MARKET_WALLET
-      : keys.REACT_APP_NAKSH_MARKET_WALLET_PRODUCTION,
+  baseURL: (isDevelopment || isStaging) ? keys.REACT_APP_BASEURL : keys.REACT_APP_BASEURL_PRODUCTION,
+  clientBaseURL: (isDevelopment || isStaging) ? keys.REACT_APP_CLIENT_BASEURL : keys.REACT_APP_CLIENT_BASEURL_PRODUCTION,
+  nakshContractWallet: (isDevelopment || isStaging) ? keys.REACT_APP_NAKSH_CONTRACT_WALLET : keys.REACT_APP_NAKSH_CONTRACT_WALLET_PRODUCTION,
+  nakshMarketWallet: (isDevelopment || isStaging) ? keys.REACT_APP_NAKSH_MARKET_WALLET : keys.REACT_APP_NAKSH_MARKET_WALLET_PRODUCTION,
+  auctionContractWallet : (isDevelopment || isStaging) ? keys.REACT_APP_AUCTION_WALLET : keys.REACT_APP_AUCTION_WALLET,
   appUrl: window.location.origin,
-  walletConfig: isDevelopment || isStaging ? testnetConfig : mainnetConfig,
+  walletConfig: (isDevelopment || isStaging) ? testnetConfig : mainnetConfig,
   isProduction,
   isStaging,
   isDevelopment,
@@ -55,13 +44,10 @@ export default {
   linkedin: "https://www.linkedin.com/company/naksh-marketplace/",
   twitter: "https://twitter.com/NakshMarket",
   faq: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luyT4",
-  familiarWithNaksh:
-    "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luznI",
-  nakshFunctioning:
-    "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lusLk",
-  existingUsers:
-    "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lu4ng",
+  familiarWithNaksh: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luznI",
+  nakshFunctioning: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lusLk",
+  existingUsers: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_lu4ng",
   nftOwners: "https://coda.io/d/_dsFX-mE7jjm/Naksh-Help-Center_sulr9#_luUoZ",
   nearWebsite: "Near.org",
-  nakshMedium: "https://medium.com/@naksh.org",
-};
+  nakshMedium: "https://medium.com/@naksh.org"
+}

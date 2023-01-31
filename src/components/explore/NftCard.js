@@ -16,6 +16,7 @@ function NftCard(props) {
         artistName,
         artistImage,
         onClick,
+        unlisted,
         near
     } = props;
 
@@ -48,7 +49,7 @@ function NftCard(props) {
             >
               {title}
             </div>
-            {Number(nearFee) > 0 && (
+            {!unlisted && Number(nearFee) > 0 (
               <div
                 style={{
                   fontSize: 12,
@@ -68,7 +69,7 @@ function NftCard(props) {
             )}
           </div>
           <div style={{ ...globalStyles.flexRowSpace, marginTop: 5 }}>
-            <div style={globalStyles.flexRowSpace}>
+          {!unlisted && <div style={globalStyles.flexRowSpace}>
               {artistImage && (
                 <img
                   style={{
@@ -94,7 +95,7 @@ function NftCard(props) {
                   {artistName.substring(0, 15)}
                 </div>
               )}
-            </div>
+            </div>}
             {/* <div style={{fontSize:11, opacity:0.67}}>{price}</div> */}
           </div>
         </div>

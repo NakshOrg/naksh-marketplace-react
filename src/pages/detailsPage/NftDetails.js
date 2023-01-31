@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useEffect, useState } from "react";
-import { Col, Row, Container } from "react-bootstrap";
+import { Col, Row, Form } from 'react-bootstrap';
 import { motion } from "framer-motion";
 import { FiBookmark, FiExternalLink, FiFlag } from "react-icons/fi";
 import { useSelector } from "react-redux";
@@ -9,20 +9,17 @@ import toast from "react-hot-toast";
 
 import NftCard from "../../components/explore/NftCard";
 import { GradientBtn } from "../../components/uiComponents/Buttons";
-import Spinner from "../../components/uiComponents/Spinner";
 import nearIcon from "../../assets/svgs/near-icon.svg";
 import party from "../../assets/svgs/party.svg";
 import profileSvg from "../../assets/svgs/profile-icon-big.svg";
 import globalStyles from "../../globalStyles";
 import classes from "./details.module.css";
 import { helpers } from "../../constants";
-import {
-  _getAllArtists,
-  _getNftArtists,
-  _updateTrendingNftOrArtist,
-} from "../../services/axios/api";
+import { _getAllArtists, _getNftArtists, _saveNft, _unSaveNft, _updateTrendingNftOrArtist } from '../../services/axios/api';
 import NearHelperFunctions from "../../services/nearHelperFunctions";
 import Modal from "../../components/uiComponents/Modal";
+import Spinner from '../../components/uiComponents/Spinner';
+import ListModal from '../../components/uiComponents/ListModal';
 
 export default function NftDetails(props) {
   const walletInfo = useSelector((state) => state.nearReducer.walletInfo);
@@ -33,11 +30,20 @@ export default function NftDetails(props) {
   const history = useHistory();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [artistData, setMyArtistData] = useState(null);
   const [nft, setNft] = useState(null);
   const [ownerData, setOwnerData] = useState(null);
   const [moreNfts, setMoreNfts] = useState([]);
   const [isOverviewActive, setIsOverviewActive] = useState(true);
   const [show, setShow] = useState(false);
+  const [nftPrice, setNftPrice] = useState(null);
+  const [shouldUpdateNft, setShouldUpdateNft] = useState(false);
+  const [isListed, setIsListed] = useState(true);
+  const [modalShow, setModalShow] = useState(false);
+  const [minimumBid, setMinimumBid] = useState("");
+  const [price, setPrice] = useState("");
+  const [pricingType, setPricingType] = useState("fixed");
   const googleForm = `https://docs.google.com/forms/d/e/1FAIpQLScaqPJC9CPhLWJfAYDbb3P5V98MMb9d3OrVqQOctS-Ynp-4Cw/viewform?usp=pp_url&entry.301861387=${window.location.href}`;
 
   useEffect(() => {
@@ -56,68 +62,115 @@ export default function NftDetails(props) {
     await _updateTrendingNftOrArtist(body, params);
   };
 
-  // _updateTrendingNftOrArtist
-  // const handleOnSubmit = async () => {
-  //     const response = await fetch(nft.metadata.media);
-  //     // here image is url/location of image
-  //     const blob = await response.blob();
-  //     const file = new File([blob], 'share.jpg', {type: blob.type});
-  //     // console.log(file);
-  //     if(navigator.share) {
-  //       await navigator.share({
-  //         title: this.state.nft.metadata?.title,
-  //         text: "Take a look at my beautiful nft",
-  //         url: window.location.href,
-  //         files: [file]
-  //       })
-  //         .then(() => // console.log('Successful share'))
-  //         .catch((error) => // console.log('Error in sharing', error));
-  //     }else {
-  //       // console.log(`system does not support sharing files.`);
-  //     }
-  // }
-
   const fetchNft = () => {
-    const functions = new NearHelperFunctions(walletInfo);
 
-    functions
-      .getNftDetails()
-      .then((nfts) => {
-        const nft = nfts.find((item) => item.token_id === params.id);
-        const moreNfts = nfts.filter((item) => item.token_id !== params.id);
-        _getNftArtists({ artist: nft?.artist?.wallet, owner: nft?.owner_id })
-          .then(({ data: { artist, owner } }) => {
-            updateTrendings({ view: 1 }, nft.token_id, artist._id);
-            setNft(nft);
-            setMoreNfts(moreNfts.reverse());
-            const query = new URLSearchParams(location.search);
-            if (query.get("transactionHashes")) {
-              updateTrendings({ sale: 1 }, nft.token_id, artist._id);
-              toast.success("NFT successfully purchased!");
-            }
-            setLoading(false);
-            owner && setOwnerData(owner);
+    const paramsId = localStorage.getItem("paramsId");
+    const primaryParamsId = localStorage.getItem("primaryParamsId");
+    const pricingType = localStorage.getItem("pricingType");
+    const functions = new NearHelperFunctions(walletInfo, (paramsId ? paramsId : primaryParamsId ? primaryParamsId : params.id));
+
+    functions.getSalesNft()
+    .then(saleNfts => {
+      
+        functions.getNftDetails()
+        .then(nfts => {
+
+          const isListed = saleNfts.find(item => item.token_id === params.id);
+          console.log(isListed, !isListed);
+          if (!isListed) {
+              console.log('mel');
+              setIsListed(false);
+          }
+
+          const nft = nfts.find(item => item.token_id === params.id);
+
+          if(paramsId) {
+            return functions.nearListing(nft, pricingType);
+          }
+
+          const moreNfts = nfts.filter(item => item.token_id !== params.id);
+          _getAllArtists({wallet: walletInfo.getAccountId(), sortBy: 'createdAt', sort: -1})
+          .then(({ data }) => {
+              setMyArtistData(data.artists[0]);
+              const savedNfts = data.artists[0].savedNft.map(item => item.token);
+              nft['saved'] = savedNfts.length ? savedNfts.includes(nft.token_id) : false;
+              _getNftArtists({artist: nft?.artist?.wallet, owner: nft?.owner_id})
+              .then(({ data: { artist, owner }}) => {
+                  updateTrendings({view:1}, nft.token_id, artist._id);
+                  setNft(nft);
+                  setMoreNfts(moreNfts.reverse());
+                  const query = new URLSearchParams(location.search); 
+                  if(query.get("transactionHashes") && helpers.isNftPurchased()) {
+                      helpers.clearIsNftPurchased();
+                      updateTrendings({sale:1}, nft.token_id, artist._id);
+                      toast.success('NFT successfully purchased!');
+                  }
+                  if(query.get("transactionHashes") && helpers.isNftListed()) {
+                      toast.success('NFT listed successfully!');
+                  }
+                  setLoading(false);
+                  owner && setOwnerData(owner);
+              })
+              .catch(err => {
+                  alert("something went wrong!");
+                  setLoading(false);
+              });
           })
-          .catch((err) => {
-            alert("something went wrong, please refresh the page!");
+          .catch(err => {
+            // console.log(err);
+            alert("something went wrong!");
             setLoading(false);
           });
-      })
-      .catch((err) => {
-        // // console.log(err);
-        alert("something went wrong, please refresh the page!");
-        setLoading(false);
       });
-  };
+    });
+  } 
 
   const handleBuyNft = async () => {
     if (isWalletSignedIn) {
+      helpers.setIsNftPurchased();
       const functions = new NearHelperFunctions(walletInfo);
       functions.buyNFt(nft.price, nft.token_id);
       return;
     }
     setShow(true);
   };
+
+  function listInMarketPlace() {
+    helpers.setIsNftListed();
+    const functions = new NearHelperFunctions(walletInfo, params.id);
+    functions.nearStorage(pricingType === "auction" ? minimumBid : nftPrice, pricingType);
+  }
+
+  const updateNft = async () => {
+    const functions = new NearHelperFunctions(walletInfo);
+    functions.updateNft(nft, pricingType === "auction" ? minimumBid : nftPrice); 
+  }
+
+  const handleSaveUnSaveNft = () => {
+
+    setSaveLoading(true);
+    const data = {
+        "blockchain": 0,
+        "token": nft.token_id
+    }
+    const copiedNft = {...nft};
+    if (walletInfo.isSignedIn()) {
+        (nft.saved ? _unSaveNft(artistData._id, data) : _saveNft(artistData._id, data))
+        .then(({ data: { artist } }) => {
+          setSaveLoading(false);
+          const savedNfts = artist.savedNft.map(item => item.token);
+          copiedNft['saved'] = savedNfts.length ? savedNfts.includes(copiedNft.token_id) : false;
+          toast.success(copiedNft.saved ? "NFT saved" : "NFT unsaved");
+          setNft(copiedNft);
+        })
+        .catch(err => {
+          setSaveLoading(false);
+          toast.error(err.response.data.error);
+        })
+    } else {
+        toast.error("Connect wallet to save NFT");
+      }
+  }
 
   const overview = () => {
     return (
@@ -387,9 +440,11 @@ export default function NftDetails(props) {
               {nft?.metadata?.title}
             </div>
             <div style={{ display: "flex" }}>
-              {/* <span style={{backgroundColor:"#fff", borderRadius:100, padding:6, opacity:0.6, cursor:"no-drop"}}>
-                                <FiBookmark size={22} color="#130F26"/>
-                            </span> */}
+            { !saveLoading ?
+              <span onClick={handleSaveUnSaveNft} style={{backgroundColor:"#fff", borderRadius:100, padding:6, cursor:"pointer"}}>
+                <FiBookmark fill={nft.saved ? 'black' : 'white'} size={22} color="#130F26"/>
+              </span> :
+              <Spinner style={{marginTop:2}} color='#fff' animation="border"/> }
               <span
                 onClick={() => helpers.openInNewTab(googleForm)}
                 style={{
@@ -404,15 +459,7 @@ export default function NftDetails(props) {
               </span>
             </div>
           </div>
-          {/* <WhatsappShareButton
-                        title={nft?.metadata?.title}
-                        separator={"/%0A"}
-                        style={{height:50, width:50, background:"#fff", color:'red'}} 
-                        url={window.location.href}
-                    >
-                        whatsapp
-                    </WhatsappShareButton> */}
-          {purchasable && nft?.price && (
+          {((purchasable && nft?.price) || isListed) && (
             <div style={{ marginTop: 5 }}>
               <span style={{ fontSize: 15, opacity: 0.6 }}>Price:</span>
               <span style={{ marginLeft: 5, fontSize: 17 }}>
@@ -498,45 +545,49 @@ export default function NftDetails(props) {
               />
             </div>
           ) : (
-            <div className={classes.ownedBtn}>
-              <img style={{ height: 30 }} src={party} alt="party" />
-              &nbsp;&nbsp; This nft is now yours!
-            </div>
+            isListed ?
+            <GradientBtn
+                style={{marginTop:30, cursor: "pointer"}}
+                onClick={() => {
+                    setModalShow(true)
+                    setShouldUpdateNft(true)
+                }}
+                content={
+                    <div>
+                        Update NFT price
+                    </div>
+                }
+            /> :
+            <GradientBtn
+                style={{marginTop:30, cursor: "pointer"}}
+                onClick={() => setModalShow(true)}
+                content={
+                    <div>
+                        List this NFT
+                    </div>
+                }
+            />
           )}
         </Col>
       </Row>
-      {purchasable ? (
-        <div
-          onClick={() => (purchasable && nft?.price ? handleBuyNft() : null)}
-          className={classes.mobileFixedBtn}
-        >
-          <div>
-            {purchasable && nft?.price
-              ? `PURCHASE FOR ${nft?.price}`
-              : !purchasable
-              ? "🎉 You own this nft"
-              : "Unavailable"}
-            {purchasable && nft?.price && (
-              <span>
-                <img
-                  style={{ marginTop: -2, marginLeft: 3 }}
-                  src={nearIcon}
-                  alt="near"
-                />
-              </span>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className={classes.ownedBtnFixed}>
-          <img style={{ height: 30 }} src={party} alt="party" />
-          &nbsp; This nft is now yours!
-        </div>
-      )}
       <div className={classes.bottomContent}>
         <div className={classes.heading}>More NFTs like this</div>
         <Row>{renderNfts()}</Row>
       </div>
+      <ListModal
+        title='NFT listing'
+        show={modalShow}
+        btnRight={"Submit"}
+        onHide={() => setModalShow(false)}
+        onSubmit={shouldUpdateNft ? updateNft : listInMarketPlace}
+        valid={((pricingType === "auction" && minimumBid) || (pricingType === "fixed" && price)) ? true : false}
+        minimumBid={minimumBid}
+        setMinimumBid={setMinimumBid}
+        price={price}
+        setPrice={setPrice}
+        pricingType={pricingType}
+        setPricingType={setPricingType}
+      />
       <Modal show={show} onHide={() => setShow(false)} />
     </div>
   );

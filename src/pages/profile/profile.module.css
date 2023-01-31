@@ -140,6 +140,11 @@
     overflow-y: hidden; */
 }
 
+.glowBtnText {
+    font-size: 10px;
+    margin-left: 5px !important;
+}
+
 @media only screen and (max-width: 600px) {
     .saveBtnDesktop, .arrowIcon {
         display: none;
